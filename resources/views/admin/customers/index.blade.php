@@ -1,11 +1,605 @@
 <x-admin-layout>
+    <!-- Page Header -->
     <div class="mb-8">
+        <div class="flex justify-between items-center">
+            <div>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Customers Management</h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Manage customer information and relationships.</p>
     </div>
-
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Customers Overview</h2>
-        <p class="text-gray-600 dark:text-gray-400">This page will show customer management features.</p>
+            <div class="flex space-x-3">
+                <button onclick="exportCustomers()" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Export
+                </button>
+                <button onclick="openAddModal()" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Add Customer
+                </button>
+            </div>
+        </div>
     </div>
+
+    <!-- Search and Filters -->
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Search -->
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Search Customers</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <input type="text" id="searchInput" placeholder="Search by name, email, phone, city..." 
+                           class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400">
+                </div>
+            </div>
+            
+            <!-- Status Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
+                <select id="statusFilter" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="pending">Pending</option>
+                </select>
+            </div>
+            
+            <!-- Sort -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sort By</label>
+                <select id="sortBy" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                    <option value="created_at">Date Created</option>
+                    <option value="name">Name</option>
+                    <option value="email">Email</option>
+                    <option value="city">City</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customers Table -->
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Customers List</h3>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-500 dark:text-gray-400" id="customerCount">
+                        {{ $customers->total() }} customers
+                    </span>
+                    <button onclick="bulkDelete()" id="bulkDeleteBtn" class="hidden inline-flex items-center px-3 py-1 border border-red-300 text-red-700 text-sm rounded-md hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Delete Selected
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                        <th class="px-6 py-3 text-left">
+                            <input type="checkbox" id="selectAll" class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50">
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Customer</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Contact</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Location</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Orders</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Created</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="customersTableBody">
+                    @foreach($customers as $customer)
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <input type="checkbox" class="customer-checkbox rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50" value="{{ $customer->id }}">
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10">
+                                    <div class="h-10 w-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                                        <span class="text-sm font-medium text-green-800 dark:text-green-200">
+                                            {{ strtoupper(substr($customer->name, 0, 2)) }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $customer->name }}</div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">ID: {{ $customer->id }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 dark:text-white">{{ $customer->email }}</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">{{ $customer->phone }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 dark:text-white">{{ $customer->city }}, {{ $customer->state }}</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">{{ $customer->postal_code }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                @if($customer->status === 'active') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($customer->status === 'inactive') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
+                                {{ ucfirst($customer->status ?? 'active') }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                            {{ $customer->orders->count() }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            {{ $customer->created_at->format('M d, Y') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex justify-end space-x-2">
+                                <button onclick="viewCustomer({{ $customer->id }})" class="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </button>
+                                <button onclick="editCustomer({{ $customer->id }})" class="text-green-600 hover:text-green-900 dark:hover:text-green-400 p-1 rounded hover:bg-green-50 dark:hover:bg-green-900/20">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </button>
+                                <button onclick="deleteCustomer({{ $customer->id }})" class="text-red-600 hover:text-red-900 dark:hover:text-red-400 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="bg-white dark:bg-gray-800 px-4 py-3 border-t border-gray-200 dark:border-gray-700 sm:px-6">
+            {{ $customers->links() }}
+        </div>
+    </div>
+
+    <!-- Add/Edit Customer Modal -->
+    <div id="customerModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white" id="modalTitle">Add New Customer</h3>
+                    <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form id="customerForm" class="space-y-4">
+                    <input type="hidden" id="customerId">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
+                            <input type="text" id="name" name="name" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email *</label>
+                            <input type="email" id="email" name="email" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone *</label>
+                            <input type="tel" id="phone" name="phone" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
+                            <select id="status" name="status" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Address *</label>
+                        <textarea id="address" name="address" rows="2" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">City *</label>
+                            <input type="text" id="city" name="city" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">State *</label>
+                            <input type="text" id="state" name="state" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Postal Code *</label>
+                            <input type="text" id="postal_code" name="postal_code" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" onclick="closeModal()" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            Save Customer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Customer Modal -->
+    <div id="viewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Customer Details</h3>
+                    <button onclick="closeViewModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div id="customerDetails" class="space-y-4">
+                    <!-- Customer details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        let currentCustomerId = null;
+        let searchTimeout;
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchCustomers();
+            }, 500);
+        });
+
+        // Filter functionality
+        document.getElementById('statusFilter').addEventListener('change', searchCustomers);
+        document.getElementById('sortBy').addEventListener('change', searchCustomers);
+
+        // Select all functionality
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.customer-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            updateBulkDeleteButton();
+        });
+
+        // Individual checkbox functionality
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('customer-checkbox')) {
+                updateBulkDeleteButton();
+                updateSelectAll();
+            }
+        });
+
+        function updateBulkDeleteButton() {
+            const checkedBoxes = document.querySelectorAll('.customer-checkbox:checked');
+            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+            
+            if (checkedBoxes.length > 0) {
+                bulkDeleteBtn.classList.remove('hidden');
+            } else {
+                bulkDeleteBtn.classList.add('hidden');
+            }
+        }
+
+        function updateSelectAll() {
+            const checkboxes = document.querySelectorAll('.customer-checkbox');
+            const selectAll = document.getElementById('selectAll');
+            const checkedBoxes = document.querySelectorAll('.customer-checkbox:checked');
+            
+            if (checkedBoxes.length === checkboxes.length) {
+                selectAll.checked = true;
+            } else {
+                selectAll.checked = false;
+            }
+        }
+
+        function searchCustomers() {
+            const search = document.getElementById('searchInput').value;
+            const status = document.getElementById('statusFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+            
+            const params = new URLSearchParams();
+            if (search) params.append('search', search);
+            if (status) params.append('status', status);
+            params.append('sort_by', sortBy);
+            params.append('sort_order', 'desc');
+            
+            fetch(`{{ route('admin.customers.index') }}?${params.toString()}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('customersTableBody').innerHTML = data.html;
+                document.getElementById('customerCount').textContent = `${data.customers.total} customers`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function openAddModal() {
+            currentCustomerId = null;
+            document.getElementById('modalTitle').textContent = 'Add New Customer';
+            document.getElementById('customerForm').reset();
+            document.getElementById('customerModal').classList.remove('hidden');
+        }
+
+        function editCustomer(id) {
+            currentCustomerId = id;
+            document.getElementById('modalTitle').textContent = 'Edit Customer';
+            
+            fetch(`/admin/customers/${id}`)
+                .then(response => response.json())
+                .then(customer => {
+                    document.getElementById('customerId').value = customer.id;
+                    document.getElementById('name').value = customer.name;
+                    document.getElementById('email').value = customer.email;
+                    document.getElementById('phone').value = customer.phone;
+                    document.getElementById('address').value = customer.address;
+                    document.getElementById('city').value = customer.city;
+                    document.getElementById('state').value = customer.state;
+                    document.getElementById('postal_code').value = customer.postal_code;
+                    document.getElementById('status').value = customer.status || 'active';
+                    
+                    document.getElementById('customerModal').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error!', 'Failed to load customer data.', 'error');
+                });
+        }
+
+        function viewCustomer(id) {
+            fetch(`/admin/customers/${id}`)
+                .then(response => response.json())
+                .then(customer => {
+                    const detailsHtml = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Personal Information</h4>
+                                <div class="space-y-2">
+                                    <div>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">Name:</span>
+                                        <p class="text-sm text-gray-900 dark:text-white">${customer.name}</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">Email:</span>
+                                        <p class="text-sm text-gray-900 dark:text-white">${customer.email}</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">Phone:</span>
+                                        <p class="text-sm text-gray-900 dark:text-white">${customer.phone}</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">Status:</span>
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                            ${customer.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
+                                              customer.status === 'inactive' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 
+                                              'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'}">
+                                            ${customer.status ? customer.status.charAt(0).toUpperCase() + customer.status.slice(1) : 'Active'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Address Information</h4>
+                                <div class="space-y-2">
+                                    <div>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">Address:</span>
+                                        <p class="text-sm text-gray-900 dark:text-white">${customer.address}</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">City:</span>
+                                        <p class="text-sm text-gray-900 dark:text-white">${customer.city}</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">State:</span>
+                                        <p class="text-sm text-gray-900 dark:text-white">${customer.state}</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">Postal Code:</span>
+                                        <p class="text-sm text-gray-900 dark:text-white">${customer.postal_code}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <h4 class="font-medium text-gray-900 dark:text-white mb-2">Additional Information</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">Customer ID:</span>
+                                    <p class="text-sm text-gray-900 dark:text-white">${customer.id}</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">Created:</span>
+                                    <p class="text-sm text-gray-900 dark:text-white">${new Date(customer.created_at).toLocaleDateString()}</p>
+                                </div>
+                            </div>
+    </div>
+                    `;
+                    
+                    document.getElementById('customerDetails').innerHTML = detailsHtml;
+                    document.getElementById('viewModal').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error!', 'Failed to load customer data.', 'error');
+                });
+        }
+
+        function deleteCustomer(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/admin/customers/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('Deleted!', data.message, 'success');
+                            searchCustomers();
+                        } else {
+                            Swal.fire('Error!', data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error!', 'Failed to delete customer.', 'error');
+                    });
+                }
+            });
+        }
+
+        function bulkDelete() {
+            const checkedBoxes = document.querySelectorAll('.customer-checkbox:checked');
+            const customerIds = Array.from(checkedBoxes).map(cb => cb.value);
+            
+            if (customerIds.length === 0) {
+                Swal.fire('Warning!', 'Please select customers to delete.', 'warning');
+                return;
+            }
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `You are about to delete ${customerIds.length} customer(s). This action cannot be undone!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete them!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/admin/customers/bulk-delete', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            customer_ids: customerIds
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('Deleted!', data.message, 'success');
+                            searchCustomers();
+                            document.getElementById('selectAll').checked = false;
+                            updateBulkDeleteButton();
+                        } else {
+                            Swal.fire('Error!', data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error!', 'Failed to delete customers.', 'error');
+                    });
+                }
+            });
+        }
+
+        function exportCustomers() {
+            const search = document.getElementById('searchInput').value;
+            const status = document.getElementById('statusFilter').value;
+            
+            let url = '{{ route("admin.customers.export") }}?';
+            if (search) url += `search=${encodeURIComponent(search)}&`;
+            if (status) url += `status=${encodeURIComponent(status)}&`;
+            
+            window.location.href = url;
+        }
+
+        // Form submission
+        document.getElementById('customerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            const url = currentCustomerId ? `/admin/customers/${currentCustomerId}` : '/admin/customers';
+            const method = currentCustomerId ? 'PUT' : 'POST';
+            
+            fetch(url, {
+                method: method,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Success!', data.message, 'success');
+                    closeModal();
+                    searchCustomers();
+                } else {
+                    Swal.fire('Error!', 'Please check the form and try again.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error!', 'Failed to save customer.', 'error');
+            });
+        });
+
+        function closeModal() {
+            document.getElementById('customerModal').classList.add('hidden');
+        }
+
+        function closeViewModal() {
+            document.getElementById('viewModal').classList.add('hidden');
+        }
+    </script>
 </x-admin-layout> 

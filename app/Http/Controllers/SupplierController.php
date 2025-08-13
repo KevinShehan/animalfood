@@ -20,9 +20,13 @@ class SupplierController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:suppliers,email',
             'phone' => 'required|string|regex:/^[0-9+\-\s\(\)]+$/|max:20',
+            'secondary_phone' => 'nullable|string|regex:/^[0-9+\-\s\(\)]+$/|max:20',
             'address' => 'required|string|max:500',
             'contact_person' => 'required|string|max:255',
             'tax_number' => 'nullable|string|max:50',
+            'status' => 'required|in:active,inactive',
+            'is_blacklisted' => 'nullable|boolean',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
         if ($validator->fails()) {
@@ -32,7 +36,11 @@ class SupplierController extends Controller
             ], 422);
         }
 
-        $supplier = Supplier::create($request->all());
+        $data = $request->all();
+        $data['supplier_id'] = Supplier::generateSupplierId();
+        $data['is_blacklisted'] = $request->boolean('is_blacklisted');
+
+        $supplier = Supplier::create($data);
 
         return response()->json([
             'success' => true,
@@ -52,9 +60,13 @@ class SupplierController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:suppliers,email,' . $supplier->id,
             'phone' => 'required|string|regex:/^[0-9+\-\s\(\)]+$/|max:20',
+            'secondary_phone' => 'nullable|string|regex:/^[0-9+\-\s\(\)]+$/|max:20',
             'address' => 'required|string|max:500',
             'contact_person' => 'required|string|max:255',
             'tax_number' => 'nullable|string|max:50',
+            'status' => 'required|in:active,inactive',
+            'is_blacklisted' => 'nullable|boolean',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
         if ($validator->fails()) {
@@ -64,7 +76,10 @@ class SupplierController extends Controller
             ], 422);
         }
 
-        $supplier->update($request->all());
+        $data = $request->all();
+        $data['is_blacklisted'] = $request->boolean('is_blacklisted');
+
+        $supplier->update($data);
 
         return response()->json([
             'success' => true,

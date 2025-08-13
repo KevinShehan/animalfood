@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Animal Food System') }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/dog.png') }}">
+    <title>Animal Food System</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -12,25 +13,87 @@
     
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <style>
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+        
+        .preloader.dark {
+            background: rgba(17, 24, 39, 0.95);
+        }
+        
+        .preloader-content {
+            text-align: center;
+        }
+        
+        .preloader-image {
+            width: 80px;
+            height: 80px;
+            animation: bounce 1.5s infinite;
+        }
+        
+        .preloader-text {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .preloader.dark .preloader-text {
+            color: #f3f4f6;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #10b981;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body class="font-sans antialiased">
+    <!-- Preloader -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="spinner"></div>
+            <img src="{{ asset('images/dog.png') }}" alt="Loading" class="preloader-image">
+            <div class="preloader-text">Signing you in...</div>
+        </div>
+    </div>
+
     <div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
-            <!-- Logo and Title -->
-            <div class="text-center">
-                <div class="mx-auto h-24 w-24 rounded-full bg-gradient-to-r from-green-500 to-blue-600 flex items-center justify-center shadow-xl mb-6">
-                    <svg class="h-12 w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                    </svg>
-                </div>
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                    Animal Food System
-                </h2>
-                <p class="text-gray-600 dark:text-gray-400">
-                    Sign in to your account
-                </p>
-            </div>
-
             <!-- Session Status -->
             @if (session('status'))
                 <div class="bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded-md">
@@ -40,7 +103,17 @@
 
             <!-- Login Form -->
             <div class="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-8">
-                <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                <!-- Logo and Title -->
+                <div class="text-center mb-6">
+                    <div class="mx-auto h-20 w-20 rounded-full bg-gradient-to-r from-green-500 to-blue-600 flex items-center justify-center shadow-lg mb-4">
+                        <img src="{{ asset('images/dog.png') }}" alt="Animal Food System" class="h-10 w-10 rounded-full">
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                        Animal Food System Login
+                    </h2>
+                </div>
+                
+                <form method="POST" action="{{ route('login') }}" class="space-y-6" id="loginForm">
                     @csrf
 
                     <!-- Email Address -->
@@ -75,8 +148,19 @@
                                 </svg>
                             </div>
                             <input id="password" name="password" type="password" required autocomplete="current-password"
-                                class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                class="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                                 placeholder="Enter your password">
+                            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <!-- Eye icon (hidden) -->
+                                <svg id="eyeOpen" class="hidden h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                <!-- Eye slash icon (visible) -->
+                                <svg id="eyeClosed" class="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L16.121 16.12"></path>
+                                </svg>
+                            </button>
                         </div>
                         @error('password')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -84,21 +168,12 @@
                     </div>
 
                     <!-- Remember Me -->
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input id="remember_me" name="remember" type="checkbox" 
-                                class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                            <label for="remember_me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                                Remember me
-                            </label>
-                        </div>
-
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" 
-                                class="text-sm text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300 font-medium">
-                                Forgot password?
-                            </a>
-                        @endif
+                    <div class="flex items-center">
+                        <input id="remember_me" name="remember" type="checkbox" 
+                            class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                        <label for="remember_me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                            Remember me
+                        </label>
                     </div>
 
                     <!-- Submit Button -->
@@ -114,15 +189,7 @@
                         </button>
                     </div>
 
-                    <!-- Register Link -->
-                    <div class="text-center">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            Don't have an account? 
-                            <a href="{{ route('register') }}" class="font-medium text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300">
-                                Register here
-                            </a>
-                        </p>
-                    </div>
+
                 </form>
             </div>
 
@@ -134,5 +201,91 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const preloader = document.getElementById('preloader');
+            
+            // Check if dark mode is enabled
+            function isDarkMode() {
+                return document.documentElement.classList.contains('dark') || 
+                       window.matchMedia('(prefers-color-scheme: dark)').matches;
+            }
+            
+            // Update preloader theme
+            function updatePreloaderTheme() {
+                if (isDarkMode()) {
+                    preloader.classList.add('dark');
+                } else {
+                    preloader.classList.remove('dark');
+                }
+            }
+            
+            // Initial theme check
+            updatePreloaderTheme();
+            
+            // Listen for theme changes
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        updatePreloaderTheme();
+                    }
+                });
+            });
+            
+            observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+            
+            loginForm.addEventListener('submit', function(e) {
+                // Show preloader
+                preloader.style.display = 'flex';
+                
+                // Disable form submission if there are validation errors
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                if (!email || !password) {
+                    e.preventDefault();
+                    preloader.style.display = 'none';
+                    return;
+                }
+                
+                // Form is valid, let it submit and show preloader
+                // The preloader will be hidden when the page redirects
+            });
+            
+            // Hide preloader if user goes back or there's an error
+            window.addEventListener('pageshow', function() {
+                preloader.style.display = 'none';
+            });
+            
+            // Hide preloader on page unload (in case of errors)
+            window.addEventListener('beforeunload', function() {
+                preloader.style.display = 'none';
+            });
+            
+            // Password visibility toggle
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const eyeOpen = document.getElementById('eyeOpen');
+            const eyeClosed = document.getElementById('eyeClosed');
+            
+            togglePassword.addEventListener('click', function() {
+                // Toggle password input type
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    eyeOpen.classList.remove('hidden');
+                    eyeClosed.classList.add('hidden');
+                } else {
+                    passwordInput.type = 'password';
+                    eyeOpen.classList.add('hidden');
+                    eyeClosed.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

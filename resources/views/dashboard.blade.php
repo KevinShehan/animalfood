@@ -1,13 +1,13 @@
 <x-admin-layout>
     <!-- Page Header -->
-    <div class="mb-8">
+    <div class="mb-4">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Welcome back! Here's what's happening with your animal food business today.</p>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Welcome back! Here's what's happening with your animal food business today.</p>
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <!-- Total Sales -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <!-- Today's Sales -->
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <div class="flex items-center">
@@ -20,43 +20,43 @@
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Sales</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white">$24,500</dd>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Today's Sales</dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="today-sales">Rs. 0.00</dd>
                         </dl>
                     </div>
                 </div>
             </div>
             <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
                 <div class="text-sm">
-                    <span class="text-green-600 dark:text-green-400 font-medium">+12%</span>
-                    <span class="text-gray-500 dark:text-gray-400">from last month</span>
+                    <span class="text-green-600 dark:text-green-400 font-medium" id="sales-target-progress">0%</span>
+                    <span class="text-gray-500 dark:text-gray-400">of daily target</span>
                 </div>
             </div>
         </div>
 
-        <!-- Total Orders -->
+        <!-- Today's Refunds -->
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                        <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
                             </svg>
                         </div>
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Orders</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white">156</dd>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Today's Refunds</dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="today-refunds">Rs. 0.00</dd>
                         </dl>
                     </div>
                 </div>
             </div>
             <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
                 <div class="text-sm">
-                    <span class="text-blue-600 dark:text-blue-400 font-medium">+8%</span>
-                    <span class="text-gray-500 dark:text-gray-400">from last month</span>
+                    <span class="text-red-600 dark:text-red-400 font-medium" id="net-sales">Rs. 0.00</span>
+                    <span class="text-gray-500 dark:text-gray-400">net sales</span>
                 </div>
             </div>
         </div>
@@ -102,32 +102,124 @@
                     <div class="ml-5 w-0 flex-1">
                         <dl>
                             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Low Stock Items</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white">12</dd>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="lowStockCount">0</dd>
                         </dl>
                     </div>
                 </div>
             </div>
             <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
                 <div class="text-sm">
-                    <span class="text-red-600 dark:text-red-400 font-medium">+2</span>
-                    <span class="text-gray-500 dark:text-gray-400">from yesterday</span>
+                    <span class="text-red-600 dark:text-red-400 font-medium" id="lowStockChange">0</span>
+                    <span class="text-gray-500 dark:text-gray-400">items need attention</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Alerts Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-6">
+        <!-- Expiring Soon -->
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Expiring Soon</dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="expiringCount">0</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+                <div class="text-sm">
+                    <span class="text-yellow-600 dark:text-yellow-400 font-medium" id="expiringChange">0</span>
+                    <span class="text-gray-500 dark:text-gray-400">items expiring in 30 days</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Products -->
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Products</dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="totalProducts">0</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+                <div class="text-sm">
+                    <span class="text-purple-600 dark:text-purple-400 font-medium" id="activeProducts">0</span>
+                    <span class="text-gray-500 dark:text-gray-400">active products</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Charts Section -->
+    <div class="mb-6">
+        <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+            <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Sales Trends</h3>
+                    <div class="flex space-x-2">
+                        <button id="daily-btn" class="px-3 py-1 text-sm font-medium text-green-600 bg-green-100 rounded-md hover:bg-green-200 dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800 transition-colors">Daily</button>
+                        <button id="weekly-btn" class="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors">Weekly</button>
+                        <button id="monthly-btn" class="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors">Monthly</button>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Line Chart -->
+                    <div>
+                        <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Sales Trend</h4>
+                        <div class="relative" style="height: 250px;">
+                            <canvas id="salesTrendChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Bar Chart -->
+                    <div>
+                        <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Top Products</h4>
+                        <div class="relative" style="height: 250px;">
+                            <canvas id="topProductsChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Recent Orders -->
         <div class="lg:col-span-2">
             <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Recent Orders</h3>
                 </div>
                 <div class="overflow-hidden">
                     <div class="flow-root">
                         <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-                            <li class="px-6 py-4">
+                            <li class="px-4 py-3">
                                 <div class="flex items-center space-x-4">
                                     <div class="flex-shrink-0">
                                         <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
@@ -146,11 +238,11 @@
                                         </span>
                                     </div>
                                     <div class="flex-shrink-0 text-sm text-gray-500 dark:text-gray-400">
-                                        $89.99
+                                        Rs. 89.99
                                     </div>
                                 </div>
                             </li>
-                            <li class="px-6 py-4">
+                            <li class="px-4 py-3">
                                 <div class="flex items-center space-x-4">
                                     <div class="flex-shrink-0">
                                         <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
@@ -169,11 +261,11 @@
                                         </span>
                                     </div>
                                     <div class="flex-shrink-0 text-sm text-gray-500 dark:text-gray-400">
-                                        $67.50
+                                        Rs. 67.50
                                     </div>
                                 </div>
                             </li>
-                            <li class="px-6 py-4">
+                            <li class="px-4 py-3">
                                 <div class="flex items-center space-x-4">
                                     <div class="flex-shrink-0">
                                         <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center">
@@ -192,27 +284,27 @@
                                         </span>
                                     </div>
                                     <div class="flex-shrink-0 text-sm text-gray-500 dark:text-gray-400">
-                                        $34.99
+                                        Rs. 34.99
                                     </div>
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
                     <a href="#" class="text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-500">View all orders</a>
                 </div>
             </div>
         </div>
 
         <!-- Quick Actions & Recent Activity -->
-        <div class="space-y-8">
+        <div class="space-y-6">
             <!-- Quick Actions -->
             <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Quick Actions</h3>
                 </div>
-                <div class="p-6 space-y-4">
+                <div class="p-4 space-y-3">
                     <a href="#" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                         <svg class="w-5 h-5 mr-3 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -242,10 +334,10 @@
 
             <!-- Recent Activity -->
             <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Recent Activity</h3>
                 </div>
-                <div class="p-6">
+                <div class="p-4">
                     <div class="flow-root">
                         <ul class="-mb-8">
                             <li>
@@ -321,14 +413,14 @@
     </div>
 
     <!-- Bottom Section - Popular Products -->
-    <div class="mt-8">
+    <div class="mt-6">
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">Popular Products</h3>
             </div>
             <div class="overflow-hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h4 class="text-sm font-medium text-gray-900 dark:text-white">Premium Dog Food</h4>
@@ -340,7 +432,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h4 class="text-sm font-medium text-gray-900 dark:text-white">Cat Food Mix</h4>
@@ -352,7 +444,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h4 class="text-sm font-medium text-gray-900 dark:text-white">Bird Seed Mix</h4>
@@ -364,7 +456,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h4 class="text-sm font-medium text-gray-900 dark:text-white">Fish Food</h4>
@@ -380,4 +472,272 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Chart instances
+        let salesTrendChart = null;
+        let topProductsChart = null;
+        let currentTimeframe = 'daily';
+
+        // Fetch dashboard data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboardData();
+            initializeCharts();
+            setupChartButtons();
+        });
+
+        function loadDashboardData() {
+            // Fetch low stock alerts
+            fetch('{{ route("admin.products.low-stock") }}')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('lowStockCount').textContent = data.length;
+                    document.getElementById('lowStockChange').textContent = data.length;
+                })
+                .catch(error => console.error('Error loading low stock data:', error));
+
+            // Fetch expiring products
+            fetch('{{ route("admin.products.expiring") }}')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('expiringCount').textContent = data.length;
+                    document.getElementById('expiringChange').textContent = data.length;
+                })
+                .catch(error => console.error('Error loading expiring data:', error));
+
+            // Fetch total products count
+            fetch('{{ route("admin.products.count") }}')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('totalProducts').textContent = data.total || 0;
+                    document.getElementById('activeProducts').textContent = data.active || 0;
+                })
+                .catch(error => console.error('Error loading product count:', error));
+
+            // Fetch sales statistics
+            fetch('{{ route("admin.sales.stats") }}')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('today-sales').textContent = 'Rs. ' + parseFloat(data.today_sales || 0).toFixed(2);
+                    document.getElementById('today-refunds').textContent = 'Rs. ' + parseFloat(data.today_refunds || 0).toFixed(2);
+                    document.getElementById('net-sales').textContent = 'Rs. ' + parseFloat(data.today_net || 0).toFixed(2);
+                    document.getElementById('sales-target-progress').textContent = parseFloat(data.target_progress || 0).toFixed(1) + '%';
+                })
+                .catch(error => console.error('Error loading sales data:', error));
+        }
+
+        function setupChartButtons() {
+            document.getElementById('daily-btn').addEventListener('click', () => switchTimeframe('daily'));
+            document.getElementById('weekly-btn').addEventListener('click', () => switchTimeframe('weekly'));
+            document.getElementById('monthly-btn').addEventListener('click', () => switchTimeframe('monthly'));
+        }
+
+        function switchTimeframe(timeframe) {
+            currentTimeframe = timeframe;
+            
+            // Update button styles
+            document.querySelectorAll('#daily-btn, #weekly-btn, #monthly-btn').forEach(btn => {
+                btn.classList.remove('text-green-600', 'bg-green-100', 'dark:bg-green-900', 'dark:text-green-300');
+                btn.classList.add('text-gray-600', 'bg-gray-100', 'dark:bg-gray-700', 'dark:text-gray-300');
+            });
+            
+            document.getElementById(timeframe + '-btn').classList.remove('text-gray-600', 'bg-gray-100', 'dark:bg-gray-700', 'dark:text-gray-300');
+            document.getElementById(timeframe + '-btn').classList.add('text-green-600', 'bg-green-100', 'dark:bg-green-900', 'dark:text-green-300');
+            
+            // Update charts
+            updateSalesTrendChart();
+        }
+
+        function initializeCharts() {
+            // Initialize sales trend chart
+            const salesTrendCtx = document.getElementById('salesTrendChart').getContext('2d');
+            salesTrendChart = new Chart(salesTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Sales',
+                        data: [],
+                        borderColor: 'rgb(34, 197, 94)',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Refunds',
+                        data: [],
+                        borderColor: 'rgb(239, 68, 68)',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Net Sales',
+                        data: [],
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151'
+                            },
+                            grid: {
+                                color: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151',
+                                callback: function(value) {
+                                    return 'Rs. ' + value.toLocaleString();
+                                }
+                            },
+                            grid: {
+                                color: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Initialize top products chart
+            const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+            topProductsChart = new Chart(topProductsCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Sales Amount',
+                        data: [],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(168, 85, 247, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(249, 115, 22, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(236, 72, 153, 0.8)',
+                            'rgba(6, 182, 212, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgb(34, 197, 94)',
+                            'rgb(59, 130, 246)',
+                            'rgb(168, 85, 247)',
+                            'rgb(245, 158, 11)',
+                            'rgb(239, 68, 68)',
+                            'rgb(16, 185, 129)',
+                            'rgb(249, 115, 22)',
+                            'rgb(139, 92, 246)',
+                            'rgb(236, 72, 153)',
+                            'rgb(6, 182, 212)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151',
+                                maxRotation: 45,
+                                minRotation: 45
+                            },
+                            grid: {
+                                color: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151',
+                                callback: function(value) {
+                                    return 'Rs. ' + value.toLocaleString();
+                                }
+                            },
+                            grid: {
+                                color: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Load initial chart data
+            updateSalesTrendChart();
+            updateTopProductsChart();
+        }
+
+        function updateSalesTrendChart() {
+            let route;
+            switch(currentTimeframe) {
+                case 'daily':
+                    route = '{{ route("admin.sales.charts.daily") }}';
+                    break;
+                case 'weekly':
+                    route = '{{ route("admin.sales.charts.weekly") }}';
+                    break;
+                case 'monthly':
+                    route = '{{ route("admin.sales.charts.monthly") }}';
+                    break;
+            }
+
+            fetch(route)
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.map(item => currentTimeframe === 'daily' ? item.date : (currentTimeframe === 'weekly' ? item.week : item.month));
+                    const salesData = data.map(item => item.sales);
+                    const refundsData = data.map(item => item.refunds);
+                    const netData = data.map(item => item.net);
+
+                    salesTrendChart.data.labels = labels;
+                    salesTrendChart.data.datasets[0].data = salesData;
+                    salesTrendChart.data.datasets[1].data = refundsData;
+                    salesTrendChart.data.datasets[2].data = netData;
+                    salesTrendChart.update();
+                })
+                .catch(error => console.error('Error loading chart data:', error));
+        }
+
+        function updateTopProductsChart() {
+            fetch('{{ route("admin.sales.charts.products") }}')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.map(item => item.product);
+                    const salesData = data.map(item => item.sales);
+
+                    topProductsChart.data.labels = labels;
+                    topProductsChart.data.datasets[0].data = salesData;
+                    topProductsChart.update();
+                })
+                .catch(error => console.error('Error loading products chart data:', error));
+        }
+
+        // Refresh data every 5 minutes
+        setInterval(loadDashboardData, 300000);
+        setInterval(() => {
+            updateSalesTrendChart();
+            updateTopProductsChart();
+        }, 300000);
+    </script>
 </x-admin-layout>

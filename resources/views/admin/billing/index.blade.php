@@ -25,44 +25,10 @@
                 </div>
 
                 <!-- Products List -->
-                <div class="space-y-2 max-h-96 overflow-y-auto">
-                    <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onclick="addToBill(1, 'Premium Dog Food', 89.99, 25)">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Premium Dog Food</h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">25kg bags - In Stock: 45</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">$89.99</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">per bag</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onclick="addToBill(2, 'Cat Food Mix', 67.50, 15)">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Cat Food Mix</h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">15kg bags - In Stock: 12</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">$67.50</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">per bag</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onclick="addToBill(3, 'Bird Seed Mix', 34.99, 5)">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Bird Seed Mix</h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">5kg bags - In Stock: 78</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">$34.99</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">per bag</p>
-                            </div>
-                        </div>
+                <div id="productsList" class="space-y-2 max-h-96 overflow-y-auto">
+                    <div class="text-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Loading products...</p>
                     </div>
                 </div>
             </div>
@@ -77,10 +43,7 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Customer</label>
                     <select id="customerSelect" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
-                        <option value="">Select Customer</option>
-                        <option value="1">John Smith</option>
-                        <option value="2">Sarah Johnson</option>
-                        <option value="3">Mike Wilson</option>
+                        <option value="">Loading customers...</option>
                     </select>
                 </div>
 
@@ -95,19 +58,19 @@
                 <div class="border-t border-gray-200 dark:border-gray-600 pt-4 space-y-2">
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-600 dark:text-gray-400">Subtotal:</span>
-                        <span class="text-gray-900 dark:text-white" id="subtotal">$0.00</span>
+                        <span class="text-gray-900 dark:text-white" id="subtotal">Rs. 0.00</span>
                     </div>
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-600 dark:text-gray-400">Tax (10%):</span>
-                        <span class="text-gray-900 dark:text-white" id="tax">$0.00</span>
+                        <span class="text-gray-900 dark:text-white" id="tax">Rs. 0.00</span>
                     </div>
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-600 dark:text-gray-400">Discount:</span>
-                        <span class="text-gray-900 dark:text-white" id="discount">$0.00</span>
+                        <span class="text-gray-900 dark:text-white" id="discount">Rs. 0.00</span>
                     </div>
                     <div class="flex justify-between text-lg font-medium border-t border-gray-200 dark:border-gray-600 pt-2">
                         <span class="text-gray-900 dark:text-white">Total:</span>
-                        <span class="text-gray-900 dark:text-white" id="total">$0.00</span>
+                        <span class="text-gray-900 dark:text-white" id="total">Rs. 0.00</span>
                     </div>
                 </div>
 
@@ -162,6 +125,117 @@
     <script>
         let billItems = [];
         let billCounter = 0;
+        let allCustomers = [];
+        let searchTimeout;
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCustomers();
+            loadProducts();
+        });
+
+        // Load customers from database
+        function loadCustomers() {
+            fetch('{{ route("admin.billing.customers") }}')
+                .then(response => response.json())
+                .then(customers => {
+                    allCustomers = customers;
+                    const customerSelect = document.getElementById('customerSelect');
+                    customerSelect.innerHTML = '<option value="">Select Customer</option>';
+                    
+                    customers.forEach(customer => {
+                        const option = document.createElement('option');
+                        option.value = customer.id;
+                        option.textContent = `${customer.name} - ${customer.email}`;
+                        customerSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading customers:', error);
+                    document.getElementById('customerSelect').innerHTML = '<option value="">Error loading customers</option>';
+                });
+        }
+
+        // Product search functionality with debouncing
+        document.getElementById('productSearch').addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            const searchTerm = e.target.value;
+            
+            // Show loading state
+            const productsList = document.getElementById('productsList');
+            productsList.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 mx-auto"></div>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Searching...</p>
+                </div>
+            `;
+            
+            // Debounce the search
+            searchTimeout = setTimeout(() => {
+                loadProducts(searchTerm);
+            }, 300);
+        });
+
+        // Load products from database
+        function loadProducts(searchTerm = '') {
+            const url = searchTerm 
+                ? `{{ route('admin.billing.products') }}?search=${encodeURIComponent(searchTerm)}`
+                : '{{ route("admin.billing.products") }}';
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(products => {
+                    displayProducts(products);
+                })
+                .catch(error => {
+                    console.error('Error loading products:', error);
+                    const productsList = document.getElementById('productsList');
+                    productsList.innerHTML = `
+                        <div class="text-center py-4 text-red-500">
+                            <p>Error loading products. Please try again.</p>
+                        </div>
+                    `;
+                });
+        }
+
+        // Display products in the list
+        function displayProducts(products) {
+            const productsList = document.getElementById('productsList');
+            productsList.innerHTML = '';
+
+            if (products.length === 0) {
+                productsList.innerHTML = `
+                    <div class="text-center py-8">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                        </svg>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">No products found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.className = 'border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-200';
+                productElement.onclick = () => addToBill(product.id, product.name, product.price, product.unit || 'unit');
+                
+                productElement.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex-1">
+                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">${product.name}</h4>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${product.sku} - In Stock: ${product.stock_quantity}</p>
+                            ${product.description ? `<p class="text-xs text-gray-400 dark:text-gray-500 mt-1">${product.description}</p>` : ''}
+                        </div>
+                        <div class="text-right ml-4">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">Rs. ${parseFloat(product.price).toFixed(2)}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">per ${product.unit || 'unit'}</p>
+                        </div>
+                    </div>
+                `;
+                productsList.appendChild(productElement);
+            });
+        }
 
         function addToBill(productId, productName, price, unit) {
             const existingItem = billItems.find(item => item.productId === productId);
@@ -174,14 +248,23 @@
                     id: ++billCounter,
                     productId: productId,
                     productName: productName,
-                    price: price,
+                    price: parseFloat(price),
                     unit: unit,
                     quantity: 1,
-                    total: price
+                    total: parseFloat(price)
                 });
             }
             
             updateBillDisplay();
+            
+            // Show success message
+            Swal.fire({
+                icon: 'success',
+                title: 'Added to Bill',
+                text: `${productName} has been added to the bill`,
+                timer: 1500,
+                showConfirmButton: false
+            });
         }
 
         function updateQuantity(itemId, newQuantity) {
@@ -194,8 +277,24 @@
         }
 
         function removeItem(itemId) {
-            billItems = billItems.filter(item => item.id !== itemId);
-            updateBillDisplay();
+            const item = billItems.find(item => item.id === itemId);
+            if (item) {
+                Swal.fire({
+                    title: 'Remove Item?',
+                    text: `Are you sure you want to remove ${item.productName}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, remove it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        billItems = billItems.filter(item => item.id !== itemId);
+                        updateBillDisplay();
+                        Swal.fire('Removed!', 'Item has been removed from the bill.', 'success');
+                    }
+                });
+            }
         }
 
         function updateBillDisplay() {
@@ -207,45 +306,58 @@
             // Clear current items
             billItemsContainer.innerHTML = '';
 
-            // Add items to display
-            billItems.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.className = 'flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-700 rounded';
-                itemElement.innerHTML = `
-                    <div class="flex-1">
-                        <div class="text-sm font-medium text-gray-900 dark:text-white">${item.productName}</div>
-                        <div class="text-xs text-gray-500 dark:text-gray-400">$${item.price} x ${item.quantity} ${item.unit}</div>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="number" value="${item.quantity}" min="1" 
-                               onchange="updateQuantity(${item.id}, this.value)"
-                               class="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white">
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">$${item.total.toFixed(2)}</span>
-                        <button onclick="removeItem(${item.id})" class="text-red-600 hover:text-red-800">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                            </svg>
-                        </button>
+            if (billItems.length === 0) {
+                billItemsContainer.innerHTML = `
+                    <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <svg class="mx-auto h-12 w-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p>No items in bill</p>
+                        <p class="text-sm">Search and select products to add to your bill</p>
                     </div>
                 `;
-                billItemsContainer.appendChild(itemElement);
-            });
+            } else {
+                // Add items to display
+                billItems.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600';
+                    itemElement.innerHTML = `
+                        <div class="flex-1">
+                            <div class="text-sm font-medium text-gray-900 dark:text-white">${item.productName}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Rs. ${item.price.toFixed(2)} x ${item.quantity} ${item.unit}</div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="number" value="${item.quantity}" min="1" max="999"
+                                   onchange="updateQuantity(${item.id}, this.value)"
+                                   class="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500">
+                            <span class="text-sm font-medium text-gray-900 dark:text-white min-w-[60px] text-right">Rs. ${item.total.toFixed(2)}</span>
+                            <button onclick="removeItem(${item.id})" class="text-red-600 hover:text-red-800 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    billItemsContainer.appendChild(itemElement);
+                });
+            }
 
             // Calculate totals
             const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
             const tax = subtotal * 0.10; // 10% tax
             const total = subtotal + tax;
 
-            subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
-            taxElement.textContent = `$${tax.toFixed(2)}`;
-            totalElement.textContent = `$${total.toFixed(2)}`;
+            subtotalElement.textContent = `Rs. ${subtotal.toFixed(2)}`;
+            taxElement.textContent = `Rs. ${tax.toFixed(2)}`;
+            totalElement.textContent = `Rs. ${total.toFixed(2)}`;
         }
 
         function generateBill() {
             const customerSelect = document.getElementById('customerSelect');
-            const customer = customerSelect.options[customerSelect.selectedIndex].text;
+            const customerId = customerSelect.value;
+            const customer = allCustomers.find(c => c.id == customerId);
 
-            if (!customer || customer === 'Select Customer') {
+            if (!customer) {
                 Swal.fire('Error!', 'Please select a customer.', 'error');
                 return;
             }
@@ -255,67 +367,110 @@
                 return;
             }
 
+            // Show loading state
+            Swal.fire({
+                title: 'Generating Bill...',
+                text: 'Please wait while we prepare your bill',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
             // Generate bill content
             const billContent = document.getElementById('billContent');
             const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
             const tax = subtotal * 0.10;
             const total = subtotal + tax;
 
-            billContent.innerHTML = `
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900">Animal Food System</h2>
-                    <p class="text-gray-600">Invoice</p>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <h4 class="font-medium text-gray-900">Bill To:</h4>
-                        <p class="text-gray-600">${customer}</p>
+            // Fetch bill header settings
+            fetch('{{ route("admin.settings.bill-header.active") }}')
+                .then(response => response.json())
+                .then(header => {
+                    let headerHtml = '';
+                    if (header) {
+                        headerHtml = `
+                            <div class="text-center mb-6">
+                                ${header.company_logo ? `<div class="mb-4"><img src="/storage/${header.company_logo}" alt="Company Logo" class="h-16 w-auto mx-auto"></div>` : ''}
+                                <h2 class="text-2xl font-bold text-gray-900">${header.company_name || 'Animal Food System'}</h2>
+                                ${header.company_address ? `<p class="text-gray-600 mt-2">${header.company_address}</p>` : ''}
+                                <div class="flex justify-center space-x-4 mt-3 text-sm text-gray-600">
+                                    ${header.company_phone ? `<span>${header.company_phone}</span>` : ''}
+                                    ${header.company_email ? `<span>${header.company_email}</span>` : ''}
+                                </div>
+                                ${header.company_website ? `<p class="text-sm text-gray-600 mt-1">${header.company_website}</p>` : ''}
+                            </div>
+                        `;
+                    } else {
+                        headerHtml = `
+                            <div class="text-center mb-6">
+                                <h2 class="text-2xl font-bold text-gray-900">Animal Food System</h2>
+                                <p class="text-gray-600">Invoice</p>
+                            </div>
+                        `;
+                    }
+                    
+                    billContent.innerHTML = headerHtml + `
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <h4 class="font-medium text-gray-900">Bill To:</h4>
+                            <p class="text-gray-600">${customer.name}</p>
+                            <p class="text-gray-600">${customer.email}</p>
+                            ${customer.phone ? `<p class="text-gray-600">${customer.phone}</p>` : ''}
+                            ${customer.address ? `<p class="text-gray-600">${customer.address}</p>` : ''}
+                        </div>
+                        <div class="text-right">
+                            <h4 class="font-medium text-gray-900">Invoice Date:</h4>
+                            <p class="text-gray-600">${new Date().toLocaleDateString()}</p>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <h4 class="font-medium text-gray-900">Invoice Date:</h4>
-                        <p class="text-gray-600">${new Date().toLocaleDateString()}</p>
-                    </div>
-                </div>
 
-                <table class="w-full mb-6">
-                    <thead>
-                        <tr class="border-b border-gray-200">
-                            <th class="text-left py-2">Item</th>
-                            <th class="text-right py-2">Quantity</th>
-                            <th class="text-right py-2">Price</th>
-                            <th class="text-right py-2">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${billItems.map(item => `
-                            <tr class="border-b border-gray-100">
-                                <td class="py-2">${item.productName}</td>
-                                <td class="text-right py-2">${item.quantity} ${item.unit}</td>
-                                <td class="text-right py-2">$${item.price.toFixed(2)}</td>
-                                <td class="text-right py-2">$${item.total.toFixed(2)}</td>
+                    <table class="w-full mb-6">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-2">Item</th>
+                                <th class="text-right py-2">Quantity</th>
+                                <th class="text-right py-2">Price</th>
+                                <th class="text-right py-2">Total</th>
                             </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            ${billItems.map(item => `
+                                <tr class="border-b border-gray-100">
+                                    <td class="py-2">${item.productName}</td>
+                                    <td class="text-right py-2">${item.quantity} ${item.unit}</td>
+                                    <td class="text-right py-2">Rs. ${item.price.toFixed(2)}</td>
+                                    <td class="text-right py-2">Rs. ${item.total.toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
 
-                <div class="text-right space-y-2">
-                    <div class="flex justify-between">
-                        <span>Subtotal:</span>
-                        <span>$${subtotal.toFixed(2)}</span>
+                    <div class="text-right space-y-2">
+                        <div class="flex justify-between">
+                            <span>Subtotal:</span>
+                            <span>Rs. ${subtotal.toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Tax (10%):</span>
+                            <span>Rs. ${tax.toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-lg">
+                            <span>Total:</span>
+                            <span>Rs. ${total.toFixed(2)}</span>
+                        </div>
                     </div>
-                    <div class="flex justify-between">
-                        <span>Tax (10%):</span>
-                        <span>$${tax.toFixed(2)}</span>
-                    </div>
-                    <div class="flex justify-between font-bold text-lg">
-                        <span>Total:</span>
-                        <span>$${total.toFixed(2)}</span>
-                    </div>
-                </div>
-            `;
+                    ${header && header.footer_text ? `<div class="border-t border-gray-200 pt-4 mt-4"><p class="text-xs text-gray-500 text-center">${header.footer_text}</p></div>` : ''}
+                `;
 
-            document.getElementById('printModal').classList.remove('hidden');
+                document.getElementById('printModal').classList.remove('hidden');
+                Swal.close();
+            })
+            .catch(error => {
+                console.error('Error generating bill:', error);
+                Swal.fire('Error!', 'Failed to generate bill. Please try again.', 'error');
+            });
         }
 
         function closePrintModal() {
@@ -353,10 +508,23 @@
         }
 
         function clearBill() {
-            billItems = [];
-            billCounter = 0;
-            updateBillDisplay();
-            document.getElementById('customerSelect').value = '';
+            Swal.fire({
+                title: 'Clear Bill?',
+                text: 'Are you sure you want to clear all items from the bill?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, clear it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    billItems = [];
+                    billCounter = 0;
+                    updateBillDisplay();
+                    document.getElementById('customerSelect').value = '';
+                    Swal.fire('Cleared!', 'Bill has been cleared.', 'success');
+                }
+            });
         }
     </script>
 </x-admin-layout> 
