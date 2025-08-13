@@ -12,6 +12,8 @@ use App\Http\Controllers\BillHeaderController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchaseReturnController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -103,6 +105,26 @@ Route::middleware('auth')->group(function () {
         Route::get('/suppliers/{supplier}', [SupplierController::class, 'show']);
         Route::put('/suppliers/{supplier}', [SupplierController::class, 'update']);
         Route::delete('/suppliers/{supplier}', [SupplierController::class, 'destroy']);
+        
+        // Purchases CRUD
+        Route::get('/purchases', [PurchaseController::class, 'index'])->name('admin.purchases.index');
+        Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('admin.purchases.create');
+        Route::post('/purchases', [PurchaseController::class, 'store'])->name('admin.purchases.store');
+        Route::get('/purchases/{purchase}', [PurchaseController::class, 'show'])->name('admin.purchases.show');
+        Route::get('/purchases/{purchase}/grn', [PurchaseController::class, 'grn'])->name('admin.purchases.grn');
+        Route::post('/purchases/{purchase}/receive', [PurchaseController::class, 'receiveItems'])->name('admin.purchases.receive');
+        Route::patch('/purchases/{purchase}/cancel', [PurchaseController::class, 'cancel'])->name('admin.purchases.cancel');
+        
+        // Purchase Returns CRUD
+        Route::get('/purchase-returns', [PurchaseReturnController::class, 'index'])->name('admin.purchase-returns.index');
+        Route::get('/purchase-returns/create', [PurchaseReturnController::class, 'create'])->name('admin.purchase-returns.create');
+        Route::post('/purchase-returns', [PurchaseReturnController::class, 'store'])->name('admin.purchase-returns.store');
+        Route::get('/purchase-returns/{purchaseReturn}', [PurchaseReturnController::class, 'show'])->name('admin.purchase-returns.show');
+        Route::patch('/purchase-returns/{purchaseReturn}/approve', [PurchaseReturnController::class, 'approve'])->name('admin.purchase-returns.approve');
+        Route::patch('/purchase-returns/{purchaseReturn}/reject', [PurchaseReturnController::class, 'reject'])->name('admin.purchase-returns.reject');
+        Route::patch('/purchase-returns/{purchaseReturn}/process', [PurchaseReturnController::class, 'process'])->name('admin.purchase-returns.process');
+        Route::patch('/purchase-returns/{purchaseReturn}/complete', [PurchaseReturnController::class, 'complete'])->name('admin.purchase-returns.complete');
+        Route::get('/purchases/{purchase}/items', [PurchaseReturnController::class, 'getPurchaseItems'])->name('admin.purchases.items');
         
         // Categories CRUD
         Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories');

@@ -50,6 +50,16 @@ class Product extends Model
         return $this->hasMany(InventoryTransaction::class);
     }
 
+    public function purchaseItems()
+    {
+        return $this->hasMany(PurchaseItem::class);
+    }
+
+    public function purchaseReturns()
+    {
+        return $this->hasMany(PurchaseReturn::class);
+    }
+
     // Helper methods for alerts
     public function isLowStock($threshold = 10)
     {
