@@ -580,10 +580,18 @@
         });
 
         function loadDashboardData() {
+            console.log('Loading dashboard data...');
             // Fetch all dashboard data from single endpoint
             fetch('{{ route("admin.dashboard.stats") }}')
-                .then(response => response.json())
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Dashboard data received:', data);
                     // Update sales statistics
                     document.getElementById('today-sales').textContent = 'Rs. ' + parseFloat(data.today_sales || 0).toFixed(2);
                     document.getElementById('today-refunds').textContent = 'Rs. ' + parseFloat(data.today_refunds || 0).toFixed(2);
@@ -621,7 +629,10 @@
                     // Update popular products
                     updatePopularProducts(data.popular_products || []);
                 })
-                .catch(error => console.error('Error loading dashboard data:', error));
+                .catch(error => {
+                    console.error('Error loading dashboard data:', error);
+                    console.error('Error details:', error.message);
+                });
         }
 
         function updateRecentOrders(orders) {
@@ -883,6 +894,9 @@
                 .catch(error => console.error('Error loading products chart data:', error));
         }
 
+        // Load initial data
+        loadDashboardData();
+        
         // Refresh data every 5 minutes
         setInterval(loadDashboardData, 300000);
         setInterval(() => {

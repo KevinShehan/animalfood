@@ -143,24 +143,24 @@
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between">
                             <span class="text-gray-600 dark:text-gray-400">Subtotal:</span>
-                            <span class="font-medium text-gray-900 dark:text-white" id="subtotalDisplay">$0.00</span>
+                            <span class="font-medium text-gray-900 dark:text-white" id="subtotalDisplay">Rs. 0.00</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600 dark:text-gray-400">Tax:</span>
-                            <span class="font-medium text-gray-900 dark:text-white" id="taxDisplay">$0.00</span>
+                            <span class="font-medium text-gray-900 dark:text-white" id="taxDisplay">Rs. 0.00</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600 dark:text-gray-400">Shipping:</span>
-                            <span class="font-medium text-gray-900 dark:text-white" id="shippingDisplay">$0.00</span>
+                            <span class="font-medium text-gray-900 dark:text-white" id="shippingDisplay">Rs. 0.00</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600 dark:text-gray-400">Discount:</span>
-                            <span class="font-medium text-gray-900 dark:text-white" id="discountDisplay">-$0.00</span>
+                            <span class="font-medium text-gray-900 dark:text-white" id="discountDisplay">-Rs. 0.00</span>
                         </div>
                         <div class="border-t border-gray-200 dark:border-gray-600 pt-2">
                             <div class="flex justify-between">
                                 <span class="font-medium text-gray-900 dark:text-white">Total:</span>
-                                <span class="font-bold text-lg text-gray-900 dark:text-white" id="totalDisplay">$0.00</span>
+                                <span class="font-bold text-lg text-gray-900 dark:text-white" id="totalDisplay">Rs. 0.00</span>
                             </div>
                         </div>
                     </div>
@@ -218,7 +218,7 @@
                     <input type="number" name="items[${itemCounter}][unit_cost]" step="0.01" min="0" required class="cost-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white" placeholder="Cost">
                 </td>
                 <td class="px-4 py-2">
-                    <span class="total-display font-medium text-gray-900 dark:text-white">$0.00</span>
+                    <span class="total-display font-medium text-gray-900 dark:text-white">Rs. 0.00</span>
                 </td>
                 <td class="px-4 py-2">
                     <button type="button" onclick="removeItem(this)" class="text-red-600 hover:text-red-900 p-1">
@@ -270,7 +270,7 @@
             const cost = parseFloat(row.querySelector('.cost-input').value) || 0;
             const total = quantity * cost;
             
-            row.querySelector('.total-display').textContent = `$${total.toFixed(2)}`;
+            row.querySelector('.total-display').textContent = `Rs. ${total.toFixed(2)}`;
             calculateTotals();
         }
 
@@ -289,11 +289,11 @@
             
             const total = subtotal + tax + shipping - discount;
             
-            document.getElementById('subtotalDisplay').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('taxDisplay').textContent = `$${tax.toFixed(2)}`;
-            document.getElementById('shippingDisplay').textContent = `$${shipping.toFixed(2)}`;
-            document.getElementById('discountDisplay').textContent = `-$${discount.toFixed(2)}`;
-            document.getElementById('totalDisplay').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('subtotalDisplay').textContent = `Rs. ${subtotal.toFixed(2)}`;
+            document.getElementById('taxDisplay').textContent = `Rs. ${tax.toFixed(2)}`;
+            document.getElementById('shippingDisplay').textContent = `Rs. ${shipping.toFixed(2)}`;
+            document.getElementById('discountDisplay').textContent = `-Rs. ${discount.toFixed(2)}`;
+            document.getElementById('totalDisplay').textContent = `Rs. ${total.toFixed(2)}`;
         }
 
         function submitForm(e) {

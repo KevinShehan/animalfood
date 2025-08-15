@@ -54,6 +54,11 @@ class CustomerController extends Controller
         return view('admin.customers.index', compact('customers'));
     }
 
+    public function create()
+    {
+        return view('admin.customers.create');
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
