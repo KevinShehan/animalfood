@@ -14,6 +14,10 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchaseReturnController;
+use App\Http\Controllers\CustomerReportController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\DiscountController;
+use App\Http\Controllers\InventoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -76,11 +80,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/sales/targets', [SalesController::class, 'targets'])->name('admin.sales.targets');
         Route::post('/sales/targets', [SalesController::class, 'storeTarget'])->name('admin.sales.targets.store');
         
-        // Inventory
-        Route::get('/inventory', function () {
-            return view('admin.inventory.index');
-        })->name('admin.inventory');
-        
+
         // Orders CRUD
         Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
         Route::post('/orders', [OrderController::class, 'store']);
@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/customers/{customer}', [CustomerController::class, 'destroy']);
         Route::post('/customers/bulk-delete', [CustomerController::class, 'bulkDelete'])->name('admin.customers.bulk-delete');
         Route::get('/customers/export', [CustomerController::class, 'export'])->name('admin.customers.export');
+        Route::get('/customers/validate-field', [CustomerController::class, 'validateField'])->name('admin.customers.validate-field');
         
         // Suppliers CRUD
         Route::get('/suppliers', [SupplierController::class, 'index'])->name('admin.suppliers');
@@ -148,6 +149,46 @@ Route::middleware('auth')->group(function () {
         Route::get('/audit-logs/stats', [AuditLogController::class, 'getStats'])->name('admin.audit-logs.stats');
         Route::post('/audit-logs/cleanup', [AuditLogController::class, 'cleanup'])->name('admin.audit-logs.cleanup');
         Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('admin.audit-logs.show');
+
+        // Customer Reports & Dues
+        Route::get('/reports/customer-dues', [CustomerReportController::class, 'index'])->name('admin.reports.customer-dues');
+        Route::get('/reports/customer-statement/{customer}', [CustomerReportController::class, 'customerStatement'])->name('admin.reports.customer-statement');
+        Route::get('/reports/detailed-report', [CustomerReportController::class, 'detailedReport'])->name('admin.reports.detailed-report');
+        Route::get('/reports/aging-report', [CustomerReportController::class, 'agingReport'])->name('admin.reports.aging-report');
+        Route::get('/reports/export-dues', [CustomerReportController::class, 'exportDues'])->name('admin.reports.export-dues');
+
+        // Payments
+        Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments.index');
+        Route::get('/payments/create', [PaymentController::class, 'create'])->name('admin.payments.create');
+        Route::post('/payments', [PaymentController::class, 'store'])->name('admin.payments.store');
+        Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('admin.payments.show');
+        Route::post('/payments/bulk', [PaymentController::class, 'bulkPayment'])->name('admin.payments.bulk');
+        Route::get('/customers/{customer}/outstanding', [PaymentController::class, 'getCustomerOutstanding'])->name('admin.customers.outstanding');
+        Route::get('/customers/{customer}/credit', function($customerId) {
+            $customer = \App\Models\Customer::find($customerId);
+            return response()->json($customer ? $customer->credit : null);
+        })->name('admin.customers.credit');
+        Route::patch('/payments/{payment}/reverse', [PaymentController::class, 'reverse'])->name('admin.payments.reverse');
+
+        // Discounts
+        Route::get('/discounts', [DiscountController::class, 'index'])->name('admin.discounts.index');
+        Route::get('/discounts/create', [DiscountController::class, 'create'])->name('admin.discounts.create');
+        Route::post('/discounts', [DiscountController::class, 'store'])->name('admin.discounts.store');
+        Route::get('/discounts/{discount}', [DiscountController::class, 'show'])->name('admin.discounts.show');
+        Route::get('/discounts/{discount}/edit', [DiscountController::class, 'edit'])->name('admin.discounts.edit');
+        Route::put('/discounts/{discount}', [DiscountController::class, 'update'])->name('admin.discounts.update');
+        Route::delete('/discounts/{discount}', [DiscountController::class, 'destroy'])->name('admin.discounts.destroy');
+        Route::get('/api/discounts/validate-code', [DiscountController::class, 'validateCode'])->name('admin.discounts.validate-code');
+        Route::get('/api/discounts/automatic', [DiscountController::class, 'getAutomaticDiscounts'])->name('admin.discounts.automatic');
+        Route::patch('/discounts/{discount}/toggle', [DiscountController::class, 'toggleStatus'])->name('admin.discounts.toggle');
+
+        // Inventory Management
+        Route::get('/inventory', [InventoryController::class, 'index'])->name('admin.inventory.dashboard');
+        Route::get('/inventory/stock-levels', [InventoryController::class, 'stockLevels'])->name('admin.inventory.stock-levels');
+        Route::get('/inventory/scanner', [InventoryController::class, 'scanner'])->name('admin.inventory.scanner');
+        Route::post('/inventory/scan-barcode', [InventoryController::class, 'scanBarcode'])->name('admin.inventory.scan-barcode');
+        Route::post('/inventory/adjust-stock', [InventoryController::class, 'adjustStock'])->name('admin.inventory.adjust-stock');
+        Route::post('/inventory/generate-barcode/{product}', [InventoryController::class, 'generateBarcode'])->name('admin.inventory.generate-barcode');
         
         // Billing
         Route::get('/billing', [BillingController::class, 'index'])->name('admin.billing');

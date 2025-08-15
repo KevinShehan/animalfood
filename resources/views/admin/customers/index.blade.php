@@ -50,6 +50,18 @@
                     <option value="pending">Pending</option>
                 </select>
             </div>
+
+            <!-- Customer Type Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Customer Type</label>
+                <select id="customerTypeFilter" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                    <option value="">All Types</option>
+                    <option value="individual">Individual</option>
+                    <option value="shop">Shop</option>
+                    <option value="institute">Institute</option>
+                    <option value="company">Company</option>
+                </select>
+            </div>
             
             <!-- Sort -->
             <div>
@@ -92,6 +104,7 @@
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Customer</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Contact</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Location</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Orders</th>
@@ -116,13 +129,25 @@
                                 </div>
                                 <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $customer->name }}</div>
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">ID: {{ $customer->id }}</div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">ID: {{ $customer->customer_id }}</div>
                                 </div>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900 dark:text-white">{{ $customer->email }}</div>
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $customer->phone }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                @if($customer->customer_type === 'individual') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                                @elseif($customer->customer_type === 'shop') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($customer->customer_type === 'institute') bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200
+                                @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
+                                {{ ucfirst($customer->customer_type ?? 'individual') }}
+                            </span>
+                            @if($customer->company_name)
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $customer->company_name }}</div>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900 dark:text-white">{{ $customer->city }}, {{ $customer->state }}</div>
@@ -199,13 +224,35 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email *</label>
                             <input type="email" id="email" name="email" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                            <div id="emailValidation" class="text-sm mt-1"></div>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone *</label>
                             <input type="tel" id="phone" name="phone" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                            <div id="phoneValidation" class="text-sm mt-1"></div>
                         </div>
                         
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Customer Type *</label>
+                            <select id="customer_type" name="customer_type" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                                <option value="individual">Individual</option>
+                                <option value="shop">Shop</option>
+                                <option value="institute">Institute</option>
+                                <option value="company">Company</option>
+                            </select>
+                        </div>
+
+                        <div id="companyFields" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company Name</label>
+                            <input type="text" id="company_name" name="company_name" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+
+                        <div id="contactPersonField" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Contact Person</label>
+                            <input type="text" id="contact_person" name="contact_person" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
                             <select id="status" name="status" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
@@ -236,6 +283,18 @@
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Postal Code *</label>
                             <input type="text" id="postal_code" name="postal_code" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tax Number</label>
+                            <input type="text" id="tax_number" name="tax_number" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes</label>
+                        <textarea id="notes" name="notes" rows="3" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"></textarea>
                     </div>
                     
                     <div class="flex justify-end space-x-3 pt-4">
@@ -288,7 +347,55 @@
 
         // Filter functionality
         document.getElementById('statusFilter').addEventListener('change', searchCustomers);
+        document.getElementById('customerTypeFilter').addEventListener('change', searchCustomers);
         document.getElementById('sortBy').addEventListener('change', searchCustomers);
+
+        // Customer type change handler
+        document.getElementById('customer_type').addEventListener('change', function() {
+            const customerType = this.value;
+            const companyFields = document.getElementById('companyFields');
+            const contactPersonField = document.getElementById('contactPersonField');
+            
+            if (customerType === 'individual') {
+                companyFields.classList.add('hidden');
+                contactPersonField.classList.add('hidden');
+            } else {
+                companyFields.classList.remove('hidden');
+                contactPersonField.classList.remove('hidden');
+            }
+        });
+
+        // Real-time validation
+        let emailValidationTimeout;
+        let phoneValidationTimeout;
+
+        document.getElementById('email').addEventListener('input', function() {
+            clearTimeout(emailValidationTimeout);
+            const email = this.value;
+            const validationDiv = document.getElementById('emailValidation');
+            
+            if (email.length > 0) {
+                emailValidationTimeout = setTimeout(() => {
+                    validateField('email', email);
+                }, 500);
+            } else {
+                validationDiv.innerHTML = '';
+            }
+        });
+
+        document.getElementById('phone').addEventListener('input', function() {
+            clearTimeout(phoneValidationTimeout);
+            const phone = this.value;
+            const validationDiv = document.getElementById('phoneValidation');
+            
+            if (phone.length > 0) {
+                phoneValidationTimeout = setTimeout(() => {
+                    validateField('phone', phone);
+                }, 500);
+            } else {
+                validationDiv.innerHTML = '';
+            }
+        });
 
         // Select all functionality
         document.getElementById('selectAll').addEventListener('change', function() {
@@ -333,11 +440,13 @@
         function searchCustomers() {
             const search = document.getElementById('searchInput').value;
             const status = document.getElementById('statusFilter').value;
+            const customerType = document.getElementById('customerTypeFilter').value;
             const sortBy = document.getElementById('sortBy').value;
             
             const params = new URLSearchParams();
             if (search) params.append('search', search);
             if (status) params.append('status', status);
+            if (customerType) params.append('customer_type', customerType);
             params.append('sort_by', sortBy);
             params.append('sort_order', 'desc');
             
@@ -354,6 +463,32 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+        }
+
+        function validateField(field, value) {
+            const currentCustomerId = document.getElementById('customerId').value;
+            const params = new URLSearchParams({
+                field: field,
+                value: value
+            });
+            
+            if (currentCustomerId) {
+                params.append('exclude_id', currentCustomerId);
+            }
+            
+            fetch(`{{ route('admin.customers.validate-field') }}?${params.toString()}`)
+                .then(response => response.json())
+                .then(data => {
+                    const validationDiv = document.getElementById(field + 'Validation');
+                    if (data.valid) {
+                        validationDiv.innerHTML = `<span class="text-green-600">✓ ${data.message}</span>`;
+                    } else {
+                        validationDiv.innerHTML = `<span class="text-red-600">✗ ${data.message}</span>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Validation error:', error);
+                });
         }
 
         function openAddModal() {
@@ -374,11 +509,29 @@
                     document.getElementById('name').value = customer.name;
                     document.getElementById('email').value = customer.email;
                     document.getElementById('phone').value = customer.phone;
+                    document.getElementById('customer_type').value = customer.customer_type || 'individual';
+                    document.getElementById('company_name').value = customer.company_name || '';
+                    document.getElementById('contact_person').value = customer.contact_person || '';
+                    document.getElementById('tax_number').value = customer.tax_number || '';
+                    document.getElementById('notes').value = customer.notes || '';
                     document.getElementById('address').value = customer.address;
                     document.getElementById('city').value = customer.city;
                     document.getElementById('state').value = customer.state;
                     document.getElementById('postal_code').value = customer.postal_code;
                     document.getElementById('status').value = customer.status || 'active';
+
+                    // Show/hide fields based on customer type
+                    const customerType = customer.customer_type || 'individual';
+                    const companyFields = document.getElementById('companyFields');
+                    const contactPersonField = document.getElementById('contactPersonField');
+                    
+                    if (customerType === 'individual') {
+                        companyFields.classList.add('hidden');
+                        contactPersonField.classList.add('hidden');
+                    } else {
+                        companyFields.classList.remove('hidden');
+                        contactPersonField.classList.remove('hidden');
+                    }
                     
                     document.getElementById('customerModal').classList.remove('hidden');
                 })
@@ -552,10 +705,12 @@
         function exportCustomers() {
             const search = document.getElementById('searchInput').value;
             const status = document.getElementById('statusFilter').value;
+            const customerType = document.getElementById('customerTypeFilter').value;
             
             let url = '{{ route("admin.customers.export") }}?';
             if (search) url += `search=${encodeURIComponent(search)}&`;
             if (status) url += `status=${encodeURIComponent(status)}&`;
+            if (customerType) url += `customer_type=${encodeURIComponent(customerType)}&`;
             
             window.location.href = url;
         }

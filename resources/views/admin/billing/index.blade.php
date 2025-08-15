@@ -54,6 +54,31 @@
                     </div>
                 </div>
 
+                <!-- Discount Section -->
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-4 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Apply Discount</label>
+                        <div class="flex space-x-2">
+                            <input type="text" id="discountCode" placeholder="Enter discount code" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm">
+                            <button onclick="applyDiscount()" class="px-3 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Apply
+                            </button>
+                        </div>
+                        <div id="discountStatus" class="mt-2 text-sm"></div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Or Manual Discount</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <select id="discountType" onchange="applyManualDiscount()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm">
+                                <option value="percentage">Percentage</option>
+                                <option value="fixed">Fixed Amount</option>
+                            </select>
+                            <input type="number" id="discountValue" placeholder="0" step="0.01" min="0" oninput="applyManualDiscount()" onchange="applyManualDiscount()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Bill Totals -->
                 <div class="border-t border-gray-200 dark:border-gray-600 pt-4 space-y-2">
                     <div class="flex justify-between text-sm">
@@ -71,6 +96,55 @@
                     <div class="flex justify-between text-lg font-medium border-t border-gray-200 dark:border-gray-600 pt-2">
                         <span class="text-gray-900 dark:text-white">Total:</span>
                         <span class="text-gray-900 dark:text-white" id="total">Rs. 0.00</span>
+                    </div>
+                </div>
+
+                <!-- Payment Section -->
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-4 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Method</label>
+                        <select id="paymentMethod" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                            <option value="cash">Cash</option>
+                            <option value="card">Card</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="credit">Customer Credit</option>
+                            <option value="cheque">Cheque</option>
+                            <option value="mobile_payment">Mobile Payment</option>
+                            <option value="mixed">Mixed Payment</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount Paid</label>
+                        <input type="number" id="amountPaid" placeholder="0.00" step="0.01" min="0" oninput="calculateBalance()" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                    </div>
+
+                    <div id="balanceDisplay" class="hidden p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <div class="text-sm text-blue-800 dark:text-blue-200">
+                            <div class="flex justify-between">
+                                <span>Total Amount:</span>
+                                <span id="billTotal">Rs. 0.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Amount Paid:</span>
+                                <span id="paidAmount">Rs. 0.00</span>
+                            </div>
+                            <div class="flex justify-between font-medium border-t border-blue-200 dark:border-blue-700 pt-2 mt-2">
+                                <span id="balanceLabel">Balance:</span>
+                                <span id="balanceAmount" class="font-bold">Rs. 0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="paymentDetails" class="space-y-3">
+                        <!-- Payment method specific fields will be shown here -->
+                    </div>
+
+                    <div id="creditInfo" class="hidden p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <div class="text-sm text-blue-800 dark:text-blue-200">
+                            <div class="font-medium">Customer Credit Info:</div>
+                            <div id="creditDetails">Select a customer to view credit information</div>
+                        </div>
                     </div>
                 </div>
 
@@ -127,11 +201,15 @@
         let billCounter = 0;
         let allCustomers = [];
         let searchTimeout;
+        let appliedDiscount = { type: null, value: 0, amount: 0, code: null };
+        let currentPaymentMethod = 'cash';
 
         // Load data on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadCustomers();
             loadProducts();
+            setupPaymentMethodChange();
+            checkAutomaticDiscounts();
         });
 
         // Load customers from database
@@ -149,11 +227,129 @@
                         option.textContent = `${customer.name} - ${customer.email}`;
                         customerSelect.appendChild(option);
                     });
+                    
+                    // Add customer change event listener
+                    customerSelect.addEventListener('change', function() {
+                        updateCreditInfo();
+                        checkAutomaticDiscounts();
+                    });
                 })
                 .catch(error => {
                     console.error('Error loading customers:', error);
                     document.getElementById('customerSelect').innerHTML = '<option value="">Error loading customers</option>';
                 });
+        }
+
+        // Setup payment method change handler
+        function setupPaymentMethodChange() {
+            const paymentSelect = document.getElementById('paymentMethod');
+            paymentSelect.addEventListener('change', function() {
+                currentPaymentMethod = this.value;
+                updatePaymentDetails();
+                updateCreditInfo();
+            });
+        }
+
+        // Update payment details based on selected method
+        function updatePaymentDetails() {
+            const paymentDetails = document.getElementById('paymentDetails');
+            const method = currentPaymentMethod;
+            
+            paymentDetails.innerHTML = '';
+            
+            if (method === 'card') {
+                paymentDetails.innerHTML = `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Card Type</label>
+                        <select id="cardType" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+                            <option value="credit">Credit Card</option>
+                            <option value="debit">Debit Card</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Card Reference</label>
+                        <input type="text" id="cardReference" placeholder="Last 4 digits" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+                    </div>
+                `;
+            } else if (method === 'bank_transfer') {
+                paymentDetails.innerHTML = `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Transfer Reference</label>
+                        <input type="text" id="transferReference" placeholder="Transaction ID" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+                    </div>
+                `;
+            } else if (method === 'cheque') {
+                paymentDetails.innerHTML = `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cheque Number</label>
+                        <input type="text" id="chequeNumber" placeholder="Cheque number" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bank Name</label>
+                        <input type="text" id="bankName" placeholder="Bank name" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+                    </div>
+                `;
+            } else if (method === 'mobile_payment') {
+                paymentDetails.innerHTML = `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Mobile Wallet</label>
+                        <select id="mobileWallet" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+                            <option value="jazzcash">JazzCash</option>
+                            <option value="easypaisa">Easypaisa</option>
+                            <option value="sadapay">SadaPay</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Transaction ID</label>
+                        <input type="text" id="mobileReference" placeholder="Transaction ID" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+                    </div>
+                `;
+            } else if (method === 'mixed') {
+                paymentDetails.innerHTML = `
+                    <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                        <p class="text-sm text-yellow-800 dark:text-yellow-200">Mixed payment will be handled during checkout. You can split the payment between multiple methods.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Update customer credit information
+        function updateCreditInfo() {
+            const customerSelect = document.getElementById('customerSelect');
+            const creditInfo = document.getElementById('creditInfo');
+            const creditDetails = document.getElementById('creditDetails');
+            const customerId = customerSelect.value;
+            
+            if (!customerId || currentPaymentMethod !== 'credit') {
+                creditInfo.classList.add('hidden');
+                return;
+            }
+            
+            const customer = allCustomers.find(c => c.id == customerId);
+            if (customer) {
+                // Fetch customer credit info
+                fetch(`{{ url('admin/customers') }}/${customerId}/credit`)
+                    .then(response => response.json())
+                    .then(credit => {
+                        if (credit) {
+                            creditDetails.innerHTML = `
+                                <div>Credit Limit: Rs. ${parseFloat(credit.credit_limit || 0).toFixed(2)}</div>
+                                <div>Available Credit: Rs. ${parseFloat(credit.available_credit || 0).toFixed(2)}</div>
+                                <div>Current Balance: Rs. ${parseFloat(credit.current_balance || 0).toFixed(2)}</div>
+                                <div class="text-xs mt-1">Status: ${credit.credit_status || 'No Credit Setup'}</div>
+                            `;
+                            creditInfo.classList.remove('hidden');
+                        } else {
+                            creditDetails.innerHTML = 'No credit account found for this customer.';
+                            creditInfo.classList.remove('hidden');
+                        }
+                    })
+                    .catch(error => {
+                        creditDetails.innerHTML = 'Customer has no credit setup.';
+                        creditInfo.classList.remove('hidden');
+                    });
+            }
         }
 
         // Product search functionality with debouncing
@@ -297,10 +493,161 @@
             }
         }
 
+        // Discount functions
+        function applyDiscount() {
+            const discountCode = document.getElementById('discountCode').value.trim();
+            const discountStatus = document.getElementById('discountStatus');
+            
+            if (!discountCode) {
+                discountStatus.innerHTML = '<span class="text-red-600">Please enter a discount code</span>';
+                return;
+            }
+            
+            const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
+            
+            // Validate discount code
+            fetch(`{{ route('admin.discounts.validate-code') }}?code=${encodeURIComponent(discountCode)}&order_amount=${subtotal}`)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.valid) {
+                        appliedDiscount = {
+                            type: result.discount.type,
+                            value: result.discount.value,
+                            amount: result.discount.amount,
+                            code: result.discount.code
+                        };
+                        discountStatus.innerHTML = `<span class="text-green-600">✓ ${result.discount.name} applied: Rs. ${result.discount.amount.toFixed(2)} off</span>`;
+                        updateBillDisplay();
+                    } else {
+                        discountStatus.innerHTML = `<span class="text-red-600">✗ ${result.message}</span>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error validating discount:', error);
+                    discountStatus.innerHTML = '<span class="text-red-600">Error validating discount code</span>';
+                });
+        }
+
+        function applyManualDiscount() {
+            const discountType = document.getElementById('discountType').value;
+            const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
+            const discountStatus = document.getElementById('discountStatus');
+            
+            if (discountValue <= 0) {
+                appliedDiscount = { type: null, value: 0, amount: 0, code: null };
+                discountStatus.innerHTML = '';
+                updateBillDisplay();
+                return;
+            }
+            
+            const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
+            let discountAmount = 0;
+            
+            if (discountType === 'percentage') {
+                if (discountValue > 100) {
+                    discountStatus.innerHTML = '<span class="text-red-600">Percentage cannot exceed 100%</span>';
+                    return;
+                }
+                discountAmount = (subtotal * discountValue) / 100;
+            } else {
+                discountAmount = discountValue;
+            }
+            
+            if (discountAmount > subtotal) {
+                discountStatus.innerHTML = '<span class="text-red-600">Discount cannot exceed subtotal</span>';
+                return;
+            }
+            
+            appliedDiscount = {
+                type: discountType,
+                value: discountValue,
+                amount: discountAmount,
+                code: 'MANUAL'
+            };
+            
+            discountStatus.innerHTML = `<span class="text-green-600">✓ Manual discount applied: Rs. ${discountAmount.toFixed(2)} off</span>`;
+            document.getElementById('discountCode').value = '';
+            updateBillDisplay();
+        }
+
+        function checkAutomaticDiscounts() {
+            const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
+            
+            if (subtotal === 0) return;
+            
+            // Check for automatic discounts
+            fetch(`{{ route('admin.discounts.automatic') }}?order_amount=${subtotal}`)
+                .then(response => response.json())
+                .then(discounts => {
+                    if (discounts.length > 0 && !appliedDiscount.code) {
+                        // Apply the best automatic discount
+                        const bestDiscount = discounts.reduce((prev, current) => 
+                            (prev.amount > current.amount) ? prev : current
+                        );
+                        
+                        appliedDiscount = {
+                            type: bestDiscount.type,
+                            value: bestDiscount.value,
+                            amount: bestDiscount.amount,
+                            code: bestDiscount.code
+                        };
+                        
+                        const discountStatus = document.getElementById('discountStatus');
+                        discountStatus.innerHTML = `<span class="text-blue-600">✓ Auto-applied: ${bestDiscount.name} - Rs. ${bestDiscount.amount.toFixed(2)} off</span>`;
+                        updateBillDisplay();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking automatic discounts:', error);
+                });
+        }
+
+        // Calculate balance in real-time when amount is entered
+        function calculateBalance() {
+            const amountPaidInput = document.getElementById('amountPaid');
+            const balanceDisplay = document.getElementById('balanceDisplay');
+            const billTotalElement = document.getElementById('billTotal');
+            const paidAmountElement = document.getElementById('paidAmount');
+            const balanceAmountElement = document.getElementById('balanceAmount');
+            const balanceLabelElement = document.getElementById('balanceLabel');
+
+            const amountPaid = parseFloat(amountPaidInput.value) || 0;
+            
+            if (amountPaid > 0) {
+                // Calculate current bill total
+                const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
+                const discountAmount = appliedDiscount.amount || 0;
+                const discountedSubtotal = subtotal - discountAmount;
+                const tax = discountedSubtotal * 0.10;
+                const total = discountedSubtotal + tax;
+                
+                const balance = amountPaid - total;
+                
+                // Update display
+                billTotalElement.textContent = `Rs. ${total.toFixed(2)}`;
+                paidAmountElement.textContent = `Rs. ${amountPaid.toFixed(2)}`;
+                balanceAmountElement.textContent = `Rs. ${Math.abs(balance).toFixed(2)}`;
+                
+                // Update label and styling based on balance
+                if (balance >= 0) {
+                    balanceLabelElement.textContent = 'Change to Return:';
+                    balanceAmountElement.className = 'font-bold text-green-600 dark:text-green-400';
+                } else {
+                    balanceLabelElement.textContent = 'Amount Due:';
+                    balanceAmountElement.className = 'font-bold text-red-600 dark:text-red-400';
+                }
+                
+                balanceDisplay.classList.remove('hidden');
+            } else {
+                balanceDisplay.classList.add('hidden');
+            }
+        }
+
         function updateBillDisplay() {
             const billItemsContainer = document.getElementById('billItems');
             const subtotalElement = document.getElementById('subtotal');
             const taxElement = document.getElementById('tax');
+            const discountElement = document.getElementById('discount');
             const totalElement = document.getElementById('total');
 
             // Clear current items
@@ -344,12 +691,23 @@
 
             // Calculate totals
             const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
-            const tax = subtotal * 0.10; // 10% tax
-            const total = subtotal + tax;
+            const discountAmount = appliedDiscount.amount || 0;
+            const discountedSubtotal = subtotal - discountAmount;
+            const tax = discountedSubtotal * 0.10; // 10% tax on discounted amount
+            const total = discountedSubtotal + tax;
 
             subtotalElement.textContent = `Rs. ${subtotal.toFixed(2)}`;
             taxElement.textContent = `Rs. ${tax.toFixed(2)}`;
+            discountElement.textContent = `Rs. ${discountAmount.toFixed(2)}`;
             totalElement.textContent = `Rs. ${total.toFixed(2)}`;
+            
+            // Check for automatic discounts when items change
+            if (billItems.length > 0) {
+                checkAutomaticDiscounts();
+            }
+            
+            // Update balance calculation if amount is paid
+            calculateBalance();
         }
 
         function generateBill() {
@@ -452,6 +810,11 @@
                             <span>Subtotal:</span>
                             <span>Rs. ${subtotal.toFixed(2)}</span>
                         </div>
+                        ${appliedDiscount.amount > 0 ? `
+                        <div class="flex justify-between text-green-600">
+                            <span>Discount (${appliedDiscount.code}):</span>
+                            <span>-Rs. ${appliedDiscount.amount.toFixed(2)}</span>
+                        </div>` : ''}
                         <div class="flex justify-between">
                             <span>Tax (10%):</span>
                             <span>Rs. ${tax.toFixed(2)}</span>
@@ -460,6 +823,19 @@
                             <span>Total:</span>
                             <span>Rs. ${total.toFixed(2)}</span>
                         </div>
+                        <div class="flex justify-between text-sm text-gray-600 border-t pt-2">
+                            <span>Payment Method:</span>
+                            <span>${currentPaymentMethod.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+                        </div>
+                        ${document.getElementById('amountPaid').value ? `
+                        <div class="flex justify-between text-sm text-gray-600">
+                            <span>Amount Paid:</span>
+                            <span>Rs. ${parseFloat(document.getElementById('amountPaid').value).toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600">
+                            <span>${parseFloat(document.getElementById('amountPaid').value) >= total ? 'Change to Return' : 'Balance Due'}:</span>
+                            <span class="${parseFloat(document.getElementById('amountPaid').value) >= total ? 'text-green-600' : 'text-red-600'}">Rs. ${Math.abs(parseFloat(document.getElementById('amountPaid').value) - total).toFixed(2)}</span>
+                        </div>` : ''}
                     </div>
                     ${header && header.footer_text ? `<div class="border-t border-gray-200 pt-4 mt-4"><p class="text-xs text-gray-500 text-center">${header.footer_text}</p></div>` : ''}
                 `;
@@ -520,8 +896,17 @@
                 if (result.isConfirmed) {
                     billItems = [];
                     billCounter = 0;
+                    appliedDiscount = { type: null, value: 0, amount: 0, code: null };
+                    currentPaymentMethod = 'cash';
                     updateBillDisplay();
                     document.getElementById('customerSelect').value = '';
+                    document.getElementById('paymentMethod').value = 'cash';
+                    document.getElementById('discountCode').value = '';
+                    document.getElementById('discountValue').value = '';
+                    document.getElementById('discountStatus').innerHTML = '';
+                    document.getElementById('amountPaid').value = '';
+                    document.getElementById('balanceDisplay').classList.add('hidden');
+                    updatePaymentDetails();
                     Swal.fire('Cleared!', 'Bill has been cleared.', 'success');
                 }
             });

@@ -20,13 +20,21 @@ class CustomerController extends Controller
                   ->orWhere('email', 'LIKE', "%{$search}%")
                   ->orWhere('phone', 'LIKE', "%{$search}%")
                   ->orWhere('city', 'LIKE', "%{$search}%")
-                  ->orWhere('state', 'LIKE', "%{$search}%");
+                  ->orWhere('state', 'LIKE', "%{$search}%")
+                  ->orWhere('customer_id', 'LIKE', "%{$search}%")
+                  ->orWhere('company_name', 'LIKE', "%{$search}%")
+                  ->orWhere('contact_person', 'LIKE', "%{$search}%");
             });
         }
         
         // Status filter
         if ($request->has('status') && $request->status !== '') {
             $query->where('status', $request->status);
+        }
+
+        // Customer type filter
+        if ($request->has('customer_type') && $request->customer_type !== '') {
+            $query->where('customer_type', $request->customer_type);
         }
         
         // Sort functionality
@@ -56,12 +64,30 @@ class CustomerController extends Controller
             'city' => 'required|string|max:100',
             'state' => 'required|string|max:100',
             'postal_code' => 'required|string|regex:/^[0-9A-Za-z\s\-]+$/|max:20',
+            'customer_type' => 'required|in:individual,shop,institute,company',
+            'company_name' => 'nullable|string|max:255',
+            'contact_person' => 'nullable|string|max:255',
+            'tax_number' => 'nullable|string|max:100',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Check for duplicate customer
+        $duplicateCheck = Customer::where('email', $request->email)
+            ->orWhere('phone', $request->phone)
+            ->first();
+
+        if ($duplicateCheck) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Customer with this email or phone already exists!',
+                'duplicate' => $duplicateCheck
             ], 422);
         }
 
@@ -89,12 +115,33 @@ class CustomerController extends Controller
             'city' => 'required|string|max:100',
             'state' => 'required|string|max:100',
             'postal_code' => 'required|string|regex:/^[0-9A-Za-z\s\-]+$/|max:20',
+            'customer_type' => 'required|in:individual,shop,institute,company',
+            'company_name' => 'nullable|string|max:255',
+            'contact_person' => 'nullable|string|max:255',
+            'tax_number' => 'nullable|string|max:100',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Check for duplicate customer (excluding current customer)
+        $duplicateCheck = Customer::where('id', '!=', $customer->id)
+            ->where(function($query) use ($request) {
+                $query->where('email', $request->email)
+                      ->orWhere('phone', $request->phone);
+            })
+            ->first();
+
+        if ($duplicateCheck) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Customer with this email or phone already exists!',
+                'duplicate' => $duplicateCheck
             ], 422);
         }
 
@@ -170,6 +217,26 @@ class CustomerController extends Controller
         }
     }
     
+    public function validateField(Request $request)
+    {
+        $field = $request->field;
+        $value = $request->value;
+        $excludeId = $request->exclude_id;
+
+        $query = Customer::query();
+        
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        $exists = $query->where($field, $value)->exists();
+
+        return response()->json([
+            'valid' => !$exists,
+            'message' => $exists ? ucfirst($field) . ' already exists.' : ucfirst($field) . ' is available.'
+        ]);
+    }
+
     public function export(Request $request)
     {
         $query = Customer::query();
@@ -181,12 +248,18 @@ class CustomerController extends Controller
                   ->orWhere('email', 'LIKE', "%{$search}%")
                   ->orWhere('phone', 'LIKE', "%{$search}%")
                   ->orWhere('city', 'LIKE', "%{$search}%")
-                  ->orWhere('state', 'LIKE', "%{$search}%");
+                  ->orWhere('state', 'LIKE', "%{$search}%")
+                  ->orWhere('customer_id', 'LIKE', "%{$search}%")
+                  ->orWhere('company_name', 'LIKE', "%{$search}%");
             });
         }
         
         if ($request->has('status') && $request->status !== '') {
             $query->where('status', $request->status);
+        }
+
+        if ($request->has('customer_type') && $request->customer_type !== '') {
+            $query->where('customer_type', $request->customer_type);
         }
         
         $customers = $query->get();
@@ -202,20 +275,25 @@ class CustomerController extends Controller
             $file = fopen('php://output', 'w');
             
             // Add headers
-            fputcsv($file, ['ID', 'Name', 'Email', 'Phone', 'Address', 'City', 'State', 'Postal Code', 'Status', 'Created At']);
+            fputcsv($file, ['Customer ID', 'Name', 'Email', 'Phone', 'Customer Type', 'Company Name', 'Contact Person', 'Address', 'City', 'State', 'Postal Code', 'Tax Number', 'Status', 'Notes', 'Created At']);
             
             // Add data
             foreach ($customers as $customer) {
                 fputcsv($file, [
-                    $customer->id,
+                    $customer->customer_id,
                     $customer->name,
                     $customer->email,
                     $customer->phone,
+                    $customer->customer_type,
+                    $customer->company_name,
+                    $customer->contact_person,
                     $customer->address,
                     $customer->city,
                     $customer->state,
                     $customer->postal_code,
+                    $customer->tax_number,
                     $customer->status,
+                    $customer->notes,
                     $customer->created_at->format('Y-m-d H:i:s')
                 ]);
             }
