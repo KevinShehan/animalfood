@@ -194,7 +194,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/inventory/generate-barcode/{product}', [InventoryController::class, 'generateBarcode'])->name('admin.inventory.generate-barcode');
         
         // Billing
-        Route::get('/billing', [BillingController::class, 'index'])->name('admin.billing');
+        Route::get('/billing', [BillingController::class, 'index'])->name('admin.billing.index');
         Route::get('/billing/customers', [BillingController::class, 'getCustomers'])->name('admin.billing.customers');
         Route::get('/billing/products', [BillingController::class, 'getProducts'])->name('admin.billing.products');
         Route::get('/billing/products/{id}', [BillingController::class, 'getProductDetails'])->name('admin.billing.products.details');
