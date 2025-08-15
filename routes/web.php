@@ -84,6 +84,7 @@ Route::middleware('auth')->group(function () {
 
         // Orders CRUD
         Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
+        Route::get('/orders/create', [OrderController::class, 'create'])->name('admin.orders.create');
         Route::post('/orders', [OrderController::class, 'store']);
         Route::get('/orders/{order}', [OrderController::class, 'show']);
         Route::put('/orders/{order}', [OrderController::class, 'update']);
@@ -93,6 +94,7 @@ Route::middleware('auth')->group(function () {
         
         // Customers CRUD
         Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customers.index');
+        Route::get('/customers/create', [CustomerController::class, 'create'])->name('admin.customers.create');
         Route::post('/customers', [CustomerController::class, 'store']);
         Route::get('/customers/{customer}', [CustomerController::class, 'show']);
         Route::put('/customers/{customer}', [CustomerController::class, 'update']);
@@ -205,7 +207,7 @@ Route::middleware('auth')->group(function () {
         // Reports
         Route::get('/reports', function () {
             return view('admin.reports.index');
-        })->name('admin.reports');
+        })->name('admin.reports.index');
         
         Route::get('/reports/sales', function () {
             return view('admin.reports.sales');

@@ -84,7 +84,7 @@
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                            <span class="text-gray-500 dark:text-gray-400 sm:text-sm">Rs.</span>
                         </div>
                         <input type="number" id="price" name="price" value="{{ old('price') }}" step="0.01" min="0" required
                                class="block w-full pl-7 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
@@ -125,13 +125,81 @@
                     @enderror
                 </div>
 
-                <!-- Expiry Date -->
+                <!-- Expiry Management -->
                 <div>
-                    <label for="expiry_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Expiry Date
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Expiry Management
                     </label>
-                    <input type="date" id="expiry_date" name="expiry_date" value="{{ old('expiry_date') }}"
-                           class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                    <div class="space-y-3">
+                        <!-- Enable Expiry Tracking -->
+                        <div class="flex items-center">
+                            <input type="checkbox" id="track_expiry" name="track_expiry" value="1" {{ old('track_expiry') ? 'checked' : '' }}
+                                   class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                                   onchange="toggleExpiryFields()">
+                            <label for="track_expiry" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                Enable expiry tracking for this product
+                            </label>
+                        </div>
+                        
+                        <!-- Expiry Type Selection -->
+                        <div id="expiryFields" class="space-y-3" style="display: none;">
+                            <div>
+                                <label for="expiry_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Expiry Type
+                                </label>
+                                <select id="expiry_type" name="expiry_type" onchange="toggleExpiryInput()"
+                                        class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                                    <option value="date">Specific Date</option>
+                                    <option value="period">Period from Manufacturing</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Specific Date Input -->
+                            <div id="expiryDateField">
+                                <label for="expiry_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Expiry Date
+                                </label>
+                                <input type="date" id="expiry_date" name="expiry_date" value="{{ old('expiry_date') }}"
+                                       class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                            </div>
+                            
+                            <!-- Period Input -->
+                            <div id="expiryPeriodField" style="display: none;">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label for="expiry_period" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Period Value
+                                        </label>
+                                        <input type="number" id="expiry_period" name="expiry_period" value="{{ old('expiry_period') }}" min="1"
+                                               class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                    <div>
+                                        <label for="expiry_period_unit" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Period Unit
+                                        </label>
+                                        <select id="expiry_period_unit" name="expiry_period_unit"
+                                                class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                                            <option value="days" {{ old('expiry_period_unit') == 'days' ? 'selected' : '' }}>Days</option>
+                                            <option value="weeks" {{ old('expiry_period_unit') == 'weeks' ? 'selected' : '' }}>Weeks</option>
+                                            <option value="months" {{ old('expiry_period_unit') == 'months' ? 'selected' : '' }}>Months</option>
+                                            <option value="years" {{ old('expiry_period_unit') == 'years' ? 'selected' : '' }}>Years</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Alert Settings -->
+                            <div>
+                                <label for="expiry_alert_days" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Alert Days Before Expiry
+                                </label>
+                                <input type="number" id="expiry_alert_days" name="expiry_alert_days" value="{{ old('expiry_alert_days', 30) }}" min="1"
+                                       class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                                       placeholder="30">
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Number of days before expiry to start showing alerts</p>
+                            </div>
+                        </div>
+                    </div>
                     @error('expiry_date')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
@@ -184,4 +252,37 @@
             </div>
         </form>
     </div>
+    
+    <script>
+        function toggleExpiryFields() {
+            const trackExpiry = document.getElementById('track_expiry');
+            const expiryFields = document.getElementById('expiryFields');
+            
+            if (trackExpiry.checked) {
+                expiryFields.style.display = 'block';
+            } else {
+                expiryFields.style.display = 'none';
+            }
+        }
+        
+        function toggleExpiryInput() {
+            const expiryType = document.getElementById('expiry_type');
+            const expiryDateField = document.getElementById('expiryDateField');
+            const expiryPeriodField = document.getElementById('expiryPeriodField');
+            
+            if (expiryType.value === 'date') {
+                expiryDateField.style.display = 'block';
+                expiryPeriodField.style.display = 'none';
+            } else {
+                expiryDateField.style.display = 'none';
+                expiryPeriodField.style.display = 'block';
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleExpiryFields();
+            toggleExpiryInput();
+        });
+    </script>
 </x-admin-layout>

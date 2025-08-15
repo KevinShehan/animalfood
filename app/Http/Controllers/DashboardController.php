@@ -40,7 +40,7 @@ class DashboardController extends Controller
         $activeProducts = Product::where('status', 'active')->count();
         
         // Low stock items
-        $lowStockItems = Product::where('stock_quantity', '<=', DB::raw('low_stock_threshold'))
+        $lowStockItems = Product::where('stock_quantity', '<=', DB::raw('reorder_level'))
             ->where('stock_quantity', '>', 0)
             ->count();
         
@@ -65,6 +65,29 @@ class DashboardController extends Controller
             ->take(10)
             ->get();
         
+        // Customer statistics
+        $totalCustomers = Customer::count();
+        $activeCustomers = Customer::where('status', 'active')->count();
+        
+        // Order statistics
+        $totalOrders = Order::count();
+        $pendingOrders = Order::where('status', 'pending')->count();
+        
+        // Monthly revenue
+        $currentMonth = Carbon::now()->startOfMonth();
+        $lastMonth = Carbon::now()->subMonth()->startOfMonth();
+        
+        $monthlyRevenue = Sales::where('created_at', '>=', $currentMonth)
+            ->where('status', '!=', 'refunded')
+            ->sum('total_amount');
+            
+        $lastMonthRevenue = Sales::where('created_at', '>=', $lastMonth)
+            ->where('created_at', '<', $currentMonth)
+            ->where('status', '!=', 'refunded')
+            ->sum('total_amount');
+            
+        $revenueGrowth = $lastMonthRevenue > 0 ? (($monthlyRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100 : 0;
+        
         return response()->json([
             'today_sales' => $todaySales,
             'today_refunds' => $todayRefunds,
@@ -75,6 +98,12 @@ class DashboardController extends Controller
             'active_products' => $activeProducts,
             'low_stock_count' => $lowStockItems,
             'expiring_count' => $expiringSoon,
+            'total_customers' => $totalCustomers,
+            'active_customers' => $activeCustomers,
+            'total_orders' => $totalOrders,
+            'pending_orders' => $pendingOrders,
+            'monthly_revenue' => $monthlyRevenue,
+            'revenue_growth' => $revenueGrowth,
             'recent_orders' => $recentOrders,
             'popular_products' => $popularProducts
         ]);

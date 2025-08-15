@@ -6,7 +6,7 @@
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         <!-- Today's Sales -->
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
             <div class="p-5">
@@ -75,15 +75,15 @@
                     <div class="ml-5 w-0 flex-1">
                         <dl>
                             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Products in Stock</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white">89</dd>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="productsInStock">0</dd>
                         </dl>
                     </div>
                 </div>
             </div>
             <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
                 <div class="text-sm">
-                    <span class="text-yellow-600 dark:text-yellow-400 font-medium">-3%</span>
-                    <span class="text-gray-500 dark:text-gray-400">from last month</span>
+                    <span class="text-yellow-600 dark:text-yellow-400 font-medium" id="productsInStockChange">0</span>
+                    <span class="text-gray-500 dark:text-gray-400">products in stock</span>
                 </div>
             </div>
         </div>
@@ -114,10 +114,37 @@
                 </div>
             </div>
         </div>
+
+        <!-- Monthly Revenue -->
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-emerald-500 rounded-md flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Monthly Revenue</dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="monthlyRevenue">Rs. 0.00</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+                <div class="text-sm">
+                    <span class="text-emerald-600 dark:text-emerald-400 font-medium" id="revenueGrowth">+0%</span>
+                    <span class="text-gray-500 dark:text-gray-400">from last month</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Additional Alerts Row -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <!-- Expiring Soon -->
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
             <div class="p-5">
@@ -168,6 +195,60 @@
                 <div class="text-sm">
                     <span class="text-purple-600 dark:text-purple-400 font-medium" id="activeProducts">0</span>
                     <span class="text-gray-500 dark:text-gray-400">active products</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Customers -->
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Customers</dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="totalCustomers">0</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+                <div class="text-sm">
+                    <span class="text-blue-600 dark:text-blue-400 font-medium" id="activeCustomers">0</span>
+                    <span class="text-gray-500 dark:text-gray-400">active customers</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Orders -->
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-indigo-500 rounded-md flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Orders</dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="totalOrders">0</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+                <div class="text-sm">
+                    <span class="text-indigo-600 dark:text-indigo-400 font-medium" id="pendingOrders">0</span>
+                    <span class="text-gray-500 dark:text-gray-400">pending orders</span>
                 </div>
             </div>
         </div>
@@ -292,7 +373,7 @@
                     </div>
                 </div>
                 <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
-                    <a href="#" class="text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-500">View all orders</a>
+                    <a href="{{ route('admin.orders.index') }}" class="text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-500">View all orders</a>
                 </div>
             </div>
         </div>
@@ -305,29 +386,41 @@
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Quick Actions</h3>
                 </div>
                 <div class="p-4 space-y-3">
-                    <a href="#" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                    <a href="{{ route('admin.products.create') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                         <svg class="w-5 h-5 mr-3 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         Add New Product
                     </a>
-                    <a href="#" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                    <a href="{{ route('admin.orders.create') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                         <svg class="w-5 h-5 mr-3 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                         </svg>
                         Create Order
                     </a>
-                    <a href="#" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                        <svg class="w-5 h-5 mr-3 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    <a href="{{ route('admin.billing.index') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <svg class="w-5 h-5 mr-3 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                         </svg>
-                        View Reports
+                        Create Bill
                     </a>
-                    <a href="#" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                    <a href="{{ route('admin.customers.create') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                         <svg class="w-5 h-5 mr-3 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                         </svg>
-                        Manage Customers
+                        Add New Customer
+                    </a>
+                    <a href="{{ route('admin.inventory.dashboard') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <svg class="w-5 h-5 mr-3 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        Inventory Management
+                    </a>
+                    <a href="{{ route('admin.reports.index') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <svg class="w-5 h-5 mr-3 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        View Reports
                     </a>
                 </div>
             </div>
@@ -505,8 +598,22 @@
                     document.getElementById('expiringCount').textContent = data.expiring_count || 0;
                     document.getElementById('expiringChange').textContent = data.expiring_count || 0;
                     
-                    // Update products in stock (hardcoded for now, can be made dynamic)
-                    document.querySelector('dd:contains("Products in Stock")').textContent = data.products_in_stock || 0;
+                    // Update products in stock
+                    document.getElementById('productsInStock').textContent = data.products_in_stock || 0;
+                    document.getElementById('productsInStockChange').textContent = data.products_in_stock || 0;
+                    
+                    // Update customer statistics
+                    document.getElementById('totalCustomers').textContent = data.total_customers || 0;
+                    document.getElementById('activeCustomers').textContent = data.active_customers || 0;
+                    
+                    // Update order statistics
+                    document.getElementById('totalOrders').textContent = data.total_orders || 0;
+                    document.getElementById('pendingOrders').textContent = data.pending_orders || 0;
+                    
+                    // Update revenue statistics
+                    document.getElementById('monthlyRevenue').textContent = 'Rs. ' + parseFloat(data.monthly_revenue || 0).toFixed(2);
+                    const growthSign = data.revenue_growth >= 0 ? '+' : '';
+                    document.getElementById('revenueGrowth').textContent = growthSign + parseFloat(data.revenue_growth || 0).toFixed(1) + '%';
                     
                     // Update recent orders
                     updateRecentOrders(data.recent_orders || []);

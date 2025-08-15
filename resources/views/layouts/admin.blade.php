@@ -488,15 +488,6 @@
                     <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white dark:bg-gray-800 shadow">
                         <div class="flex-1 px-4 flex justify-end">
                             <div class="flex items-center md:ml-6">
-                                <!-- Notifications -->
-                                <button class="bg-white dark:bg-gray-800 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                    <span class="sr-only">View notifications</span>
-                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                    </svg>
-                                </button>
-
                                 <!-- Profile dropdown -->
                                 <div class="ml-3 relative" x-data="{ open: false }">
                                     <div>
@@ -508,31 +499,37 @@
                                         </button>
                                     </div>
                                     
-                                                                         <!-- Dropdown menu -->
-                                     <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                         <div class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
-                                             <div class="font-medium">{{ Auth::user()->name }}</div>
-                                             <div class="text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</div>
-                                             <div class="text-xs text-gray-400 dark:text-gray-500 capitalize">{{ str_replace('_', ' ', Auth::user()->role) }}</div>
-                                         </div>
-                                         <div class="border-t border-gray-200 dark:border-gray-700">
-                                             <a href="{{ route('password.change') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                 <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
-                                                 </svg>
-                                                 Change Password
-                                             </a>
-                                             <form method="POST" action="{{ route('logout') }}">
-                                                 @csrf
-                                                 <button type="submit" class="flex items-center w-full px-4 py-2 text-sm text-red-700 bg-red-50 hover:bg-red-100 hover:text-red-800 dark:text-red-300 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:hover:text-red-200">
-                                                     <svg class="mr-3 h-4 w-4 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                                                     </svg>
-                                                     Sign out
-                                                 </button>
-                                             </form>
-                                         </div>
-                                     </div>
+                                    <!-- Dropdown menu -->
+                                    <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                                            <div class="font-medium">{{ Auth::user()->name }}</div>
+                                            <div class="text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</div>
+                                            <div class="text-xs text-gray-400 dark:text-gray-500 capitalize">{{ str_replace('_', ' ', Auth::user()->role) }}</div>
+                                        </div>
+                                        <div class="border-t border-gray-200 dark:border-gray-700">
+                                            <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                                </svg>
+                                                Profile
+                                            </a>
+                                            <a href="{{ route('password.change') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                                                </svg>
+                                                Change Password
+                                            </a>
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <button type="submit" class="flex items-center w-full px-4 py-2 text-sm text-red-700 bg-red-50 hover:bg-red-100 hover:text-red-800 dark:text-red-300 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:hover:text-red-200">
+                                                    <svg class="mr-3 h-4 w-4 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                                    </svg>
+                                                    Sign out
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
