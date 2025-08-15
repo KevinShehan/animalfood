@@ -487,43 +487,99 @@
         });
 
         function loadDashboardData() {
-            // Fetch low stock alerts
-            fetch('{{ route("admin.products.low-stock") }}')
+            // Fetch all dashboard data from single endpoint
+            fetch('{{ route("admin.dashboard.stats") }}')
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('lowStockCount').textContent = data.length;
-                    document.getElementById('lowStockChange').textContent = data.length;
-                })
-                .catch(error => console.error('Error loading low stock data:', error));
-
-            // Fetch expiring products
-            fetch('{{ route("admin.products.expiring") }}')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('expiringCount').textContent = data.length;
-                    document.getElementById('expiringChange').textContent = data.length;
-                })
-                .catch(error => console.error('Error loading expiring data:', error));
-
-            // Fetch total products count
-            fetch('{{ route("admin.products.count") }}')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('totalProducts').textContent = data.total || 0;
-                    document.getElementById('activeProducts').textContent = data.active || 0;
-                })
-                .catch(error => console.error('Error loading product count:', error));
-
-            // Fetch sales statistics
-            fetch('{{ route("admin.sales.stats") }}')
-                .then(response => response.json())
-                .then(data => {
+                    // Update sales statistics
                     document.getElementById('today-sales').textContent = 'Rs. ' + parseFloat(data.today_sales || 0).toFixed(2);
                     document.getElementById('today-refunds').textContent = 'Rs. ' + parseFloat(data.today_refunds || 0).toFixed(2);
                     document.getElementById('net-sales').textContent = 'Rs. ' + parseFloat(data.today_net || 0).toFixed(2);
                     document.getElementById('sales-target-progress').textContent = parseFloat(data.target_progress || 0).toFixed(1) + '%';
+                    
+                    // Update product statistics
+                    document.getElementById('totalProducts').textContent = data.total_products || 0;
+                    document.getElementById('activeProducts').textContent = data.active_products || 0;
+                    document.getElementById('lowStockCount').textContent = data.low_stock_count || 0;
+                    document.getElementById('lowStockChange').textContent = data.low_stock_count || 0;
+                    document.getElementById('expiringCount').textContent = data.expiring_count || 0;
+                    document.getElementById('expiringChange').textContent = data.expiring_count || 0;
+                    
+                    // Update products in stock (hardcoded for now, can be made dynamic)
+                    document.querySelector('dd:contains("Products in Stock")').textContent = data.products_in_stock || 0;
+                    
+                    // Update recent orders
+                    updateRecentOrders(data.recent_orders || []);
+                    
+                    // Update popular products
+                    updatePopularProducts(data.popular_products || []);
                 })
-                .catch(error => console.error('Error loading sales data:', error));
+                .catch(error => console.error('Error loading dashboard data:', error));
+        }
+
+        function updateRecentOrders(orders) {
+            const ordersContainer = document.querySelector('.flow-root ul');
+            if (!ordersContainer) return;
+            
+            let ordersHtml = '';
+            orders.forEach(order => {
+                const statusClass = order.status === 'completed' ? 'bg-green-100 text-green-800' : 
+                                  order.status === 'processing' ? 'bg-blue-100 text-blue-800' : 
+                                  'bg-yellow-100 text-yellow-800';
+                
+                ordersHtml += `
+                    <li class="px-4 py-3">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">${order.items?.[0]?.product?.name || 'Product'}</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Order #${order.id} - ${order.customer?.name || 'Customer'}</p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClass}">
+                                    ${order.status}
+                                </span>
+                            </div>
+                            <div class="flex-shrink-0 text-sm text-gray-500 dark:text-gray-400">
+                                Rs. ${parseFloat(order.total_amount || 0).toFixed(2)}
+                            </div>
+                        </div>
+                    </li>
+                `;
+            });
+            
+            ordersContainer.innerHTML = ordersHtml;
+        }
+
+        function updatePopularProducts(products) {
+            const productsContainer = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4');
+            if (!productsContainer) return;
+            
+            let productsHtml = '';
+            products.forEach(product => {
+                productsHtml += `
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">${product.name}</h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">${product.total_sold} sold</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">${product.total_sold}</p>
+                                <p class="text-sm text-green-600 dark:text-green-400">+12%</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            productsContainer.innerHTML = productsHtml;
         }
 
         function setupChartButtons() {
@@ -689,20 +745,7 @@
         }
 
         function updateSalesTrendChart() {
-            let route;
-            switch(currentTimeframe) {
-                case 'daily':
-                    route = '{{ route("admin.sales.charts.daily") }}';
-                    break;
-                case 'weekly':
-                    route = '{{ route("admin.sales.charts.weekly") }}';
-                    break;
-                case 'monthly':
-                    route = '{{ route("admin.sales.charts.monthly") }}';
-                    break;
-            }
-
-            fetch(route)
+            fetch(`{{ route("admin.dashboard.charts", "daily") }}`)
                 .then(response => response.json())
                 .then(data => {
                     const labels = data.map(item => currentTimeframe === 'daily' ? item.date : (currentTimeframe === 'weekly' ? item.week : item.month));

@@ -18,6 +18,7 @@ use App\Http\Controllers\CustomerReportController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -225,6 +226,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/settings', function () {
             return view('admin.settings.index');
         })->name('admin.settings');
+        
+        // Dashboard Data
+        Route::get('/dashboard/stats', [DashboardController::class, 'getStats'])->name('admin.dashboard.stats');
+        Route::get('/dashboard/charts/{period}', [DashboardController::class, 'getChartData'])->name('admin.dashboard.charts');
         
         // Bill Header Settings
         Route::get('/settings/bill-header', [BillHeaderController::class, 'index'])->name('admin.settings.bill-header');
