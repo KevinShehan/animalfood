@@ -422,8 +422,8 @@
                                 </button>
                             </div>
 
-                            <!-- Right side items -->
-                            <div class="flex items-center">
+                            <!-- Right side items - User icon positioned at far right -->
+                            <div class="flex items-center ml-auto">
                                 <!-- Profile dropdown -->
                                 <div class="relative" x-data="{ open: false }">
                                     <div>

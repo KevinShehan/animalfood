@@ -51,7 +51,8 @@
 
     <!-- Users Table -->
     <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
-        <div class="overflow-x-auto">
+        <!-- Desktop Table View -->
+        <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
@@ -120,6 +121,59 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="md:hidden space-y-4 p-4">
+            @foreach($users as $user)
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4">
+                <div class="flex items-start justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="h-12 w-12 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-600">
+                            <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-white truncate">{{ $user->name }}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">ID: {{ $user->id }}</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="editUser({{ $user->id }})" class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 p-2 rounded hover:bg-green-50 dark:hover:bg-green-900/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </button>
+                        @if($user->id !== auth()->id())
+                        <button onclick="deleteUser({{ $user->id }})" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                        @endif
+                    </div>
+                </div>
+                
+                <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <span class="font-medium text-gray-500 dark:text-gray-400">Email:</span>
+                        <div class="text-gray-900 dark:text-white">{{ $user->email }}</div>
+                    </div>
+                    <div>
+                        <span class="font-medium text-gray-500 dark:text-gray-400">Role:</span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                            @if($user->role === 'super_administrator') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                            @elseif($user->role === 'administrator') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                            @else bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 @endif">
+                            {{ str_replace('_', ' ', ucfirst($user->role)) }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                    Joined: {{ $user->created_at->format('M d, Y') }}
+                </div>
+            </div>
+            @endforeach
         </div>
     </div>
 

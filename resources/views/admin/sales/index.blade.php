@@ -111,7 +111,8 @@
                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Sales Records</h3>
                     <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">All sales, refunds, and corrections</p>
                 </div>
-                <div class="overflow-x-auto">
+                <!-- Desktop Table View -->
+                <div class="hidden md:block overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
@@ -187,6 +188,90 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Mobile Card View -->
+                <div class="md:hidden space-y-4 p-4">
+                    @forelse($sales as $sale)
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="h-12 w-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                                    <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-lg font-medium text-gray-900 dark:text-white truncate">{{ $sale->product->name }}</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $sale->created_at->format('M d, Y H:i') }}</p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="{{ route('admin.sales.show', $sale) }}" class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 p-2 rounded hover:bg-green-50 dark:hover:bg-green-900/20">View</a>
+                                @if($sale->canBeRefunded())
+                                <a href="{{ route('admin.sales.show', $sale) }}#refund" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20">Refund</a>
+                                @endif
+                                @if($sale->canBeCorrected())
+                                <a href="{{ route('admin.sales.edit', $sale) }}" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-2 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20">Correct</a>
+                                @endif
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="font-medium text-gray-500 dark:text-gray-400">Type:</span>
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                    @if($sale->type === 'sale') bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200
+                                    @elseif($sale->type === 'refund') bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-200
+                                    @else bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200
+                                    @endif">
+                                    {{ ucfirst($sale->type) }}
+                                </span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-500 dark:text-gray-400">Quantity:</span>
+                                <div class="text-gray-900 dark:text-white">{{ $sale->quantity }} {{ $sale->product->unit }}</div>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-500 dark:text-gray-400">Unit Price:</span>
+                                <div class="text-gray-900 dark:text-white">Rs. {{ number_format($sale->unit_price, 2) }}</div>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-500 dark:text-gray-400">Total:</span>
+                                <div class="text-sm font-medium
+                                    @if($sale->type === 'refund') text-red-600 dark:text-red-400
+                                    @else text-green-600 dark:text-green-400
+                                    @endif">
+                                    Rs. {{ number_format($sale->total_amount, 2) }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="font-medium text-gray-500 dark:text-gray-400">Staff:</span>
+                                <div class="text-gray-900 dark:text-white">{{ $sale->user->name }}</div>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-500 dark:text-gray-400">Status:</span>
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                    @if($sale->status === 'completed') bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200
+                                    @elseif($sale->status === 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200
+                                    @else bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-200
+                                    @endif">
+                                    {{ ucfirst($sale->status) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                        <p class="mt-2">No sales records found.</p>
+                    </div>
+                    @endforelse
                 </div>
                 <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
                     {{ $sales->links() }}
