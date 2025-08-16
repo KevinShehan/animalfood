@@ -30,9 +30,9 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    // Registration routes (only for authenticated users)
-    Route::get('/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('register');
-    Route::post('/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'store']);
+    // Registration routes (only for administrators and super administrators)
+    Route::get('/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('register')->middleware('role:administrator,super_administrator');
+    Route::post('/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'store'])->middleware('role:administrator,super_administrator');
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/products/{product}', [ProductController::class, 'show'])->name('admin.products.show');
         Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
         Route::put('/products/{product}', [ProductController::class, 'update'])->name('admin.products.update');
-        Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
+        Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('admin.products.destroy')->middleware('role:administrator,super_administrator');
         
         // Product alerts and stock management
         Route::get('/products/alerts/low-stock', [ProductController::class, 'lowStockAlerts'])->name('admin.products.low-stock');
@@ -103,55 +103,55 @@ Route::middleware('auth')->group(function () {
         Route::get('/customers/export', [CustomerController::class, 'export'])->name('admin.customers.export');
         Route::get('/customers/validate-field', [CustomerController::class, 'validateField'])->name('admin.customers.validate-field');
         
-        // Suppliers CRUD
-        Route::get('/suppliers', [SupplierController::class, 'index'])->name('admin.suppliers');
-        Route::post('/suppliers', [SupplierController::class, 'store']);
-        Route::get('/suppliers/{supplier}', [SupplierController::class, 'show']);
-        Route::put('/suppliers/{supplier}', [SupplierController::class, 'update']);
-        Route::delete('/suppliers/{supplier}', [SupplierController::class, 'destroy']);
+        // Suppliers CRUD (Admin Only)
+        Route::get('/suppliers', [SupplierController::class, 'index'])->name('admin.suppliers')->middleware('role:administrator,super_administrator');
+        Route::post('/suppliers', [SupplierController::class, 'store'])->middleware('role:administrator,super_administrator');
+        Route::get('/suppliers/{supplier}', [SupplierController::class, 'show'])->middleware('role:administrator,super_administrator');
+        Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->middleware('role:administrator,super_administrator');
+        Route::delete('/suppliers/{supplier}', [SupplierController::class, 'destroy'])->middleware('role:administrator,super_administrator');
         
-        // Purchases CRUD
-        Route::get('/purchases', [PurchaseController::class, 'index'])->name('admin.purchases.index');
-        Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('admin.purchases.create');
-        Route::post('/purchases', [PurchaseController::class, 'store'])->name('admin.purchases.store');
-        Route::get('/purchases/{purchase}', [PurchaseController::class, 'show'])->name('admin.purchases.show');
-        Route::get('/purchases/{purchase}/grn', [PurchaseController::class, 'grn'])->name('admin.purchases.grn');
-        Route::post('/purchases/{purchase}/receive', [PurchaseController::class, 'receiveItems'])->name('admin.purchases.receive');
-        Route::patch('/purchases/{purchase}/cancel', [PurchaseController::class, 'cancel'])->name('admin.purchases.cancel');
+        // Purchases CRUD (Admin Only)
+        Route::get('/purchases', [PurchaseController::class, 'index'])->name('admin.purchases.index')->middleware('role:administrator,super_administrator');
+        Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('admin.purchases.create')->middleware('role:administrator,super_administrator');
+        Route::post('/purchases', [PurchaseController::class, 'store'])->name('admin.purchases.store')->middleware('role:administrator,super_administrator');
+        Route::get('/purchases/{purchase}', [PurchaseController::class, 'show'])->name('admin.purchases.show')->middleware('role:administrator,super_administrator');
+        Route::get('/purchases/{purchase}/grn', [PurchaseController::class, 'grn'])->name('admin.purchases.grn')->middleware('role:administrator,super_administrator');
+        Route::post('/purchases/{purchase}/receive', [PurchaseController::class, 'receiveItems'])->name('admin.purchases.receive')->middleware('role:administrator,super_administrator');
+        Route::patch('/purchases/{purchase}/cancel', [PurchaseController::class, 'cancel'])->name('admin.purchases.cancel')->middleware('role:administrator,super_administrator');
         
-        // Purchase Returns CRUD
-        Route::get('/purchase-returns', [PurchaseReturnController::class, 'index'])->name('admin.purchase-returns.index');
-        Route::get('/purchase-returns/create', [PurchaseReturnController::class, 'create'])->name('admin.purchase-returns.create');
-        Route::post('/purchase-returns', [PurchaseReturnController::class, 'store'])->name('admin.purchase-returns.store');
-        Route::get('/purchase-returns/{purchaseReturn}', [PurchaseReturnController::class, 'show'])->name('admin.purchase-returns.show');
-        Route::patch('/purchase-returns/{purchaseReturn}/approve', [PurchaseReturnController::class, 'approve'])->name('admin.purchase-returns.approve');
-        Route::patch('/purchase-returns/{purchaseReturn}/reject', [PurchaseReturnController::class, 'reject'])->name('admin.purchase-returns.reject');
-        Route::patch('/purchase-returns/{purchaseReturn}/process', [PurchaseReturnController::class, 'process'])->name('admin.purchase-returns.process');
-        Route::patch('/purchase-returns/{purchaseReturn}/complete', [PurchaseReturnController::class, 'complete'])->name('admin.purchase-returns.complete');
-        Route::get('/purchases/{purchase}/items', [PurchaseReturnController::class, 'getPurchaseItems'])->name('admin.purchases.items');
+        // Purchase Returns CRUD (Admin Only)
+        Route::get('/purchase-returns', [PurchaseReturnController::class, 'index'])->name('admin.purchase-returns.index')->middleware('role:administrator,super_administrator');
+        Route::get('/purchase-returns/create', [PurchaseReturnController::class, 'create'])->name('admin.purchase-returns.create')->middleware('role:administrator,super_administrator');
+        Route::post('/purchase-returns', [PurchaseReturnController::class, 'store'])->name('admin.purchase-returns.store')->middleware('role:administrator,super_administrator');
+        Route::get('/purchase-returns/{purchaseReturn}', [PurchaseReturnController::class, 'show'])->name('admin.purchase-returns.show')->middleware('role:administrator,super_administrator');
+        Route::patch('/purchase-returns/{purchaseReturn}/approve', [PurchaseReturnController::class, 'approve'])->name('admin.purchase-returns.approve')->middleware('role:administrator,super_administrator');
+        Route::patch('/purchase-returns/{purchaseReturn}/reject', [PurchaseReturnController::class, 'reject'])->name('admin.purchase-returns.reject')->middleware('role:administrator,super_administrator');
+        Route::patch('/purchase-returns/{purchaseReturn}/process', [PurchaseReturnController::class, 'process'])->name('admin.purchase-returns.process')->middleware('role:administrator,super_administrator');
+        Route::patch('/purchase-returns/{purchaseReturn}/complete', [PurchaseReturnController::class, 'complete'])->name('admin.purchase-returns.complete')->middleware('role:administrator,super_administrator');
+        Route::get('/purchases/{purchase}/items', [PurchaseReturnController::class, 'getPurchaseItems'])->name('admin.purchases.items')->middleware('role:administrator,super_administrator');
         
-        // Categories CRUD
-        Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories');
-        Route::post('/categories', [CategoryController::class, 'store']);
-        Route::get('/categories/get/all', [CategoryController::class, 'getCategories'])->name('admin.categories.get');
-        Route::get('/categories/validate-name', [CategoryController::class, 'validateName'])->name('admin.categories.validate-name');
-        Route::get('/categories/{id}', [CategoryController::class, 'show'])->where('id', '[0-9]+');
-        Route::put('/categories/{id}', [CategoryController::class, 'update'])->where('id', '[0-9]+');
-        Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->where('id', '[0-9]+');
+        // Categories CRUD (Admin Only)
+        Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories')->middleware('role:administrator,super_administrator');
+        Route::post('/categories', [CategoryController::class, 'store'])->middleware('role:administrator,super_administrator');
+        Route::get('/categories/get/all', [CategoryController::class, 'getCategories'])->name('admin.categories.get')->middleware('role:administrator,super_administrator');
+        Route::get('/categories/validate-name', [CategoryController::class, 'validateName'])->name('admin.categories.validate-name')->middleware('role:administrator,super_administrator');
+        Route::get('/categories/{id}', [CategoryController::class, 'show'])->where('id', '[0-9]+')->middleware('role:administrator,super_administrator');
+        Route::put('/categories/{id}', [CategoryController::class, 'update'])->where('id', '[0-9]+')->middleware('role:administrator,super_administrator');
+        Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->where('id', '[0-9]+')->middleware('role:administrator,super_administrator');
         
-        // Users CRUD
-        Route::get('/users', [UserController::class, 'index'])->name('admin.users');
-        Route::post('/users', [UserController::class, 'store']);
-        Route::get('/users/{user}', [UserController::class, 'show']);
-        Route::put('/users/{user}', [UserController::class, 'update']);
-        Route::delete('/users/{user}', [UserController::class, 'destroy']);
+        // Users CRUD (Admin Only)
+        Route::get('/users', [UserController::class, 'index'])->name('admin.users')->middleware('role:administrator,super_administrator');
+        Route::post('/users', [UserController::class, 'store'])->middleware('role:administrator,super_administrator');
+        Route::get('/users/{user}', [UserController::class, 'show'])->middleware('role:administrator,super_administrator');
+        Route::put('/users/{user}', [UserController::class, 'update'])->middleware('role:administrator,super_administrator');
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])->middleware('role:administrator,super_administrator');
         
-        // Audit Logs
-        Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('admin.audit-logs.index');
-        Route::get('/audit-logs/export', [AuditLogController::class, 'export'])->name('admin.audit-logs.export');
-        Route::get('/audit-logs/stats', [AuditLogController::class, 'getStats'])->name('admin.audit-logs.stats');
-        Route::post('/audit-logs/cleanup', [AuditLogController::class, 'cleanup'])->name('admin.audit-logs.cleanup');
-        Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('admin.audit-logs.show');
+        // Audit Logs (Admin Only)
+        Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('admin.audit-logs.index')->middleware('role:administrator,super_administrator');
+        Route::get('/audit-logs/export', [AuditLogController::class, 'export'])->name('admin.audit-logs.export')->middleware('role:administrator,super_administrator');
+        Route::get('/audit-logs/stats', [AuditLogController::class, 'getStats'])->name('admin.audit-logs.stats')->middleware('role:administrator,super_administrator');
+        Route::post('/audit-logs/cleanup', [AuditLogController::class, 'cleanup'])->name('admin.audit-logs.cleanup')->middleware('role:administrator,super_administrator');
+        Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('admin.audit-logs.show')->middleware('role:administrator,super_administrator');
 
         // Customer Reports & Dues
         Route::get('/reports/customer-dues', [CustomerReportController::class, 'index'])->name('admin.reports.customer-dues');

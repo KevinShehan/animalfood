@@ -90,7 +90,7 @@
                 </div>
                 <div class="ml-4">
                     <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Outstanding</div>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">${{ number_format($stats['total_outstanding'], 2) }}</div>
+                    <div class="text-2xl font-bold text-gray-900 dark:text-white">Rs. {{ number_format($stats['total_outstanding'], 2) }}</div>
                 </div>
             </div>
         </div>
@@ -104,7 +104,7 @@
                 </div>
                 <div class="ml-4">
                     <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Overdue Amount</div>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">${{ number_format($stats['overdue_amount'], 2) }}</div>
+                    <div class="text-2xl font-bold text-gray-900 dark:text-white">Rs. {{ number_format($stats['overdue_amount'], 2) }}</div>
                 </div>
             </div>
         </div>
@@ -200,9 +200,9 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($customer->credit)
                                 <div class="text-sm text-gray-900 dark:text-white">
-                                    <div>Limit: <span class="font-medium">${{ number_format($customer->credit->credit_limit, 2) }}</span></div>
-                                    <div>Balance: <span class="font-medium">${{ number_format($customer->credit->current_balance, 2) }}</span></div>
-                                    <div>Available: <span class="font-medium">${{ number_format($customer->credit->available_credit, 2) }}</span></div>
+                                    <div>Limit: <span class="font-medium">Rs. {{ number_format($customer->credit->credit_limit, 2) }}</span></div>
+                                    <div>Balance: <span class="font-medium">Rs. {{ number_format($customer->credit->current_balance, 2) }}</span></div>
+                                    <div>Available: <span class="font-medium">Rs. {{ number_format($customer->credit->available_credit, 2) }}</span></div>
                                 </div>
                                 @if($customer->credit->utilization_percentage > 0)
                                 <div class="mt-1">
@@ -218,7 +218,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($totalDue > 0)
-                                <div class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($totalDue, 2) }}</div>
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">Rs. {{ number_format($totalDue, 2) }}</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">{{ $customer->orders->count() }} orders</div>
                             @else
                                 <span class="text-sm text-green-600 dark:text-green-400">No dues</span>
@@ -226,7 +226,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($overdueAmount > 0)
-                                <div class="text-sm font-medium text-red-600 dark:text-red-400">${{ number_format($overdueAmount, 2) }}</div>
+                                <div class="text-sm font-medium text-red-600 dark:text-red-400">Rs. {{ number_format($overdueAmount, 2) }}</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">{{ $overdueOrders->count() }} orders</div>
                             @else
                                 <span class="text-sm text-gray-500 dark:text-gray-400">-</span>

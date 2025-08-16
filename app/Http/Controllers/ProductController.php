@@ -149,10 +149,27 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
+        // Check if user is cashier - cashiers cannot delete products
+        if (auth()->user()->role === 'cashier') {
+            return redirect()->route('admin.products.index')
+                ->with('error', 'You do not have permission to delete products. Only administrators can perform this action.');
+        }
 
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Product deleted successfully.');
+        try {
+            // Check if product has associated orders or sales
+            if ($product->orderItems()->count() > 0 || $product->inventoryTransactions()->count() > 0) {
+                return redirect()->route('admin.products.index')
+                    ->with('error', 'Cannot delete product with existing orders or inventory transactions. Please archive instead.');
+            }
+            
+            $product->delete();
+
+            return redirect()->route('admin.products.index')
+                ->with('success', 'Product deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.products.index')
+                ->with('error', 'Error deleting product: ' . $e->getMessage());
+        }
     }
 
     /**

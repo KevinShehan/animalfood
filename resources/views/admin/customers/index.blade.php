@@ -85,12 +85,14 @@
                     <span class="text-sm text-gray-500 dark:text-gray-400" id="customerCount">
                         {{ $customers->total() }} customers
                     </span>
+                    @if(auth()->user()->role !== 'cashier')
                     <button onclick="bulkDelete()" id="bulkDeleteBtn" class="hidden inline-flex items-center px-3 py-1 border border-red-300 text-red-700 text-sm rounded-md hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                         </svg>
                         Delete Selected
                     </button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -99,9 +101,11 @@
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
+                        @if(auth()->user()->role !== 'cashier')
                         <th class="px-6 py-3 text-left">
                             <input type="checkbox" id="selectAll" class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50">
                         </th>
+                        @endif
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Customer</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Contact</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
@@ -115,9 +119,11 @@
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="customersTableBody">
                     @foreach($customers as $customer)
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        @if(auth()->user()->role !== 'cashier')
                         <td class="px-6 py-4 whitespace-nowrap">
                             <input type="checkbox" class="customer-checkbox rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50" value="{{ $customer->id }}">
                         </td>
+                        @endif
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
@@ -180,11 +186,13 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                     </svg>
                                 </button>
+                                @if(auth()->user()->role !== 'cashier')
                                 <button onclick="deleteCustomer({{ $customer->id }})" class="text-red-600 hover:text-red-900 dark:hover:text-red-400 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                     </svg>
                                 </button>
+                                @endif
                             </div>
                         </td>
                     </tr>

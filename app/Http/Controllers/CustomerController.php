@@ -161,6 +161,14 @@ class CustomerController extends Controller
 
     public function destroy(Customer $customer)
     {
+        // Check if user is cashier - cashiers cannot delete customers
+        if (auth()->user()->role === 'cashier') {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have permission to delete customers. Only administrators can perform this action.'
+            ], 403);
+        }
+
         try {
             // Check if customer has orders
             if ($customer->orders()->count() > 0) {
@@ -186,6 +194,14 @@ class CustomerController extends Controller
     
     public function bulkDelete(Request $request)
     {
+        // Check if user is cashier - cashiers cannot delete customers
+        if (auth()->user()->role === 'cashier') {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have permission to delete customers. Only administrators can perform this action.'
+            ], 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'customer_ids' => 'required|array',
             'customer_ids.*' => 'exists:customers,id'

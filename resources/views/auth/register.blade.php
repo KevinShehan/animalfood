@@ -70,7 +70,17 @@
                             <input id="email" name="email" type="email" value="{{ old('email') }}" required autocomplete="username"
                                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 @error('email') border-red-500 dark:border-red-400 @enderror"
                                 placeholder="Enter your email">
+                            <!-- Email validation indicator -->
+                            <div id="email-validation" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none hidden">
+                                <svg id="email-valid-icon" class="h-5 w-5 text-green-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <svg id="email-invalid-icon" class="h-5 w-5 text-red-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </div>
                         </div>
+                        <div id="email-feedback" class="mt-2 text-sm hidden"></div>
                         @error('email')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -170,5 +180,92 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Real-time email validation
+        let emailValidationTimeout;
+        const emailInput = document.getElementById('email');
+        const emailValidation = document.getElementById('email-validation');
+        const emailValidIcon = document.getElementById('email-valid-icon');
+        const emailInvalidIcon = document.getElementById('email-invalid-icon');
+        const emailFeedback = document.getElementById('email-feedback');
+
+        emailInput.addEventListener('input', function() {
+            const email = this.value.trim();
+            
+            // Clear previous timeout
+            clearTimeout(emailValidationTimeout);
+            
+            // Hide validation elements
+            emailValidation.classList.add('hidden');
+            emailValidIcon.classList.add('hidden');
+            emailInvalidIcon.classList.add('hidden');
+            emailFeedback.classList.add('hidden');
+            
+            // Reset border color
+            this.classList.remove('border-green-500', 'border-red-500');
+            this.classList.add('border-gray-300');
+            
+            // Don't validate if email is empty or invalid format
+            if (!email || !isValidEmail(email)) {
+                return;
+            }
+            
+            // Debounce the validation request
+            emailValidationTimeout = setTimeout(() => {
+                validateEmail(email);
+            }, 500);
+        });
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function validateEmail(email) {
+            // Show loading state
+            emailValidation.classList.remove('hidden');
+            emailValidIcon.classList.add('hidden');
+            emailInvalidIcon.classList.add('hidden');
+            emailFeedback.classList.add('hidden');
+            
+            fetch('/api/validate-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                emailValidation.classList.remove('hidden');
+                emailFeedback.classList.remove('hidden');
+                
+                if (data.valid) {
+                    // Email is available
+                    emailValidIcon.classList.remove('hidden');
+                    emailInvalidIcon.classList.add('hidden');
+                    emailInput.classList.remove('border-red-500');
+                    emailInput.classList.add('border-green-500');
+                    emailFeedback.textContent = data.message;
+                    emailFeedback.className = 'mt-2 text-sm text-green-600 dark:text-green-400';
+                } else {
+                    // Email is already taken
+                    emailValidIcon.classList.add('hidden');
+                    emailInvalidIcon.classList.remove('hidden');
+                    emailInput.classList.remove('border-green-500');
+                    emailInput.classList.add('border-red-500');
+                    emailFeedback.textContent = data.message;
+                    emailFeedback.className = 'mt-2 text-sm text-red-600 dark:text-red-400';
+                }
+            })
+            .catch(error => {
+                console.error('Error validating email:', error);
+                emailValidation.classList.add('hidden');
+                emailFeedback.classList.add('hidden');
+            });
+        }
+    </script>
 </body>
 </html>

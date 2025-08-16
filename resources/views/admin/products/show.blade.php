@@ -193,6 +193,7 @@
                         </svg>
                         Update Stock
                     </button>
+                    @if(auth()->user()->role !== 'cashier')
                     <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline w-full" onsubmit="return confirm('Are you sure you want to delete this product?')">
                         @csrf
                         @method('DELETE')
@@ -203,6 +204,7 @@
                             Delete Product
                         </button>
                     </form>
+                    @endif
                 </div>
             </div>
 
