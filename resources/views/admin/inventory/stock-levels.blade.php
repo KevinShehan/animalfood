@@ -156,8 +156,8 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900 dark:text-white">
-                                <div>Cost: ${{ number_format($product->average_cost, 2) }}</div>
-                                <div>Total: ${{ number_format($totalValue, 2) }}</div>
+                                <div>Cost: {{ \App\Helpers\CurrencyHelper::format($product->average_cost) }}</div>
+                                <div>Total: {{ \App\Helpers\CurrencyHelper::format($totalValue) }}</div>
                                 @if($product->last_stock_update)
                                     <div class="text-xs text-gray-500 dark:text-gray-400">Updated: {{ $product->last_stock_update->diffForHumans() }}</div>
                                 @endif

@@ -76,7 +76,7 @@
                 </div>
                 <div class="ml-4">
                     <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Inventory Value</div>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">${{ number_format($stats['total_inventory_value'], 2) }}</div>
+                                            <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ \App\Helpers\CurrencyHelper::format($stats['total_inventory_value']) }}</div>
                 </div>
             </div>
         </div>

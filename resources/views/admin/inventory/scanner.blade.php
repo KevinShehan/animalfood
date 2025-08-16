@@ -346,11 +346,11 @@
                         </div>
                         <div>
                             <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Selling Price</div>
-                            <div class="text-lg font-semibold text-gray-900 dark:text-white">$${parseFloat(product.price).toFixed(2)}</div>
+                            <div class="text-lg font-semibold text-gray-900 dark:text-white">Rs. ${parseFloat(product.price).toFixed(2)}</div>
                         </div>
                         <div>
                             <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Cost Price</div>
-                            <div class="text-lg font-semibold text-gray-900 dark:text-white">$${parseFloat(product.cost_price).toFixed(2)}</div>
+                            <div class="text-lg font-semibold text-gray-900 dark:text-white">Rs. ${parseFloat(product.cost_price).toFixed(2)}</div>
                         </div>
                     </div>
                     
