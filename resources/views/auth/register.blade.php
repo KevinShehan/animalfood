@@ -122,8 +122,47 @@
                                 </svg>
                             </div>
                             <input id="password" name="password" type="password" required autocomplete="new-password"
-                                class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 @error('password') border-red-500 dark:border-red-400 @enderror"
+                                class="block w-full pl-10 pr-20 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 @error('password') border-red-500 dark:border-red-400 @enderror"
                                 placeholder="Create a password">
+                            <button type="button" id="generatePasswordBtn" class="absolute inset-y-0 right-0 px-3 flex items-center text-sm text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors duration-200">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Generate
+                            </button>
+                        </div>
+                        <!-- Password Requirements -->
+                        <div id="password-requirements" class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                            <div id="req-length" class="flex items-center">
+                                <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                At least 8 characters
+                            </div>
+                            <div id="req-uppercase" class="flex items-center">
+                                <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                One uppercase letter
+                            </div>
+                            <div id="req-lowercase" class="flex items-center">
+                                <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                One lowercase letter
+                            </div>
+                            <div id="req-number" class="flex items-center">
+                                <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                One number
+                            </div>
+                            <div id="req-symbol" class="flex items-center">
+                                <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                One special character
+                            </div>
                         </div>
                         @error('password')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -265,6 +304,105 @@
                 emailValidation.classList.add('hidden');
                 emailFeedback.classList.add('hidden');
             });
+        }
+    </script>
+
+    <script>
+        // Password generation functionality
+        document.getElementById('generatePasswordBtn').addEventListener('click', function() {
+            const password = generateSecurePassword();
+            document.getElementById('password').value = password;
+            document.getElementById('password_confirmation').value = password;
+            
+            // Trigger input events to update validation
+            document.getElementById('password').dispatchEvent(new Event('input'));
+            document.getElementById('password_confirmation').dispatchEvent(new Event('input'));
+        });
+
+        function generateSecurePassword() {
+            const length = 12;
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+            let password = "";
+            
+            // Ensure at least one character from each required category
+            password += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)]; // Uppercase
+            password += "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)]; // Lowercase
+            password += "0123456789"[Math.floor(Math.random() * 10)]; // Number
+            password += "!@#$%^&*()_+-=[]{}|;:,.<>?"[Math.floor(Math.random() * 32)]; // Symbol
+            
+            // Fill the rest with random characters
+            for (let i = password.length; i < length; i++) {
+                password += charset[Math.floor(Math.random() * charset.length)];
+            }
+            
+            // Shuffle the password
+            return password.split('').sort(() => Math.random() - 0.5).join('');
+        }
+
+        // Password validation
+        document.getElementById('password').addEventListener('input', function() {
+            validatePassword(this.value);
+        });
+
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                symbol: /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)
+            };
+            
+            // Update visual indicators
+            Object.keys(requirements).forEach(req => {
+                const element = document.getElementById('req-' + req);
+                if (element) {
+                    const svg = element.querySelector('svg');
+                    
+                    if (requirements[req]) {
+                        svg.classList.remove('text-gray-400');
+                        svg.classList.add('text-green-500');
+                        element.classList.remove('text-gray-500');
+                        element.classList.add('text-green-600');
+                    } else {
+                        svg.classList.remove('text-green-500');
+                        svg.classList.add('text-gray-400');
+                        element.classList.remove('text-green-600');
+                        element.classList.add('text-gray-500');
+                    }
+                }
+            });
+            
+            // Validate password confirmation if it has a value
+            const confirmField = document.getElementById('password_confirmation');
+            if (confirmField.value.length > 0) {
+                validatePasswordConfirmation();
+            }
+        }
+
+        // Password confirmation validation
+        document.getElementById('password_confirmation').addEventListener('input', function() {
+            validatePasswordConfirmation();
+        });
+
+        function validatePasswordConfirmation() {
+            const password = document.getElementById('password').value;
+            const confirmation = document.getElementById('password_confirmation').value;
+            const confirmField = document.getElementById('password_confirmation');
+            
+            if (confirmation.length === 0) {
+                confirmField.classList.remove('border-green-500', 'border-red-500');
+                confirmField.classList.add('border-gray-300');
+                return;
+            }
+            
+            if (password === confirmation) {
+                confirmField.classList.remove('border-red-500');
+                confirmField.classList.add('border-green-500');
+            } else {
+                confirmField.classList.remove('border-green-500');
+                confirmField.classList.add('border-red-500');
+            }
         }
     </script>
 </body>

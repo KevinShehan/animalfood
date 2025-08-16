@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\User;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,17 +19,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Real-time email validation for registration
+// Email validation endpoint
 Route::post('/validate-email', function (Request $request) {
     $request->validate([
         'email' => 'required|email'
     ]);
 
     $email = $request->email;
-    $exists = User::where('email', $email)->exists();
+    $user = \App\Models\User::where('email', $email)->first();
+
+    if ($user) {
+        return response()->json([
+            'valid' => false,
+            'message' => 'This email address is already taken.'
+        ]);
+    }
 
     return response()->json([
-        'valid' => !$exists,
-        'message' => $exists ? 'This email is already registered.' : 'Email is available.'
+        'valid' => true,
+        'message' => 'Email address is available.'
     ]);
-})->name('api.validate-email');
+});

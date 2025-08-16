@@ -123,10 +123,20 @@
                                     </svg>
                                 </div>
                                 <input id="email" name="email" type="email" value="{{ old('email') }}" required autocomplete="username"
-                                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-200 @error('email') border-red-500 dark:border-red-400 @enderror"
+                                    class="block w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-200 @error('email') border-red-500 dark:border-red-400 @enderror"
                                     placeholder="Enter email address"
                                     oninput="validateEmail(this)">
+                                <!-- Email validation indicator -->
+                                <div id="email-validation" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none hidden">
+                                    <svg id="email-valid-icon" class="h-5 w-5 text-green-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <svg id="email-invalid-icon" class="h-5 w-5 text-red-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </div>
                             </div>
+                            <div id="email-feedback" class="mt-2 text-sm hidden"></div>
                             @error('email')
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
@@ -174,9 +184,15 @@
                                     </svg>
                                 </div>
                                 <input id="password" name="password" type="password" required autocomplete="new-password"
-                                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-200 @error('password') border-red-500 dark:border-red-400 @enderror"
+                                    class="block w-full pl-10 pr-20 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-200 @error('password') border-red-500 dark:border-red-400 @enderror"
                                     placeholder="Create a password"
                                     oninput="validatePassword(this)">
+                                <button type="button" id="generatePasswordBtn" class="absolute inset-y-0 right-0 px-3 flex items-center text-sm text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors duration-200">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    Generate
+                                </button>
                             </div>
                             <!-- Password Requirements -->
                             <div id="password-requirements" class="mt-2 text-xs text-gray-500 dark:text-gray-400">
@@ -203,6 +219,12 @@
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                     </svg>
                                     One number
+                                </div>
+                                <div id="req-symbol" class="flex items-center">
+                                    <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    One special character
                                 </div>
                             </div>
                             @error('password')
@@ -376,10 +398,32 @@
             return true;
         }
 
-        // Email validation with regex
+        // Email validation with regex and real-time availability check
+        let emailValidationTimeout;
+        
         function validateEmail(input) {
             const value = input.value.trim();
             const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            
+            // Clear previous timeout
+            clearTimeout(emailValidationTimeout);
+            
+            // Hide validation elements
+            const emailValidation = document.getElementById('email-validation');
+            const emailValidIcon = document.getElementById('email-valid-icon');
+            const emailInvalidIcon = document.getElementById('email-invalid-icon');
+            const emailFeedback = document.getElementById('email-feedback');
+            
+            if (emailValidation) {
+                emailValidation.classList.add('hidden');
+                emailValidIcon.classList.add('hidden');
+                emailInvalidIcon.classList.add('hidden');
+                emailFeedback.classList.add('hidden');
+            }
+            
+            // Reset border color
+            input.classList.remove('border-green-500', 'border-red-500');
+            input.classList.add('border-gray-300');
             
             if (value.length === 0) {
                 setFieldState('email', false, 'Email address is required');
@@ -391,8 +435,70 @@
                 return false;
             }
             
+            // Debounce the availability check
+            emailValidationTimeout = setTimeout(() => {
+                checkEmailAvailability(value);
+            }, 500);
+            
             setFieldState('email', true);
             return true;
+        }
+
+        function checkEmailAvailability(email) {
+            const emailValidation = document.getElementById('email-validation');
+            const emailValidIcon = document.getElementById('email-valid-icon');
+            const emailInvalidIcon = document.getElementById('email-invalid-icon');
+            const emailFeedback = document.getElementById('email-feedback');
+            const emailInput = document.getElementById('email');
+            
+            if (!emailValidation || !emailValidIcon || !emailInvalidIcon || !emailFeedback || !emailInput) {
+                return;
+            }
+            
+            // Show loading state
+            emailValidation.classList.remove('hidden');
+            emailValidIcon.classList.add('hidden');
+            emailInvalidIcon.classList.add('hidden');
+            emailFeedback.classList.add('hidden');
+            
+            fetch('/api/validate-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                emailValidation.classList.remove('hidden');
+                emailFeedback.classList.remove('hidden');
+                
+                if (data.valid) {
+                    // Email is available
+                    emailValidIcon.classList.remove('hidden');
+                    emailInvalidIcon.classList.add('hidden');
+                    emailInput.classList.remove('border-red-500');
+                    emailInput.classList.add('border-green-500');
+                    emailFeedback.textContent = data.message;
+                    emailFeedback.className = 'mt-2 text-sm text-green-600 dark:text-green-400';
+                    setFieldState('email', true);
+                } else {
+                    // Email is already taken
+                    emailValidIcon.classList.add('hidden');
+                    emailInvalidIcon.classList.remove('hidden');
+                    emailInput.classList.remove('border-green-500');
+                    emailInput.classList.add('border-red-500');
+                    emailFeedback.textContent = data.message;
+                    emailFeedback.className = 'mt-2 text-sm text-red-600 dark:text-red-400';
+                    setFieldState('email', false, data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error validating email:', error);
+                emailValidation.classList.add('hidden');
+                emailFeedback.classList.add('hidden');
+            });
         }
 
         // Role validation
@@ -417,24 +523,27 @@
                 length: value.length >= 8,
                 uppercase: /[A-Z]/.test(value),
                 lowercase: /[a-z]/.test(value),
-                number: /\d/.test(value)
+                number: /\d/.test(value),
+                symbol: /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(value)
             };
             
             // Update visual indicators
             Object.keys(requirements).forEach(req => {
                 const element = document.getElementById('req-' + req);
-                const svg = element.querySelector('svg');
-                
-                if (requirements[req]) {
-                    svg.classList.remove('text-gray-400');
-                    svg.classList.add('text-green-500');
-                    element.classList.remove('text-gray-500');
-                    element.classList.add('text-green-600');
-                } else {
-                    svg.classList.remove('text-green-500');
-                    svg.classList.add('text-gray-400');
-                    element.classList.remove('text-green-600');
-                    element.classList.add('text-gray-500');
+                if (element) {
+                    const svg = element.querySelector('svg');
+                    
+                    if (requirements[req]) {
+                        svg.classList.remove('text-gray-400');
+                        svg.classList.add('text-green-500');
+                        element.classList.remove('text-gray-500');
+                        element.classList.add('text-green-600');
+                    } else {
+                        svg.classList.remove('text-green-500');
+                        svg.classList.add('text-gray-400');
+                        element.classList.remove('text-green-600');
+                        element.classList.add('text-gray-500');
+                    }
                 }
             });
             
@@ -535,8 +644,21 @@
             }
         }
 
-        // Initialize validation on page load
+        // Password generation functionality
         document.addEventListener('DOMContentLoaded', function() {
+            const generatePasswordBtn = document.getElementById('generatePasswordBtn');
+            if (generatePasswordBtn) {
+                generatePasswordBtn.addEventListener('click', function() {
+                    const password = generateSecurePassword();
+                    document.getElementById('password').value = password;
+                    document.getElementById('password_confirmation').value = password;
+                    
+                    // Trigger input events to update validation
+                    document.getElementById('password').dispatchEvent(new Event('input'));
+                    document.getElementById('password_confirmation').dispatchEvent(new Event('input'));
+                });
+            }
+            
             // Add event listeners for real-time validation
             document.getElementById('name').addEventListener('blur', function() {
                 validateName(this);
@@ -554,5 +676,25 @@
                 validatePasswordConfirmation(this);
             });
         });
+
+        function generateSecurePassword() {
+            const length = 12;
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+            let password = "";
+            
+            // Ensure at least one character from each required category
+            password += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)]; // Uppercase
+            password += "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)]; // Lowercase
+            password += "0123456789"[Math.floor(Math.random() * 10)]; // Number
+            password += "!@#$%^&*()_+-=[]{}|;:,.<>?"[Math.floor(Math.random() * 32)]; // Symbol
+            
+            // Fill the rest with random characters
+            for (let i = password.length; i < length; i++) {
+                password += charset[Math.floor(Math.random() * charset.length)];
+            }
+            
+            // Shuffle the password
+            return password.split('').sort(() => Math.random() - 0.5).join('');
+        }
     </script>
 </x-admin-layout>

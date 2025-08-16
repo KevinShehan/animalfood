@@ -202,7 +202,19 @@
 
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
-                        <input type="email" id="email" name="email" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        <div class="relative">
+                            <input type="email" id="email" name="email" required class="block w-full pl-3 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                            <!-- Email validation indicator -->
+                            <div id="email-validation" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none hidden">
+                                <svg id="email-valid-icon" class="h-5 w-5 text-green-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <svg id="email-invalid-icon" class="h-5 w-5 text-red-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div id="email-feedback" class="text-xs mt-1 hidden"></div>
                         <div id="email_error" class="text-red-500 text-xs mt-1 hidden"></div>
                     </div>
 
@@ -219,7 +231,48 @@
 
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-                        <input type="password" id="password" name="password" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        <div class="relative">
+                            <input type="password" id="password" name="password" class="block w-full pl-3 pr-20 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                            <button type="button" id="generatePasswordBtn" class="absolute inset-y-0 right-0 px-3 flex items-center text-sm text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors duration-200">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Generate
+                            </button>
+                        </div>
+                        <!-- Password Requirements -->
+                        <div id="password-requirements" class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                            <div id="req-length" class="flex items-center">
+                                <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                At least 8 characters
+                            </div>
+                            <div id="req-uppercase" class="flex items-center">
+                                <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                One uppercase letter
+                            </div>
+                            <div id="req-lowercase" class="flex items-center">
+                                <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                One lowercase letter
+                            </div>
+                            <div id="req-number" class="flex items-center">
+                                <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                One number
+                            </div>
+                            <div id="req-symbol" class="flex items-center">
+                                <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                One special character
+                            </div>
+                        </div>
                         <div id="password_error" class="text-red-500 text-xs mt-1 hidden"></div>
                     </div>
 
@@ -370,5 +423,219 @@
                 row.style.display = text.includes(searchTerm) ? '' : 'none';
             });
         });
+
+        // Password generation functionality
+        let emailValidationTimeout;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const generatePasswordBtn = document.getElementById('generatePasswordBtn');
+            if (generatePasswordBtn) {
+                generatePasswordBtn.addEventListener('click', function() {
+                    const password = generateSecurePassword();
+                    document.getElementById('password').value = password;
+                    document.getElementById('password_confirmation').value = password;
+                    
+                    // Trigger input events to update validation
+                    document.getElementById('password').dispatchEvent(new Event('input'));
+                    document.getElementById('password_confirmation').dispatchEvent(new Event('input'));
+                });
+            }
+
+            // Email validation
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                emailInput.addEventListener('input', function() {
+                    validateEmail(this.value);
+                });
+            }
+
+            // Password validation
+            const passwordInput = document.getElementById('password');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    validatePassword(this.value);
+                });
+            }
+
+            // Password confirmation validation
+            const passwordConfirmInput = document.getElementById('password_confirmation');
+            if (passwordConfirmInput) {
+                passwordConfirmInput.addEventListener('input', function() {
+                    validatePasswordConfirmation();
+                });
+            }
+        });
+
+        function generateSecurePassword() {
+            const length = 12;
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+            let password = "";
+            
+            // Ensure at least one character from each required category
+            password += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)]; // Uppercase
+            password += "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)]; // Lowercase
+            password += "0123456789"[Math.floor(Math.random() * 10)]; // Number
+            password += "!@#$%^&*()_+-=[]{}|;:,.<>?"[Math.floor(Math.random() * 32)]; // Symbol
+            
+            // Fill the rest with random characters
+            for (let i = password.length; i < length; i++) {
+                password += charset[Math.floor(Math.random() * charset.length)];
+            }
+            
+            // Shuffle the password
+            return password.split('').sort(() => Math.random() - 0.5).join('');
+        }
+
+        function validateEmail(email) {
+            const emailInput = document.getElementById('email');
+            const emailValidation = document.getElementById('email-validation');
+            const emailValidIcon = document.getElementById('email-valid-icon');
+            const emailInvalidIcon = document.getElementById('email-invalid-icon');
+            const emailFeedback = document.getElementById('email-feedback');
+            
+            // Clear previous timeout
+            clearTimeout(emailValidationTimeout);
+            
+            // Hide validation elements
+            if (emailValidation) {
+                emailValidation.classList.add('hidden');
+                emailValidIcon.classList.add('hidden');
+                emailInvalidIcon.classList.add('hidden');
+                emailFeedback.classList.add('hidden');
+            }
+            
+            // Reset border color
+            emailInput.classList.remove('border-green-500', 'border-red-500');
+            emailInput.classList.add('border-gray-300');
+            
+            // Don't validate if email is empty
+            if (!email || email.trim() === '') {
+                return;
+            }
+            
+            // Basic email format validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return;
+            }
+            
+            // Debounce the availability check
+            emailValidationTimeout = setTimeout(() => {
+                checkEmailAvailability(email);
+            }, 500);
+        }
+
+        function checkEmailAvailability(email) {
+            const emailInput = document.getElementById('email');
+            const emailValidation = document.getElementById('email-validation');
+            const emailValidIcon = document.getElementById('email-valid-icon');
+            const emailInvalidIcon = document.getElementById('email-invalid-icon');
+            const emailFeedback = document.getElementById('email-feedback');
+            
+            if (!emailValidation || !emailValidIcon || !emailInvalidIcon || !emailFeedback || !emailInput) {
+                return;
+            }
+            
+            // Show loading state
+            emailValidation.classList.remove('hidden');
+            emailValidIcon.classList.add('hidden');
+            emailInvalidIcon.classList.add('hidden');
+            emailFeedback.classList.add('hidden');
+            
+            fetch('/api/validate-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                emailValidation.classList.remove('hidden');
+                emailFeedback.classList.remove('hidden');
+                
+                if (data.valid) {
+                    // Email is available
+                    emailValidIcon.classList.remove('hidden');
+                    emailInvalidIcon.classList.add('hidden');
+                    emailInput.classList.remove('border-red-500');
+                    emailInput.classList.add('border-green-500');
+                    emailFeedback.textContent = data.message;
+                    emailFeedback.className = 'text-xs mt-1 text-green-600 dark:text-green-400';
+                } else {
+                    // Email is already taken
+                    emailValidIcon.classList.add('hidden');
+                    emailInvalidIcon.classList.remove('hidden');
+                    emailInput.classList.remove('border-green-500');
+                    emailInput.classList.add('border-red-500');
+                    emailFeedback.textContent = data.message;
+                    emailFeedback.className = 'text-xs mt-1 text-red-600 dark:text-red-400';
+                }
+            })
+            .catch(error => {
+                console.error('Error validating email:', error);
+                emailValidation.classList.add('hidden');
+                emailFeedback.classList.add('hidden');
+            });
+        }
+
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                symbol: /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)
+            };
+            
+            // Update visual indicators
+            Object.keys(requirements).forEach(req => {
+                const element = document.getElementById('req-' + req);
+                if (element) {
+                    const svg = element.querySelector('svg');
+                    
+                    if (requirements[req]) {
+                        svg.classList.remove('text-gray-400');
+                        svg.classList.add('text-green-500');
+                        element.classList.remove('text-gray-500');
+                        element.classList.add('text-green-600');
+                    } else {
+                        svg.classList.remove('text-green-500');
+                        svg.classList.add('text-gray-400');
+                        element.classList.remove('text-green-600');
+                        element.classList.add('text-gray-500');
+                    }
+                }
+            });
+            
+            // Validate password confirmation if it has a value
+            const confirmField = document.getElementById('password_confirmation');
+            if (confirmField && confirmField.value.length > 0) {
+                validatePasswordConfirmation();
+            }
+        }
+
+        function validatePasswordConfirmation() {
+            const password = document.getElementById('password').value;
+            const confirmation = document.getElementById('password_confirmation').value;
+            const confirmField = document.getElementById('password_confirmation');
+            
+            if (!confirmField) return;
+            
+            if (confirmation.length === 0) {
+                confirmField.classList.remove('border-green-500', 'border-red-500');
+                confirmField.classList.add('border-gray-300');
+                return;
+            }
+            
+            if (password === confirmation) {
+                confirmField.classList.remove('border-red-500');
+                confirmField.classList.add('border-green-500');
+            } else {
+                confirmField.classList.remove('border-green-500');
+                confirmField.classList.add('border-red-500');
+            }
+        }
     </script>
 </x-admin-layout> 
