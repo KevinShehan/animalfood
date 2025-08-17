@@ -33,8 +33,25 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Bill Header Settings Form -->
-        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-6">Company Information</h2>
+                 <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+             <div class="flex items-center justify-between mb-6">
+                 <h2 class="text-lg font-medium text-gray-900 dark:text-white">Company Information</h2>
+                 @if($billHeader)
+                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                     </svg>
+                     Active
+                 </span>
+                 @else
+                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                         <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                     </svg>
+                     Not Configured
+                 </span>
+                 @endif
+             </div>
             
             <form method="POST" action="{{ $billHeader ? route('admin.settings.bill-header.update', $billHeader) : route('admin.settings.bill-header.store') }}" enctype="multipart/form-data" class="space-y-6" id="billHeaderForm">
                 @csrf
@@ -59,7 +76,7 @@
                         </div>
                         <div class="flex-1">
                             <input type="file" id="company_logo_input" name="company_logo" accept="image/*" class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100 dark:file:bg-green-900 dark:file:text-green-300">
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF up to 2MB</p>
+                                                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF up to 2MB. Logo will appear in bill preview and print.</p>
                         </div>
                     </div>
                     @error('company_logo')
@@ -72,7 +89,7 @@
                     <label for="company_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Company Name *
                     </label>
-                    <input type="text" id="company_name" name="company_name" value="{{ old('company_name', $billHeader->company_name ?? '') }}" required
+                                         <input type="text" id="company_name" name="company_name" value="{{ old('company_name', $billHeader?->company_name ?? '') }}" required
                         class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
                     @error('company_name')
                         <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -84,8 +101,8 @@
                     <label for="company_address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Company Address
                     </label>
-                    <textarea id="company_address" name="company_address" rows="3"
-                        class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">{{ old('company_address', $billHeader->company_address ?? '') }}</textarea>
+                                         <textarea id="company_address" name="company_address" rows="3"
+                         class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">{{ old('company_address', $billHeader?->company_address ?? '') }}</textarea>
                     @error('company_address')
                         <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
@@ -97,7 +114,7 @@
                         <label for="company_phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Phone Number
                         </label>
-                        <input type="text" id="company_phone" name="company_phone" value="{{ old('company_phone', $billHeader->company_phone ?? '') }}"
+                                                 <input type="text" id="company_phone" name="company_phone" value="{{ old('company_phone', $billHeader?->company_phone ?? '') }}"
                             class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
                         @error('company_phone')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -108,7 +125,7 @@
                         <label for="company_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Email Address
                         </label>
-                        <input type="email" id="company_email" name="company_email" value="{{ old('company_email', $billHeader->company_email ?? '') }}"
+                                                 <input type="email" id="company_email" name="company_email" value="{{ old('company_email', $billHeader?->company_email ?? '') }}"
                             class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
                         @error('company_email')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -122,7 +139,7 @@
                         <label for="company_website" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Website
                         </label>
-                        <input type="url" id="company_website" name="company_website" value="{{ old('company_website', $billHeader->company_website ?? '') }}"
+                                                 <input type="url" id="company_website" name="company_website" value="{{ old('company_website', $billHeader?->company_website ?? '') }}"
                             class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
                         @error('company_website')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -133,7 +150,7 @@
                         <label for="tax_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Tax Number
                         </label>
-                        <input type="text" id="tax_number" name="tax_number" value="{{ old('tax_number', $billHeader->tax_number ?? '') }}"
+                                                 <input type="text" id="tax_number" name="tax_number" value="{{ old('tax_number', $billHeader?->tax_number ?? '') }}"
                             class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
                         @error('tax_number')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -146,7 +163,7 @@
                     <label for="invoice_prefix" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Invoice Prefix
                     </label>
-                    <input type="text" id="invoice_prefix" name="invoice_prefix" value="{{ old('invoice_prefix', $billHeader->invoice_prefix ?? 'INV') }}"
+                                         <input type="text" id="invoice_prefix" name="invoice_prefix" value="{{ old('invoice_prefix', $billHeader?->invoice_prefix ?? 'INV') }}"
                         class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Prefix for invoice numbers (e.g., INV, BILL)</p>
                     @error('invoice_prefix')
@@ -159,8 +176,8 @@
                     <label for="footer_text" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Footer Text
                     </label>
-                    <textarea id="footer_text" name="footer_text" rows="3"
-                        class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">{{ old('footer_text', $billHeader->footer_text ?? '') }}</textarea>
+                                         <textarea id="footer_text" name="footer_text" rows="3"
+                         class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">{{ old('footer_text', $billHeader?->footer_text ?? '') }}</textarea>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Text to appear at the bottom of bills</p>
                     @error('footer_text')
                         <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -206,22 +223,22 @@
                     
                     <!-- Company information on the right -->
                     <div class="flex-1">
-                        <h3 id="preview-company-name" class="text-xl font-bold text-gray-900 dark:text-white">
-                            {{ $billHeader->company_name ?? 'Your Company Name' }}
-                        </h3>
-                        
-                        <p id="preview-company-address" class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                            {{ $billHeader->company_address ?? 'Company Address' }}
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-4 mt-3 text-sm text-gray-600 dark:text-gray-400">
-                            <span id="preview-company-phone">{{ $billHeader->company_phone ?? 'Phone Number' }}</span>
-                            <span id="preview-company-email">{{ $billHeader->company_email ?? 'Email Address' }}</span>
-                        </div>
-                        
-                        <p id="preview-company-website" class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                            {{ $billHeader->company_website ?? 'Website' }}
-                        </p>
+                                                 <h3 id="preview-company-name" class="text-xl font-bold text-gray-900 dark:text-white">
+                             {{ $billHeader?->company_name ?? 'Your Company Name' }}
+                         </h3>
+                         
+                         <p id="preview-company-address" class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                             {{ $billHeader?->company_address ?? 'Company Address' }}
+                         </p>
+                         
+                         <div class="flex flex-wrap gap-4 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                             <span id="preview-company-phone">{{ $billHeader?->company_phone ?? 'Phone Number' }}</span>
+                             <span id="preview-company-email">{{ $billHeader?->company_email ?? 'Email Address' }}</span>
+                         </div>
+                         
+                         <p id="preview-company-website" class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                             {{ $billHeader?->company_website ?? 'Website' }}
+                         </p>
                     </div>
                 </div>
                 
@@ -229,7 +246,7 @@
                     <div class="flex justify-between items-center">
                         <div>
                             <h4 class="font-medium text-gray-900 dark:text-white">Invoice #</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ $billHeader->invoice_prefix ?? 'INV' }}-001</p>
+                                                         <p class="text-sm text-gray-600 dark:text-gray-400">{{ $billHeader?->invoice_prefix ?? 'INV' }}-001</p>
                         </div>
                         <div class="text-right">
                             <h4 class="font-medium text-gray-900 dark:text-white">Date</h4>
@@ -238,25 +255,43 @@
                     </div>
                 </div>
                 
-                @if($billHeader && $billHeader->footer_text)
+                                 @if($billHeader?->footer_text)
                     <div class="border-t border-gray-200 dark:border-gray-600 pt-4 mt-4">
                         <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
-                            {{ $billHeader->footer_text }}
+                                                         {{ $billHeader?->footer_text }}
                         </p>
                     </div>
                 @endif
             </div>
             
-            <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
-                <h4 class="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">How it works:</h4>
-                <ul class="text-sm text-blue-800 dark:text-blue-200 space-y-1">
-                    <li>• Configure your company information above</li>
-                    <li>• Upload your company logo (PNG, JPG, GIF up to 2MB)</li>
-                    <li>• Save the settings with confirmation</li>
-                    <li>• This header will be applied to all generated bills</li>
-                    <li>• Use the "Test Header" button to verify your settings</li>
-                </ul>
-            </div>
+                         <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
+                 <h4 class="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">How it works:</h4>
+                 <ul class="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+                     <li>• Configure your company information above</li>
+                     <li>• Upload your company logo (PNG, JPG, GIF up to 2MB)</li>
+                     <li>• Save the settings with confirmation</li>
+                     <li>• This header will be applied to all generated bills</li>
+                     <li>• Use the "Test Header" button to verify your settings</li>
+                 </ul>
+             </div>
+             
+             @if(!$billHeader)
+             <div class="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900 rounded-lg">
+                 <h4 class="text-sm font-medium text-yellow-900 dark:text-yellow-100 mb-2">⚠️ No Bill Header Found:</h4>
+                 <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                     You haven't created a bill header yet. Fill out the form and save your company information. 
+                     The "Test Header" button will show "No Active Header" until you save your first bill header settings.
+                 </p>
+             </div>
+             @else
+             <div class="mt-4 p-4 bg-green-50 dark:bg-green-900 rounded-lg">
+                 <h4 class="text-sm font-medium text-green-900 dark:text-green-100 mb-2">✅ Bill Header Active:</h4>
+                 <p class="text-sm text-green-800 dark:text-green-200">
+                     Your bill header is configured and active. The "Test Header" button will show your current settings. 
+                     You can update the information below and save changes.
+                 </p>
+             </div>
+             @endif
             
             <div class="mt-4 p-4 bg-green-50 dark:bg-green-900 rounded-lg">
                 <h4 class="text-sm font-medium text-green-900 dark:text-green-100 mb-2">💡 Tips:</h4>

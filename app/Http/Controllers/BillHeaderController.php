@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BillHeader;
+use App\Services\AuditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -32,6 +33,13 @@ class BillHeaderController extends Controller
             'footer_text' => 'nullable|string',
         ]);
 
+        // Get old values for audit logging
+        $oldValues = [];
+        $existingHeader = BillHeader::getActive();
+        if ($existingHeader) {
+            $oldValues = $existingHeader->toArray();
+        }
+
         // Deactivate all existing headers
         BillHeader::where('is_active', true)->update(['is_active' => false]);
 
@@ -54,9 +62,13 @@ class BillHeaderController extends Controller
 
             \Log::info('Bill header created:', ['id' => $billHeader->id, 'data' => $billHeader->toArray()]);
 
+            // Log bill header change for audit
+            $newValues = $billHeader->toArray();
+            AuditService::logBillHeaderChange($oldValues, $newValues, $request);
+
             return redirect()->route('admin.settings.bill-header')->with('success', 'Bill header settings saved successfully! Your company logo and information will now appear on all generated bills.');
         } catch (\Exception $e) {
-            \Log::error('Error creating bill header:', ['error' => $e->getMessage()]);
+            \Log::error('Error creating bill header:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return redirect()->route('admin.settings.bill-header')->with('error', 'Failed to save bill header settings. Please try again.');
         }
     }
@@ -74,6 +86,9 @@ class BillHeaderController extends Controller
             'invoice_prefix' => 'nullable|string|max:10',
             'footer_text' => 'nullable|string',
         ]);
+
+        // Get old values for audit logging
+        $oldValues = $billHeader->toArray();
 
         $data = $request->except('company_logo');
 
@@ -96,9 +111,13 @@ class BillHeaderController extends Controller
 
             \Log::info('Bill header updated:', ['id' => $billHeader->id, 'data' => $billHeader->toArray()]);
 
+            // Log bill header change for audit
+            $newValues = $billHeader->fresh()->toArray();
+            AuditService::logBillHeaderChange($oldValues, $newValues, $request);
+
             return redirect()->route('admin.settings.bill-header')->with('success', 'Bill header settings updated successfully! Your company logo and information will now appear on all generated bills.');
         } catch (\Exception $e) {
-            \Log::error('Error updating bill header:', ['error' => $e->getMessage()]);
+            \Log::error('Error updating bill header:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return redirect()->route('admin.settings.bill-header')->with('error', 'Failed to update bill header settings. Please try again.');
         }
     }

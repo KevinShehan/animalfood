@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Services\AuditService;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,11 +26,28 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        try {
+            $request->authenticate();
+            $request->session()->regenerate();
 
-        $request->session()->regenerate();
+            // Log successful login
+            $user = Auth::user();
+            AuditService::logUserLogin($user, $request, true);
 
-        return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('dashboard', absolute: false));
+        } catch (\Exception $e) {
+            // Log failed login attempt
+            $email = $request->input('email');
+            $user = User::where('email', $email)->first();
+            
+            if ($user) {
+                AuditService::logUserLogin($user, $request, false);
+            } else {
+                AuditService::logFailedLoginAttempt($request, $email);
+            }
+
+            throw $e;
+        }
     }
 
     /**
@@ -36,10 +55,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Log logout before destroying session
+        if (Auth::check()) {
+            $user = Auth::user();
+            AuditService::logUserLogout($user, $request);
+        }
+
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');

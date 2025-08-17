@@ -1,4 +1,4 @@
-<?php
+/<?php
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChangePasswordController;
@@ -152,6 +152,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/audit-logs/stats', [AuditLogController::class, 'getStats'])->name('admin.audit-logs.stats')->middleware('role:administrator,super_administrator');
         Route::post('/audit-logs/cleanup', [AuditLogController::class, 'cleanup'])->name('admin.audit-logs.cleanup')->middleware('role:administrator,super_administrator');
         Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('admin.audit-logs.show')->middleware('role:administrator,super_administrator');
+        Route::get('/audit-logs/user/login-history', [AuditLogController::class, 'getUserLoginHistory'])->name('admin.audit-logs.user.login-history')->middleware('role:administrator,super_administrator');
+        Route::get('/audit-logs/bill-header/history', [AuditLogController::class, 'getBillHeaderHistory'])->name('admin.audit-logs.bill-header.history')->middleware('role:administrator,super_administrator');
+        Route::get('/audit-logs/recent', [AuditLogController::class, 'getRecentLogs'])->name('admin.audit-logs.recent')->middleware('role:administrator,super_administrator');
 
         // Customer Reports & Dues
         Route::get('/reports/customer-dues', [CustomerReportController::class, 'index'])->name('admin.reports.customer-dues');
@@ -200,9 +203,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/billing/products/{id}', [BillingController::class, 'getProductDetails'])->name('admin.billing.products.details');
         Route::get('/billing/customers/{id}', [BillingController::class, 'getCustomerDetails'])->name('admin.billing.customers.details');
         
-        Route::get('/billing/list', function () {
-            return view('admin.billing.list');
-        })->name('admin.bill.list');
+        Route::get('/billing/list', [BillingController::class, 'list'])->name('admin.bill.list');
+        Route::get('/billing/api/bills', [BillingController::class, 'getBills'])->name('admin.billing.api.bills');
+        Route::get('/billing/export', [BillingController::class, 'exportBills'])->name('admin.billing.export');
         
         // Reports
         Route::get('/reports', function () {
@@ -242,11 +245,22 @@ Route::middleware('auth')->group(function () {
         // Test route to check bill header data
         Route::get('/test/bill-header', function() {
             $header = \App\Models\BillHeader::getActive();
+            $logoExists = false;
+            $logoPath = '';
+            
+            if ($header && $header->company_logo) {
+                $logoPath = storage_path('app/public/' . $header->company_logo);
+                $logoExists = file_exists($logoPath);
+            }
+            
             return response()->json([
                 'header' => $header,
                 'all_headers' => \App\Models\BillHeader::all(),
                 'storage_url' => asset('storage'),
-                'logo_url' => $header ? asset('storage/' . $header->company_logo) : null
+                'logo_url' => $header ? asset('storage/' . $header->company_logo) : null,
+                'logo_exists' => $logoExists,
+                'logo_path' => $logoPath,
+                'public_storage_path' => public_path('storage')
             ]);
         })->name('admin.test.bill-header');
     });

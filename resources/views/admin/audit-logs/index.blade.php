@@ -123,6 +123,17 @@
                     </select>
                 </div>
 
+                <!-- Activity Type Filter -->
+                <div>
+                    <label for="activity_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Activity Type</label>
+                    <select id="activity_type" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        <option value="">All Activities</option>
+                        @foreach($activityTypes as $type)
+                            <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <!-- Date From -->
                 <div>
                     <label for="date_from" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">From</label>
@@ -140,6 +151,18 @@
                 <div class="flex space-x-2">
                     <button id="clear-filters" class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Clear Filters
+                    </button>
+                    <button id="view-login-history" class="px-4 py-2 text-sm font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-600 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        User Login History
+                    </button>
+                    <button id="view-bill-header-history" class="px-4 py-2 text-sm font-medium text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-900/20 border border-green-300 dark:border-green-600 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Bill Header Changes
                     </button>
                 </div>
                 <div class="flex space-x-2">
@@ -234,37 +257,68 @@
             loadStats();
             
             // Set up event listeners for filters
-            ['search', 'action', 'model_type', 'user_id', 'date_from', 'date_to'].forEach(id => {
-                document.getElementById(id).addEventListener('change', filterLogs);
+            ['search', 'action', 'model_type', 'user_id', 'activity_type', 'date_from', 'date_to'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', filterLogs);
+                }
             });
             
             // Debounce search input
             let searchTimeout;
-            document.getElementById('search').addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(filterLogs, 300);
-            });
+            const searchElement = document.getElementById('search');
+            if (searchElement) {
+                searchElement.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(filterLogs, 300);
+                });
+            }
         });
 
         function loadStats() {
             fetch('/admin/audit-logs/stats')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('today-logs').textContent = data.today_logs;
-                    document.getElementById('week-logs').textContent = data.this_week_logs;
-                    document.getElementById('month-logs').textContent = data.this_month_logs;
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load stats');
+                    }
+                    return response.json();
                 })
-                .catch(error => console.error('Error loading stats:', error));
+                .then(data => {
+                    if (data.error) {
+                        console.error('Stats error:', data.error);
+                        return;
+                    }
+                    
+                    const todayElement = document.getElementById('today-logs');
+                    const weekElement = document.getElementById('week-logs');
+                    const monthElement = document.getElementById('month-logs');
+                    const totalElement = document.getElementById('total-logs');
+                    
+                    if (todayElement) todayElement.textContent = data.today_logs || 0;
+                    if (weekElement) weekElement.textContent = data.this_week_logs || 0;
+                    if (monthElement) monthElement.textContent = data.this_month_logs || 0;
+                    if (totalElement) totalElement.textContent = data.total_logs || 0;
+                })
+                .catch(error => {
+                    console.error('Error loading stats:', error);
+                    // Set default values if stats fail to load
+                    const elements = ['today-logs', 'week-logs', 'month-logs'];
+                    elements.forEach(id => {
+                        const element = document.getElementById(id);
+                        if (element) element.textContent = '0';
+                    });
+                });
         }
 
         function filterLogs() {
             const filters = {
-                search: document.getElementById('search').value,
-                action: document.getElementById('action').value,
-                model_type: document.getElementById('model_type').value,
-                user_id: document.getElementById('user_id').value,
-                date_from: document.getElementById('date_from').value,
-                date_to: document.getElementById('date_to').value
+                search: document.getElementById('search')?.value || '',
+                action: document.getElementById('action')?.value || '',
+                model_type: document.getElementById('model_type')?.value || '',
+                user_id: document.getElementById('user_id')?.value || '',
+                activity_type: document.getElementById('activity_type')?.value || '',
+                date_from: document.getElementById('date_from')?.value || '',
+                date_to: document.getElementById('date_to')?.value || ''
             };
 
             currentFilters = filters;
@@ -274,24 +328,54 @@
                 if (filters[key]) params.append(key, filters[key]);
             });
 
+            // Show loading state
+            const container = document.getElementById('audit-logs-container');
+            if (container) {
+                container.innerHTML = '<div class="text-center py-8"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-2 text-gray-600">Loading...</p></div>';
+            }
+
             fetch(`/admin/audit-logs?${params.toString()}`, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load audit logs');
+                }
+                return response.json();
+            })
             .then(data => {
-                document.getElementById('audit-logs-container').innerHTML = data.html;
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                if (container) {
+                    container.innerHTML = data.html || '<div class="text-center py-8 text-gray-600">No audit logs found</div>';
+                }
+                
+                // Update pagination if available
+                const paginationContainer = document.querySelector('.pagination-container');
+                if (paginationContainer && data.pagination) {
+                    paginationContainer.innerHTML = data.pagination;
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
+                if (container) {
+                    container.innerHTML = '<div class="text-center py-8 text-red-600">Failed to load audit logs. Please try again.</div>';
+                }
                 Swal.fire('Error!', 'Failed to load audit logs', 'error');
             });
         }
 
         function clearFilters() {
-            ['search', 'action', 'model_type', 'user_id', 'date_from', 'date_to'].forEach(id => {
-                document.getElementById(id).value = '';
+            const filterIds = ['search', 'action', 'model_type', 'user_id', 'activity_type', 'date_from', 'date_to'];
+            filterIds.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.value = '';
+                }
             });
             filterLogs();
         }
@@ -367,9 +451,164 @@
             document.getElementById('cleanupModal').classList.add('hidden');
         }
 
+        function showUserLoginHistory() {
+            Swal.fire({
+                title: 'User Login History',
+                html: `
+                    <div class="text-left">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select User</label>
+                        <select id="user-select" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select a user...</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'View History',
+                cancelButtonText: 'Cancel',
+                preConfirm: () => {
+                    const userId = document.getElementById('user-select').value;
+                    if (!userId) {
+                        Swal.showValidationMessage('Please select a user');
+                        return false;
+                    }
+                    return userId;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const userId = result.value;
+                    fetch(`/admin/audit-logs/user/login-history?user_id=${userId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error) {
+                                Swal.fire('Error!', data.error, 'error');
+                                return;
+                            }
+
+                            const historyHtml = data.login_history.map(log => `
+                                <div class="border-b border-gray-200 py-2">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <span class="font-medium">${log.action}</span>
+                                            <span class="text-sm text-gray-500 ml-2">${new Date(log.created_at).toLocaleString()}</span>
+                                        </div>
+                                        <span class="text-xs px-2 py-1 rounded ${getActionBadgeClass(log.action)}">${log.action}</span>
+                                    </div>
+                                    <div class="text-sm text-gray-600 mt-1">${log.description}</div>
+                                    <div class="text-xs text-gray-500 mt-1">IP: ${log.ip_address}</div>
+                                </div>
+                            `).join('');
+
+                            Swal.fire({
+                                title: `Login History - ${data.user.name}`,
+                                html: `
+                                    <div class="text-left max-h-96 overflow-y-auto">
+                                        <div class="mb-4 p-3 bg-blue-50 rounded-lg">
+                                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                                <div><strong>Total Logins:</strong> ${data.summary.total_logins}</div>
+                                                <div><strong>Total Logouts:</strong> ${data.summary.total_logouts}</div>
+                                                <div><strong>Failed Attempts:</strong> ${data.summary.failed_attempts}</div>
+                                                <div><strong>Last Login:</strong> ${data.summary.last_login ? new Date(data.summary.last_login).toLocaleString() : 'N/A'}</div>
+                                            </div>
+                                        </div>
+                                        <div class="space-y-2">
+                                            ${historyHtml}
+                                        </div>
+                                    </div>
+                                `,
+                                width: '600px',
+                                confirmButtonText: 'Close'
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire('Error!', 'Failed to load login history', 'error');
+                        });
+                }
+            });
+        }
+
+        function showBillHeaderHistory() {
+            fetch('/admin/audit-logs/bill-header/history')
+                .then(response => response.json())
+                .then(data => {
+                    const historyHtml = data.history.map(log => `
+                        <div class="border-b border-gray-200 py-2">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="font-medium">${log.user_name}</span>
+                                    <span class="text-sm text-gray-500 ml-2">${new Date(log.created_at).toLocaleString()}</span>
+                                </div>
+                                <span class="text-xs px-2 py-1 rounded bg-green-100 text-green-800">Bill Header Updated</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">${log.description}</div>
+                            <div class="text-xs text-gray-500 mt-1">IP: ${log.ip_address}</div>
+                            ${log.changed_fields && log.changed_fields.length > 0 ? `
+                                <div class="mt-2">
+                                    <span class="text-xs font-medium text-gray-700">Changed Fields:</span>
+                                    <span class="text-xs text-gray-600 ml-1">${log.changed_fields.join(', ')}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('');
+
+                    const changesByUser = Object.entries(data.summary.changes_by_user).map(([user, count]) => 
+                        `<div class="flex justify-between"><span>${user}</span><span class="font-medium">${count}</span></div>`
+                    ).join('');
+
+                    Swal.fire({
+                        title: 'Bill Header Change History',
+                        html: `
+                            <div class="text-left max-h-96 overflow-y-auto">
+                                <div class="mb-4 p-3 bg-green-50 rounded-lg">
+                                    <div class="grid grid-cols-2 gap-4 text-sm">
+                                        <div><strong>Total Changes:</strong> ${data.summary.total_changes}</div>
+                                        <div><strong>Last Change:</strong> ${data.summary.last_change ? new Date(data.summary.last_change).toLocaleString() : 'N/A'}</div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <div class="font-medium text-sm mb-2">Changes by User:</div>
+                                        <div class="space-y-1 text-sm">
+                                            ${changesByUser}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    ${historyHtml}
+                                </div>
+                            </div>
+                        `,
+                        width: '700px',
+                        confirmButtonText: 'Close'
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error!', 'Failed to load bill header history', 'error');
+                });
+        }
+
+        function getActionBadgeClass(action) {
+            switch (action) {
+                case 'login':
+                    return 'bg-green-100 text-green-800';
+                case 'logout':
+                    return 'bg-blue-100 text-blue-800';
+                case 'login_failed':
+                    return 'bg-red-100 text-red-800';
+                case 'session_timeout':
+                    return 'bg-yellow-100 text-yellow-800';
+                default:
+                    return 'bg-gray-100 text-gray-800';
+            }
+        }
+
         // Event Listeners
         document.getElementById('clear-filters').addEventListener('click', clearFilters);
         document.getElementById('cleanup-btn').addEventListener('click', openCleanupModal);
+        document.getElementById('view-login-history').addEventListener('click', showUserLoginHistory);
+        document.getElementById('view-bill-header-history').addEventListener('click', showBillHeaderHistory);
 
         document.getElementById('export-btn').addEventListener('click', function() {
             const params = new URLSearchParams(currentFilters);
@@ -381,6 +620,11 @@
             
             const days = document.getElementById('cleanup_days').value;
             
+            if (!days || days < 30 || days > 3650) {
+                Swal.fire('Error!', 'Please enter a valid number of days (30-3650)', 'error');
+                return;
+            }
+            
             Swal.fire({
                 title: 'Are you sure?',
                 text: `This will permanently delete all audit logs older than ${days} days. This action cannot be undone.`,
@@ -391,15 +635,30 @@
                 confirmButtonText: 'Yes, delete logs'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Get CSRF token
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
+                                     document.querySelector('input[name="_token"]')?.value;
+                    
+                    if (!csrfToken) {
+                        Swal.fire('Error!', 'CSRF token not found. Please refresh the page and try again.', 'error');
+                        return;
+                    }
+                    
                     fetch('/admin/audit-logs/cleanup', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
                         },
                         body: JSON.stringify({ days: parseInt(days) })
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         if (data.success) {
                             Swal.fire('Success!', data.message, 'success');
@@ -407,12 +666,12 @@
                             filterLogs(); // Reload the logs
                             loadStats(); // Reload stats
                         } else {
-                            Swal.fire('Error!', data.message, 'error');
+                            Swal.fire('Error!', data.message || 'Failed to cleanup logs', 'error');
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        Swal.fire('Error!', 'Failed to cleanup logs', 'error');
+                        Swal.fire('Error!', 'Failed to cleanup logs. Please try again.', 'error');
                     });
                 }
             });

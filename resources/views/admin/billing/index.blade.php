@@ -873,13 +873,15 @@
                 })
                 .then(header => {
                     console.log('Bill header data:', header); // Debug log
+                    console.log('Company logo path:', header ? header.company_logo : 'No header');
+                    console.log('Full logo URL:', header && header.company_logo ? `/storage/${header.company_logo}` : 'No logo');
                     let headerHtml = '';
                     if (header && header.company_name) {
                         headerHtml = `
                             <div class="flex items-start space-x-4 mb-6">
                                 <!-- Logo on the left -->
                                 <div class="flex-shrink-0">
-                                    ${header.company_logo ? `<img src="{{ asset('storage') }}/${header.company_logo}" alt="Company Logo" class="h-16 w-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : ''}
+                                    ${header.company_logo ? `<img src="/storage/${header.company_logo}" alt="Company Logo" class="h-16 w-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="this.nextElementSibling.style.display='none';">` : ''}
                                     <div class="h-16 w-16 bg-gray-200 rounded-lg flex items-center justify-center" ${header.company_logo ? 'style="display: none;"' : ''}>
                                         <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -1041,7 +1043,12 @@
                             .rounded-lg { border-radius: 0.5rem; }
                             .flex-wrap { flex-wrap: wrap; }
                             .gap-4 > * + * { margin-left: 1rem; }
-                            img { max-width: 100%; height: auto; }
+                            img { max-width: 100%; height: auto; display: block; }
+                            @media print {
+                                img { max-width: 100%; height: auto; display: block !important; }
+                                .h-16 { height: 4rem !important; }
+                                .w-auto { width: auto !important; }
+                            }
                         </style>
                     </head>
                     <body>
@@ -1050,7 +1057,11 @@
                 </html>
             `);
             printWindow.document.close();
-            printWindow.print();
+            
+            // Wait for images to load before printing
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
             
             // Save bill to database (you would implement this)
             Swal.fire('Success!', 'Bill has been printed and saved.', 'success').then(() => {
@@ -1105,7 +1116,10 @@
                                     <p><strong>Company Name:</strong> ${data.header.company_name || 'Not set'}</p>
                                     <p><strong>Company Logo:</strong> ${data.header.company_logo || 'Not set'}</p>
                                     <p><strong>Logo URL:</strong> ${data.logo_url || 'Not set'}</p>
+                                    <p><strong>Logo Exists:</strong> ${data.logo_exists ? 'Yes' : 'No'}</p>
+                                    <p><strong>Logo Path:</strong> ${data.logo_path || 'Not set'}</p>
                                     <p><strong>Storage URL:</strong> ${data.storage_url}</p>
+                                    <p><strong>Public Storage Path:</strong> ${data.public_storage_path}</p>
                                 ` : ''}
                                 <p><strong>Total Headers:</strong> ${data.all_headers.length}</p>
                             </div>
