@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         // Call the seeders to generate sample data
         $this->call([
             CategorySeeder::class,
+            ProductSeeder::class,
             SalesSeeder::class,
         ]);
     }

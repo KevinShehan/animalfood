@@ -35,6 +35,15 @@ class BillingController extends Controller
             
             $customers = $query->where('status', 'active')->get(['id', 'name', 'email', 'phone', 'address']);
             
+            // Ensure the default "Customer" entry is always first for billing
+            $defaultCustomer = $customers->where('name', 'Customer')->first();
+            if ($defaultCustomer) {
+                $customers = $customers->reject(function($customer) {
+                    return $customer->name === 'Customer';
+                });
+                $customers = collect([$defaultCustomer])->merge($customers);
+            }
+            
             return response()->json($customers);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error fetching customers: ' . $e->getMessage()], 500);

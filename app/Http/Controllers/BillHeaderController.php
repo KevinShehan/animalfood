@@ -11,7 +11,11 @@ class BillHeaderController extends Controller
     public function index()
     {
         $billHeader = BillHeader::getActive();
-        return view('admin.settings.bill-header', compact('billHeader'));
+        
+        // Check if storage link exists
+        $storageLinkExists = file_exists(public_path('storage'));
+        
+        return view('admin.settings.bill-header', compact('billHeader', 'storageLinkExists'));
     }
 
     public function store(Request $request)
@@ -37,13 +41,24 @@ class BillHeaderController extends Controller
         if ($request->hasFile('company_logo')) {
             $logoPath = $request->file('company_logo')->store('bill-headers', 'public');
             $data['company_logo'] = $logoPath;
+            \Log::info('Logo uploaded:', ['path' => $logoPath]);
         }
 
         $data['is_active'] = true;
 
-        BillHeader::create($data);
+        // Log the data being saved
+        \Log::info('Saving bill header data:', $data);
 
-        return redirect()->route('admin.settings.bill-header')->with('success', 'Bill header settings saved successfully!');
+        try {
+            $billHeader = BillHeader::create($data);
+
+            \Log::info('Bill header created:', ['id' => $billHeader->id, 'data' => $billHeader->toArray()]);
+
+            return redirect()->route('admin.settings.bill-header')->with('success', 'Bill header settings saved successfully! Your company logo and information will now appear on all generated bills.');
+        } catch (\Exception $e) {
+            \Log::error('Error creating bill header:', ['error' => $e->getMessage()]);
+            return redirect()->route('admin.settings.bill-header')->with('error', 'Failed to save bill header settings. Please try again.');
+        }
     }
 
     public function update(Request $request, BillHeader $billHeader)
@@ -70,16 +85,31 @@ class BillHeaderController extends Controller
             }
             $logoPath = $request->file('company_logo')->store('bill-headers', 'public');
             $data['company_logo'] = $logoPath;
+            \Log::info('Logo updated:', ['path' => $logoPath]);
         }
 
-        $billHeader->update($data);
+        // Log the data being updated
+        \Log::info('Updating bill header data:', $data);
 
-        return redirect()->route('admin.settings.bill-header')->with('success', 'Bill header settings updated successfully!');
+        try {
+            $billHeader->update($data);
+
+            \Log::info('Bill header updated:', ['id' => $billHeader->id, 'data' => $billHeader->toArray()]);
+
+            return redirect()->route('admin.settings.bill-header')->with('success', 'Bill header settings updated successfully! Your company logo and information will now appear on all generated bills.');
+        } catch (\Exception $e) {
+            \Log::error('Error updating bill header:', ['error' => $e->getMessage()]);
+            return redirect()->route('admin.settings.bill-header')->with('error', 'Failed to update bill header settings. Please try again.');
+        }
     }
 
     public function getActiveHeader()
     {
         $header = BillHeader::getActive();
+        
+        // Add debug logging
+        \Log::info('Bill header data:', ['header' => $header]);
+        
         return response()->json($header);
     }
 }

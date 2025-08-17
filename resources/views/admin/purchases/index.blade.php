@@ -126,7 +126,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($purchase->total_amount, 2) }}</div>
+                            <div class="text-sm font-medium text-gray-900 dark:text-white">Rs. {{ number_format($purchase->total_amount, 2) }}</div>
                             @if($purchase->total_quantity_ordered > 0)
                                 <div class="text-xs text-gray-500 dark:text-gray-400">
                                     {{ $purchase->total_quantity_received }}/{{ $purchase->total_quantity_ordered }} received

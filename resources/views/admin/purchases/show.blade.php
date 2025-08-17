@@ -138,30 +138,30 @@
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-600 dark:text-gray-400">Subtotal:</span>
-                        <span class="font-medium text-gray-900 dark:text-white">${{ number_format($purchase->subtotal, 2) }}</span>
+                        <span class="font-medium text-gray-900 dark:text-white">Rs. {{ number_format($purchase->subtotal, 2) }}</span>
                     </div>
                     @if($purchase->tax_amount > 0)
                     <div class="flex justify-between">
                         <span class="text-gray-600 dark:text-gray-400">Tax:</span>
-                        <span class="font-medium text-gray-900 dark:text-white">${{ number_format($purchase->tax_amount, 2) }}</span>
+                        <span class="font-medium text-gray-900 dark:text-white">Rs. {{ number_format($purchase->tax_amount, 2) }}</span>
                     </div>
                     @endif
                     @if($purchase->shipping_cost > 0)
                     <div class="flex justify-between">
                         <span class="text-gray-600 dark:text-gray-400">Shipping:</span>
-                        <span class="font-medium text-gray-900 dark:text-white">${{ number_format($purchase->shipping_cost, 2) }}</span>
+                        <span class="font-medium text-gray-900 dark:text-white">Rs. {{ number_format($purchase->shipping_cost, 2) }}</span>
                     </div>
                     @endif
                     @if($purchase->discount_amount > 0)
                     <div class="flex justify-between">
                         <span class="text-gray-600 dark:text-gray-400">Discount:</span>
-                        <span class="font-medium text-gray-900 dark:text-white">-${{ number_format($purchase->discount_amount, 2) }}</span>
+                        <span class="font-medium text-gray-900 dark:text-white">-Rs. {{ number_format($purchase->discount_amount, 2) }}</span>
                     </div>
                     @endif
                     <div class="border-t border-gray-200 dark:border-gray-600 pt-2">
                         <div class="flex justify-between">
                             <span class="font-medium text-gray-900 dark:text-white">Total:</span>
-                            <span class="font-bold text-lg text-gray-900 dark:text-white">${{ number_format($purchase->total_amount, 2) }}</span>
+                            <span class="font-bold text-lg text-gray-900 dark:text-white">Rs. {{ number_format($purchase->total_amount, 2) }}</span>
                         </div>
                     </div>
                 </div>
@@ -234,7 +234,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            ${{ number_format($item->unit_cost, 2) }}
+                            Rs. {{ number_format($item->unit_cost, 2) }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             {{ $item->quantity_ordered }}
@@ -246,7 +246,7 @@
                             {{ $item->quantity_pending }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                            ${{ number_format($item->total_cost, 2) }}
+                            Rs. {{ number_format($item->total_cost, 2) }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium

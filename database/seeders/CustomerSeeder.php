@@ -14,6 +14,17 @@ class CustomerSeeder extends Seeder
     public function run(): void
     {
         $customers = [
+            // Default Customer for billing when no regular customer is selected
+            [
+                'name' => 'Customer',
+                'email' => 'customer@default.com',
+                'phone' => '0000000000',
+                'address' => 'Default Address',
+                'city' => 'Default City',
+                'state' => 'Default State',
+                'postal_code' => '00000',
+                'status' => 'active'
+            ],
             [
                 'name' => 'John Smith',
                 'email' => 'john.smith@email.com',

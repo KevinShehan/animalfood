@@ -42,9 +42,15 @@
                 <!-- Customer Selection -->
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Customer</label>
-                    <select id="customerSelect" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
-                        <option value="">Loading customers...</option>
-                    </select>
+                    <div class="flex space-x-2">
+                        <button type="button" onclick="openCustomerModal()" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-left">
+                            <span id="selectedCustomerText">Select Customer</span>
+                        </button>
+                        <button type="button" onclick="selectCashCustomer()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm">
+                            CASH
+                        </button>
+                    </div>
+                    <input type="hidden" id="selectedCustomerId" value="">
                 </div>
 
                 <!-- Bill Items -->
@@ -159,6 +165,51 @@
                     <button onclick="clearBill()" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
                         Clear Bill
                     </button>
+                    <button onclick="testBillHeader()" class="w-full inline-flex justify-center items-center px-4 py-2 border border-blue-300 dark:border-blue-600 text-sm font-medium rounded-lg text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                        Test Bill Header
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Selection Modal -->
+    <div id="customerModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Select Customer</h3>
+                    <button onclick="closeCustomerModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="mb-4">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <input type="text" id="customerSearch" placeholder="Search customers by name, email, or phone..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400">
+                    </div>
+                </div>
+
+                <!-- Customers List -->
+                <div id="customersList" class="max-h-96 overflow-y-auto space-y-2">
+                    <div class="text-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Loading customers...</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 mt-4">
+                    <button onclick="closeCustomerModal()" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>
@@ -201,43 +252,123 @@
         let billCounter = 0;
         let allCustomers = [];
         let searchTimeout;
+        let customerSearchTimeout;
         let appliedDiscount = { type: null, value: 0, amount: 0, code: null };
         let currentPaymentMethod = 'cash';
+        let selectedCustomer = null;
 
         // Load data on page load
         document.addEventListener('DOMContentLoaded', function() {
-            loadCustomers();
             loadProducts();
             setupPaymentMethodChange();
             checkAutomaticDiscounts();
+            setupCustomerSearch();
         });
 
+        // Customer modal functions
+        function openCustomerModal() {
+            document.getElementById('customerModal').classList.remove('hidden');
+            loadCustomers();
+        }
+
+        function closeCustomerModal() {
+            document.getElementById('customerModal').classList.add('hidden');
+            document.getElementById('customerSearch').value = '';
+        }
+
+        function selectCashCustomer() {
+            selectedCustomer = {
+                id: 'cash',
+                name: 'CASH',
+                email: 'cash@default.com',
+                phone: 'N/A',
+                address: 'Cash Payment'
+            };
+            document.getElementById('selectedCustomerText').textContent = 'CASH';
+            document.getElementById('selectedCustomerId').value = 'cash';
+            updateCreditInfo();
+            checkAutomaticDiscounts();
+        }
+
+        function selectCustomer(customer) {
+            selectedCustomer = customer;
+            document.getElementById('selectedCustomerText').textContent = `${customer.name} - ${customer.email}`;
+            document.getElementById('selectedCustomerId').value = customer.id;
+            closeCustomerModal();
+            updateCreditInfo();
+            checkAutomaticDiscounts();
+        }
+
+        function setupCustomerSearch() {
+            document.getElementById('customerSearch').addEventListener('input', function(e) {
+                clearTimeout(customerSearchTimeout);
+                const searchTerm = e.target.value;
+                
+                customerSearchTimeout = setTimeout(() => {
+                    loadCustomers(searchTerm);
+                }, 300);
+            });
+        }
+
         // Load customers from database
-        function loadCustomers() {
-            fetch('{{ route("admin.billing.customers") }}')
+        function loadCustomers(searchTerm = '') {
+            const url = searchTerm 
+                ? `{{ route("admin.billing.customers") }}?search=${encodeURIComponent(searchTerm)}`
+                : '{{ route("admin.billing.customers") }}';
+            
+            fetch(url)
                 .then(response => response.json())
                 .then(customers => {
                     allCustomers = customers;
-                    const customerSelect = document.getElementById('customerSelect');
-                    customerSelect.innerHTML = '<option value="">Select Customer</option>';
-                    
-                    customers.forEach(customer => {
-                        const option = document.createElement('option');
-                        option.value = customer.id;
-                        option.textContent = `${customer.name} - ${customer.email}`;
-                        customerSelect.appendChild(option);
-                    });
-                    
-                    // Add customer change event listener
-                    customerSelect.addEventListener('change', function() {
-                        updateCreditInfo();
-                        checkAutomaticDiscounts();
-                    });
+                    displayCustomers(customers);
                 })
                 .catch(error => {
                     console.error('Error loading customers:', error);
-                    document.getElementById('customerSelect').innerHTML = '<option value="">Error loading customers</option>';
+                    document.getElementById('customersList').innerHTML = `
+                        <div class="text-center py-4 text-red-500">
+                            <p>Error loading customers. Please try again.</p>
+                        </div>
+                    `;
                 });
+        }
+
+        function displayCustomers(customers) {
+            const customersList = document.getElementById('customersList');
+            customersList.innerHTML = '';
+
+            if (customers.length === 0) {
+                customersList.innerHTML = `
+                    <div class="text-center py-8">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">No customers found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            customers.forEach(customer => {
+                const customerElement = document.createElement('div');
+                customerElement.className = 'border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-200';
+                customerElement.onclick = () => selectCustomer(customer);
+                
+                customerElement.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex-1">
+                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">${customer.name}</h4>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${customer.email}</p>
+                            ${customer.phone ? `<p class="text-xs text-gray-400 dark:text-gray-500">${customer.phone}</p>` : ''}
+                        </div>
+                        <div class="text-right ml-4">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+                customersList.appendChild(customerElement);
+            });
         }
 
         // Setup payment method change handler
@@ -316,40 +447,35 @@
 
         // Update customer credit information
         function updateCreditInfo() {
-            const customerSelect = document.getElementById('customerSelect');
             const creditInfo = document.getElementById('creditInfo');
             const creditDetails = document.getElementById('creditDetails');
-            const customerId = customerSelect.value;
             
-            if (!customerId || currentPaymentMethod !== 'credit') {
+            if (!selectedCustomer || currentPaymentMethod !== 'credit' || selectedCustomer.id === 'cash') {
                 creditInfo.classList.add('hidden');
                 return;
             }
             
-            const customer = allCustomers.find(c => c.id == customerId);
-            if (customer) {
-                // Fetch customer credit info
-                fetch(`{{ url('admin/customers') }}/${customerId}/credit`)
-                    .then(response => response.json())
-                    .then(credit => {
-                        if (credit) {
-                            creditDetails.innerHTML = `
-                                <div>Credit Limit: Rs. ${parseFloat(credit.credit_limit || 0).toFixed(2)}</div>
-                                <div>Available Credit: Rs. ${parseFloat(credit.available_credit || 0).toFixed(2)}</div>
-                                <div>Current Balance: Rs. ${parseFloat(credit.current_balance || 0).toFixed(2)}</div>
-                                <div class="text-xs mt-1">Status: ${credit.credit_status || 'No Credit Setup'}</div>
-                            `;
-                            creditInfo.classList.remove('hidden');
-                        } else {
-                            creditDetails.innerHTML = 'No credit account found for this customer.';
-                            creditInfo.classList.remove('hidden');
-                        }
-                    })
-                    .catch(error => {
-                        creditDetails.innerHTML = 'Customer has no credit setup.';
+            // Fetch customer credit info
+            fetch(`{{ url('admin/customers') }}/${selectedCustomer.id}/credit`)
+                .then(response => response.json())
+                .then(credit => {
+                    if (credit) {
+                        creditDetails.innerHTML = `
+                            <div>Credit Limit: Rs. ${parseFloat(credit.credit_limit || 0).toFixed(2)}</div>
+                            <div>Available Credit: Rs. ${parseFloat(credit.available_credit || 0).toFixed(2)}</div>
+                            <div>Current Balance: Rs. ${parseFloat(credit.current_balance || 0).toFixed(2)}</div>
+                            <div class="text-xs mt-1">Status: ${credit.credit_status || 'No Credit Setup'}</div>
+                        `;
                         creditInfo.classList.remove('hidden');
-                    });
-            }
+                    } else {
+                        creditDetails.innerHTML = 'No credit account found for this customer.';
+                        creditInfo.classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    creditDetails.innerHTML = 'Customer has no credit setup.';
+                    creditInfo.classList.remove('hidden');
+                });
         }
 
         // Product search functionality with debouncing
@@ -711,11 +837,7 @@
         }
 
         function generateBill() {
-            const customerSelect = document.getElementById('customerSelect');
-            const customerId = customerSelect.value;
-            const customer = allCustomers.find(c => c.id == customerId);
-
-            if (!customer) {
+            if (!selectedCustomer) {
                 Swal.fire('Error!', 'Please select a customer.', 'error');
                 return;
             }
@@ -743,43 +865,72 @@
 
             // Fetch bill header settings
             fetch('{{ route("admin.settings.bill-header.active") }}')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch bill header settings');
+                    }
+                    return response.json();
+                })
                 .then(header => {
+                    console.log('Bill header data:', header); // Debug log
                     let headerHtml = '';
-                    if (header) {
+                    if (header && header.company_name) {
                         headerHtml = `
-                            <div class="text-center mb-6">
-                                ${header.company_logo ? `<div class="mb-4"><img src="/storage/${header.company_logo}" alt="Company Logo" class="h-16 w-auto mx-auto"></div>` : ''}
-                                <h2 class="text-2xl font-bold text-gray-900">${header.company_name || 'Animal Food System'}</h2>
-                                ${header.company_address ? `<p class="text-gray-600 mt-2">${header.company_address}</p>` : ''}
-                                <div class="flex justify-center space-x-4 mt-3 text-sm text-gray-600">
-                                    ${header.company_phone ? `<span>${header.company_phone}</span>` : ''}
-                                    ${header.company_email ? `<span>${header.company_email}</span>` : ''}
+                            <div class="flex items-start space-x-4 mb-6">
+                                <!-- Logo on the left -->
+                                <div class="flex-shrink-0">
+                                    ${header.company_logo ? `<img src="{{ asset('storage') }}/${header.company_logo}" alt="Company Logo" class="h-16 w-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : ''}
+                                    <div class="h-16 w-16 bg-gray-200 rounded-lg flex items-center justify-center" ${header.company_logo ? 'style="display: none;"' : ''}>
+                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
                                 </div>
-                                ${header.company_website ? `<p class="text-sm text-gray-600 mt-1">${header.company_website}</p>` : ''}
+                                
+                                <!-- Company information on the right -->
+                                <div class="flex-1">
+                                    <h2 class="text-xl font-bold text-gray-900">${header.company_name}</h2>
+                                    ${header.company_address ? `<p class="text-sm text-gray-600 mt-2">${header.company_address}</p>` : ''}
+                                    <div class="flex flex-wrap gap-4 mt-3 text-sm text-gray-600">
+                                        ${header.company_phone ? `<span>${header.company_phone}</span>` : ''}
+                                        ${header.company_email ? `<span>${header.company_email}</span>` : ''}
+                                    </div>
+                                    ${header.company_website ? `<p class="text-sm text-gray-600 mt-1">${header.company_website}</p>` : ''}
+                                </div>
                             </div>
                         `;
                     } else {
                         headerHtml = `
-                            <div class="text-center mb-6">
-                                <h2 class="text-2xl font-bold text-gray-900">Animal Food System</h2>
-                                <p class="text-gray-600">Invoice</p>
+                            <div class="flex items-start space-x-4 mb-6">
+                                <div class="flex-shrink-0">
+                                    <div class="h-16 w-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <h2 class="text-xl font-bold text-gray-900">Animal Food System</h2>
+                                    <p class="text-sm text-gray-600">Invoice</p>
+                                </div>
                             </div>
                         `;
                     }
                     
-                    billContent.innerHTML = headerHtml + `
-                    
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div>
-                            <h4 class="font-medium text-gray-900">Bill To:</h4>
-                            <p class="text-gray-600">${customer.name}</p>
-                            <p class="text-gray-600">${customer.email}</p>
-                            ${customer.phone ? `<p class="text-gray-600">${customer.phone}</p>` : ''}
-                            ${customer.address ? `<p class="text-gray-600">${customer.address}</p>` : ''}
-                        </div>
+                                         billContent.innerHTML = headerHtml + `
+                     
+                     <div class="grid grid-cols-2 gap-4 mb-6">
+                         <div>
+                             <h4 class="font-medium text-gray-900">Bill To:</h4>
+                             <p class="text-gray-600">${selectedCustomer.name}</p>
+                             <p class="text-gray-600">${selectedCustomer.email}</p>
+                             ${selectedCustomer.phone ? `<p class="text-gray-600">${selectedCustomer.phone}</p>` : ''}
+                             ${selectedCustomer.address ? `<p class="text-gray-600">${selectedCustomer.address}</p>` : ''}
+                         </div>
                         <div class="text-right">
-                            <h4 class="font-medium text-gray-900">Invoice Date:</h4>
+                            <h4 class="font-medium text-gray-900">Invoice #:</h4>
+                            <p class="text-gray-600">${header && header.invoice_prefix ? header.invoice_prefix : 'INV'}-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}</p>
+                            <h4 class="font-medium text-gray-900 mt-2">Invoice Date:</h4>
                             <p class="text-gray-600">${new Date().toLocaleDateString()}</p>
                         </div>
                     </div>
@@ -837,7 +988,7 @@
                             <span class="${parseFloat(document.getElementById('amountPaid').value) >= total ? 'text-green-600' : 'text-red-600'}">Rs. ${Math.abs(parseFloat(document.getElementById('amountPaid').value) - total).toFixed(2)}</span>
                         </div>` : ''}
                     </div>
-                    ${header && header.footer_text ? `<div class="border-t border-gray-200 pt-4 mt-4"><p class="text-xs text-gray-500 text-center">${header.footer_text}</p></div>` : ''}
+                    ${header && header.footer_text ? `<div class="border-t border-gray-200 pt-6 mt-6"><p class="text-sm text-gray-600 text-center">${header.footer_text}</p></div>` : ''}
                 `;
 
                 document.getElementById('printModal').classList.remove('hidden');
@@ -866,6 +1017,31 @@
                             th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
                             .text-right { text-align: right; }
                             .text-center { text-align: center; }
+                            .flex { display: flex; }
+                            .items-start { align-items: flex-start; }
+                            .space-x-4 > * + * { margin-left: 1rem; }
+                            .flex-shrink-0 { flex-shrink: 0; }
+                            .flex-1 { flex: 1; }
+                            .mb-6 { margin-bottom: 1.5rem; }
+                            .mt-2 { margin-top: 0.5rem; }
+                            .mt-3 { margin-top: 0.75rem; }
+                            .mt-1 { margin-top: 0.25rem; }
+                            .pt-6 { padding-top: 1.5rem; }
+                            .mt-6 { margin-top: 1.5rem; }
+                            .border-t { border-top: 1px solid #e5e7eb; }
+                            .text-sm { font-size: 0.875rem; }
+                            .text-gray-600 { color: #4b5563; }
+                            .text-xl { font-size: 1.25rem; }
+                            .font-bold { font-weight: 700; }
+                            .text-gray-900 { color: #111827; }
+                            .h-16 { height: 4rem; }
+                            .w-auto { width: auto; }
+                            .w-16 { width: 4rem; }
+                            .bg-gray-200 { background-color: #e5e7eb; }
+                            .rounded-lg { border-radius: 0.5rem; }
+                            .flex-wrap { flex-wrap: wrap; }
+                            .gap-4 > * + * { margin-left: 1rem; }
+                            img { max-width: 100%; height: auto; }
                         </style>
                     </head>
                     <body>
@@ -898,8 +1074,10 @@
                     billCounter = 0;
                     appliedDiscount = { type: null, value: 0, amount: 0, code: null };
                     currentPaymentMethod = 'cash';
+                    selectedCustomer = null;
                     updateBillDisplay();
-                    document.getElementById('customerSelect').value = '';
+                    document.getElementById('selectedCustomerText').textContent = 'Select Customer';
+                    document.getElementById('selectedCustomerId').value = '';
                     document.getElementById('paymentMethod').value = 'cash';
                     document.getElementById('discountCode').value = '';
                     document.getElementById('discountValue').value = '';
@@ -911,5 +1089,45 @@
                 }
             });
         }
+
+        // Test bill header function
+        function testBillHeader() {
+            fetch('{{ route("admin.test.bill-header") }}')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Bill header test data:', data);
+                    Swal.fire({
+                        title: 'Bill Header Test',
+                        html: `
+                            <div class="text-left">
+                                <p><strong>Active Header:</strong> ${data.header ? 'Yes' : 'No'}</p>
+                                ${data.header ? `
+                                    <p><strong>Company Name:</strong> ${data.header.company_name || 'Not set'}</p>
+                                    <p><strong>Company Logo:</strong> ${data.header.company_logo || 'Not set'}</p>
+                                    <p><strong>Logo URL:</strong> ${data.logo_url || 'Not set'}</p>
+                                    <p><strong>Storage URL:</strong> ${data.storage_url}</p>
+                                ` : ''}
+                                <p><strong>Total Headers:</strong> ${data.all_headers.length}</p>
+                            </div>
+                        `,
+                        icon: 'info',
+                        confirmButtonText: 'OK'
+                    });
+                })
+                .catch(error => {
+                    console.error('Error testing bill header:', error);
+                    Swal.fire('Error!', 'Failed to test bill header data.', 'error');
+                });
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            // Customer modal close on outside click
+            document.getElementById('customerModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeCustomerModal();
+                }
+            });
+        });
     </script>
 </x-admin-layout> 

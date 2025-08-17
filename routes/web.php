@@ -238,6 +238,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/settings/bill-header', [BillHeaderController::class, 'store'])->name('admin.settings.bill-header.store');
         Route::put('/settings/bill-header/{billHeader}', [BillHeaderController::class, 'update'])->name('admin.settings.bill-header.update');
         Route::get('/settings/bill-header/active', [BillHeaderController::class, 'getActiveHeader'])->name('admin.settings.bill-header.active');
+        
+        // Test route to check bill header data
+        Route::get('/test/bill-header', function() {
+            $header = \App\Models\BillHeader::getActive();
+            return response()->json([
+                'header' => $header,
+                'all_headers' => \App\Models\BillHeader::all(),
+                'storage_url' => asset('storage'),
+                'logo_url' => $header ? asset('storage/' . $header->company_logo) : null
+            ]);
+        })->name('admin.test.bill-header');
     });
 });
 
