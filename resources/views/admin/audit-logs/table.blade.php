@@ -30,20 +30,23 @@
             @forelse($auditLogs as $log)
             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                    {{ $log->created_at->format('M d, Y H:i') }}
+                    {{ $log->created_at->format('M d, Y g:i A') }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                     <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                        @if($log->event === 'created') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                        @elseif($log->event === 'updated') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
-                        @elseif($log->event === 'deleted') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                        @if($log->action === 'created') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                        @elseif($log->action === 'updated') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                        @elseif($log->action === 'deleted') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                        @elseif($log->action === 'login') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                        @elseif($log->action === 'logout') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                        @elseif($log->action === 'login_failed') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
                         @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200
                         @endif">
-                        {{ ucfirst($log->event) }}
+                        {{ ucfirst(str_replace('_', ' ', $log->action)) }}
                     </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                    {{ class_basename($log->auditable_type) }}
+                    {{ class_basename($log->model_type) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {{ $log->user->name ?? 'System' }}
@@ -52,19 +55,19 @@
                     {{ Str::limit($log->description, 50) }}
                 </td>
                 <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
-                    @if($log->event === 'updated' && $log->getModified())
+                    @if($log->action === 'updated' && $log->changed_fields)
                         <div class="text-xs">
-                            @foreach($log->getModified() as $field => $changes)
+                            @foreach($log->changed_fields as $field)
                                 <div class="mb-1">
                                     <span class="font-medium">{{ $field }}:</span>
-                                    <span class="text-red-600 dark:text-red-400">{{ $changes['old'] ?? 'null' }}</span>
+                                    <span class="text-red-600 dark:text-red-400">{{ $log->old_values[$field] ?? 'null' }}</span>
                                     <span class="mx-1">→</span>
-                                    <span class="text-green-600 dark:text-green-400">{{ $changes['new'] ?? 'null' }}</span>
+                                    <span class="text-green-600 dark:text-green-400">{{ $log->new_values[$field] ?? 'null' }}</span>
                                 </div>
                             @endforeach
                         </div>
                     @else
-                        <span class="text-gray-500 dark:text-gray-400">No changes</span>
+                        <span class="text-gray-500 dark:text-gray-400">{{ $log->formatted_changes }}</span>
                     @endif
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -105,8 +108,8 @@
                     </svg>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white truncate">{{ class_basename($log->auditable_type) }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $log->created_at->format('M d, Y H:i') }}</p>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white truncate">{{ class_basename($log->model_type) }}</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $log->created_at->format('M d, Y g:i A') }}</p>
                 </div>
             </div>
             <div class="flex space-x-2">
@@ -123,12 +126,15 @@
             <div>
                 <span class="font-medium text-gray-500 dark:text-gray-400">Action:</span>
                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                    @if($log->event === 'created') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                    @elseif($log->event === 'updated') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
-                    @elseif($log->event === 'deleted') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                    @if($log->action === 'created') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                    @elseif($log->action === 'updated') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                    @elseif($log->action === 'deleted') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                    @elseif($log->action === 'login') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                    @elseif($log->action === 'logout') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                    @elseif($log->action === 'login_failed') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
                     @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200
                     @endif">
-                    {{ ucfirst($log->event) }}
+                    {{ ucfirst(str_replace('_', ' ', $log->action)) }}
                 </span>
             </div>
             <div>
@@ -139,16 +145,16 @@
                 <span class="font-medium text-gray-500 dark:text-gray-400">Description:</span>
                 <div class="text-gray-900 dark:text-white">{{ Str::limit($log->description, 100) }}</div>
             </div>
-            @if($log->event === 'updated' && $log->getModified())
+            @if($log->action === 'updated' && $log->changed_fields)
             <div class="col-span-2">
                 <span class="font-medium text-gray-500 dark:text-gray-400">Changes:</span>
                 <div class="text-xs mt-1">
-                    @foreach($log->getModified() as $field => $changes)
+                    @foreach($log->changed_fields as $field)
                         <div class="mb-1">
                             <span class="font-medium">{{ $field }}:</span>
-                            <span class="text-red-600 dark:text-red-400">{{ $changes['old'] ?? 'null' }}</span>
+                            <span class="text-red-600 dark:text-red-400">{{ $log->old_values[$field] ?? 'null' }}</span>
                             <span class="mx-1">→</span>
-                            <span class="text-green-600 dark:text-green-400">{{ $changes['new'] ?? 'null' }}</span>
+                            <span class="text-green-600 dark:text-green-400">{{ $log->new_values[$field] ?? 'null' }}</span>
                         </div>
                     @endforeach
                 </div>

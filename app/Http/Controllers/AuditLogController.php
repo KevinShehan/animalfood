@@ -16,6 +16,11 @@ class AuditLogController extends Controller
     public function index(Request $request)
     {
         try {
+            \Log::info('Audit logs index request', [
+                'is_ajax' => $request->ajax(),
+                'filters' => $request->all()
+            ]);
+            
             $query = AuditLog::with('user')->orderBy('created_at', 'desc');
 
             // Filtering
@@ -32,11 +37,11 @@ class AuditLogController extends Controller
             }
 
             if ($request->filled('date_from')) {
-                $query->where('created_at', '>=', Carbon::parse($request->date_from)->startOfDay());
+                $query->where('created_at', '>=', Carbon::parse($request->date_from)->setTimezone(config('app.timezone'))->startOfDay());
             }
 
             if ($request->filled('date_to')) {
-                $query->where('created_at', '<=', Carbon::parse($request->date_to)->endOfDay());
+                $query->where('created_at', '<=', Carbon::parse($request->date_to)->setTimezone(config('app.timezone'))->endOfDay());
             }
 
             // Special filters for user activities
@@ -90,16 +95,53 @@ class AuditLogController extends Controller
             ];
 
             if ($request->ajax()) {
-                return response()->json([
-                    'html' => view('admin.audit-logs.table', compact('auditLogs'))->render(),
-                    'pagination' => $auditLogs->links()->render(),
-                    'total' => $auditLogs->total(),
-                    'current_page' => $auditLogs->currentPage(),
-                    'last_page' => $auditLogs->lastPage()
-                ]);
+                try {
+                    $html = view('admin.audit-logs.table', compact('auditLogs'))->render();
+                    $pagination = $auditLogs->links()->render();
+                    
+                    \Log::info('AJAX audit logs request', [
+                        'filters' => $request->all(),
+                        'total_found' => $auditLogs->total(),
+                        'current_page' => $auditLogs->currentPage(),
+                        'per_page' => $auditLogs->perPage()
+                    ]);
+                    
+                    return response()->json([
+                        'success' => true,
+                        'html' => $html,
+                        'pagination' => $pagination,
+                        'total' => $auditLogs->total(),
+                        'current_page' => $auditLogs->currentPage(),
+                        'last_page' => $auditLogs->lastPage(),
+                        'filters_applied' => $request->all()
+                    ]);
+                } catch (\Exception $e) {
+                    \Log::error('Error rendering AJAX audit logs response', [
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                    
+                    return response()->json([
+                        'success' => false,
+                        'error' => 'Failed to render audit logs table',
+                        'message' => $e->getMessage()
+                    ], 500);
+                }
             }
 
-            return view('admin.audit-logs.index', compact('auditLogs', 'actions', 'modelTypes', 'users', 'activityTypes'));
+            // Get stats for the page
+            $stats = [
+                'total_logs' => AuditLog::count(),
+                'today_logs' => AuditLog::whereDate('created_at', today())->count(),
+                'this_week_logs' => AuditLog::whereBetween('created_at', [
+                    now()->startOfWeek(), 
+                    now()->endOfWeek()
+                ])->count(),
+                'this_month_logs' => AuditLog::whereMonth('created_at', now()->month)
+                                            ->whereYear('created_at', now()->year)->count(),
+            ];
+
+            return view('admin.audit-logs.index', compact('auditLogs', 'actions', 'modelTypes', 'users', 'activityTypes', 'stats'));
         } catch (\Exception $e) {
             \Log::error('Error in audit logs index: ' . $e->getMessage());
             
@@ -115,7 +157,13 @@ class AuditLogController extends Controller
                 'actions' => collect([]),
                 'modelTypes' => collect([]),
                 'users' => collect([]),
-                'activityTypes' => []
+                'activityTypes' => [],
+                'stats' => [
+                    'total_logs' => 0,
+                    'today_logs' => 0,
+                    'this_week_logs' => 0,
+                    'this_month_logs' => 0,
+                ]
             ])->with('error', 'Failed to load audit logs. Please try again.');
         }
     }
@@ -125,8 +173,28 @@ class AuditLogController extends Controller
      */
     public function show(AuditLog $auditLog)
     {
-        $auditLog->load('user');
-        return response()->json($auditLog);
+        try {
+            \Log::info('Audit log show request', [
+                'audit_log_id' => $auditLog->id,
+                'action' => $auditLog->action,
+                'model_type' => $auditLog->model_type
+            ]);
+            
+            $auditLog->load('user');
+            
+            \Log::info('Audit log loaded successfully', [
+                'has_user' => $auditLog->user ? true : false,
+                'user_name' => $auditLog->user ? $auditLog->user->name : 'System'
+            ]);
+            
+            return response()->json($auditLog);
+        } catch (\Exception $e) {
+            \Log::error('Error showing audit log: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Failed to load audit log details',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -197,13 +265,13 @@ class AuditLogController extends Controller
             $query->byUser($request->user_id);
         }
 
-        if ($request->filled('date_from')) {
-            $query->where('created_at', '>=', Carbon::parse($request->date_from)->startOfDay());
-        }
+                    if ($request->filled('date_from')) {
+                $query->where('created_at', '>=', Carbon::parse($request->date_from)->setTimezone(config('app.timezone'))->startOfDay());
+            }
 
-        if ($request->filled('date_to')) {
-            $query->where('created_at', '<=', Carbon::parse($request->date_to)->endOfDay());
-        }
+            if ($request->filled('date_to')) {
+                $query->where('created_at', '<=', Carbon::parse($request->date_to)->setTimezone(config('app.timezone'))->endOfDay());
+            }
 
         if ($request->filled('activity_type')) {
             switch ($request->activity_type) {
@@ -375,13 +443,55 @@ class AuditLogController extends Controller
     }
 
     /**
+     * Get cleanup estimate
+     */
+    public function cleanupEstimate(Request $request)
+    {
+        try {
+            $days = $request->get('days');
+            
+            if (!is_numeric($days) || $days < 30 || $days > 3650) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid number of days. Must be between 30 and 3650 days.'
+                ], 400);
+            }
+
+            $days = (int)$days;
+            $cutoffDate = now()->subDays($days);
+            $estimatedCount = AuditLog::where('created_at', '<', $cutoffDate)->count();
+
+            return response()->json([
+                'success' => true,
+                'estimated_count' => $estimatedCount,
+                'cutoff_date' => $cutoffDate->format('Y-m-d H:i:s'),
+                'days' => $days
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error getting cleanup estimate: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get cleanup estimate.'
+            ], 500);
+        }
+    }
+
+    /**
      * Clean old audit logs
      */
     public function cleanup(Request $request)
     {
         try {
             // Handle both JSON and form data
-            $days = $request->input('days') ?? $request->json('days') ?? 180;
+            $days = $request->input('days') ?? $request->json('days') ?? $request->get('days');
+            
+            // Validate that days parameter exists
+            if ($days === null) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Number of days is required.'
+                ], 400);
+            }
             
             // Validate the input
             if (!is_numeric($days) || $days < 30 || $days > 3650) {
@@ -391,13 +501,29 @@ class AuditLogController extends Controller
                 ], 400);
             }
 
-            $cutoffDate = now()->subDays((int)$days);
-            $deletedCount = AuditLog::where('created_at', '<', $cutoffDate)->delete();
+            $days = (int)$days;
+            $cutoffDate = now()->subDays($days);
+            
+            // Get count before deletion for better user feedback
+            $logsToDelete = AuditLog::where('created_at', '<', $cutoffDate);
+            $countToDelete = $logsToDelete->count();
+            
+            if ($countToDelete === 0) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "No audit logs found older than {$days} days to delete.",
+                    'deleted_count' => 0,
+                    'cutoff_date' => $cutoffDate->format('Y-m-d H:i:s')
+                ]);
+            }
+            
+            $deletedCount = $logsToDelete->delete();
 
             \Log::info('Audit logs cleanup completed', [
                 'days' => $days,
                 'cutoff_date' => $cutoffDate,
-                'deleted_count' => $deletedCount
+                'deleted_count' => $deletedCount,
+                'requested_by' => auth()->user()->name ?? 'Unknown'
             ]);
 
             return response()->json([
@@ -407,10 +533,15 @@ class AuditLogController extends Controller
                 'cutoff_date' => $cutoffDate->format('Y-m-d H:i:s')
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error during audit logs cleanup: ' . $e->getMessage());
+            \Log::error('Error during audit logs cleanup: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request_data' => $request->all(),
+                'user' => auth()->user()->name ?? 'Unknown'
+            ]);
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to cleanup audit logs. Please try again.'
+                'message' => 'Failed to cleanup audit logs: ' . $e->getMessage()
             ], 500);
         }
     }

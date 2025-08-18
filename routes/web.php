@@ -1,4 +1,4 @@
-/<?php
+<?php
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChangePasswordController;
@@ -150,11 +150,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('admin.audit-logs.index')->middleware('role:administrator,super_administrator');
         Route::get('/audit-logs/export', [AuditLogController::class, 'export'])->name('admin.audit-logs.export')->middleware('role:administrator,super_administrator');
         Route::get('/audit-logs/stats', [AuditLogController::class, 'getStats'])->name('admin.audit-logs.stats')->middleware('role:administrator,super_administrator');
+        Route::get('/audit-logs/cleanup-estimate', [AuditLogController::class, 'cleanupEstimate'])->name('admin.audit-logs.cleanup-estimate')->middleware('role:administrator,super_administrator');
         Route::post('/audit-logs/cleanup', [AuditLogController::class, 'cleanup'])->name('admin.audit-logs.cleanup')->middleware('role:administrator,super_administrator');
-        Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('admin.audit-logs.show')->middleware('role:administrator,super_administrator');
         Route::get('/audit-logs/user/login-history', [AuditLogController::class, 'getUserLoginHistory'])->name('admin.audit-logs.user.login-history')->middleware('role:administrator,super_administrator');
         Route::get('/audit-logs/bill-header/history', [AuditLogController::class, 'getBillHeaderHistory'])->name('admin.audit-logs.bill-header.history')->middleware('role:administrator,super_administrator');
         Route::get('/audit-logs/recent', [AuditLogController::class, 'getRecentLogs'])->name('admin.audit-logs.recent')->middleware('role:administrator,super_administrator');
+        Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('admin.audit-logs.show')->middleware('role:administrator,super_administrator');
 
         // Customer Reports & Dues
         Route::get('/reports/customer-dues', [CustomerReportController::class, 'index'])->name('admin.reports.customer-dues');
