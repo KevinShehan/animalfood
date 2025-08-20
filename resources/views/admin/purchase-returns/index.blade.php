@@ -96,7 +96,7 @@
                             <div class="text-sm text-gray-900 dark:text-white">{{ $return->formatted_reason }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                            ${{ number_format($return->total_amount, 2) }}
+                            {{ \App\Helpers\CurrencyHelper::format($return->total_amount) }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 

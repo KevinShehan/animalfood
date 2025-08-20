@@ -74,7 +74,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Unit Cost</label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-white">${{ number_format($purchaseReturn->unit_cost, 2) }}</p>
+                        <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ \App\Helpers\CurrencyHelper::format($purchaseReturn->unit_cost) }}</p>
                     </div>
                 </div>
             </div>
@@ -134,7 +134,7 @@
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-600 dark:text-gray-400">Return Amount:</span>
-                        <span class="font-medium text-gray-900 dark:text-white">${{ number_format($purchaseReturn->total_amount, 2) }}</span>
+                        <span class="font-medium text-gray-900 dark:text-white">{{ \App\Helpers\CurrencyHelper::format($purchaseReturn->total_amount) }}</span>
                     </div>
                     @if($purchaseReturn->refund_amount)
                     <div class="flex justify-between">

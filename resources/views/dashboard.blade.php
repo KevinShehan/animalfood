@@ -1,8 +1,16 @@
 <x-admin-layout>
     <!-- Page Header -->
     <div class="mb-4">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Welcome back! Here's what's happening with your animal food business today.</p>
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Welcome back! Here's what's happening with your animal food business today.</p>
+            </div>
+            <div id="dashboard-status" class="flex items-center space-x-2">
+                <div id="status-indicator" class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span id="status-text" class="text-sm text-gray-600 dark:text-gray-400">Live</span>
+            </div>
+        </div>
     </div>
 
     <!-- Statistics Cards -->
@@ -143,116 +151,7 @@
         </div>
     </div>
 
-    <!-- Additional Alerts Row -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <!-- Expiring Soon -->
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Expiring Soon</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="expiringCount">0</dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
-                <div class="text-sm">
-                    <span class="text-yellow-600 dark:text-yellow-400 font-medium" id="expiringChange">0</span>
-                    <span class="text-gray-500 dark:text-gray-400">items expiring in 30 days</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- Total Products -->
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Products</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="totalProducts">0</dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
-                <div class="text-sm">
-                    <span class="text-purple-600 dark:text-purple-400 font-medium" id="activeProducts">0</span>
-                    <span class="text-gray-500 dark:text-gray-400">active products</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Customers -->
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Customers</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="totalCustomers">0</dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
-                <div class="text-sm">
-                    <span class="text-blue-600 dark:text-blue-400 font-medium" id="activeCustomers">0</span>
-                    <span class="text-gray-500 dark:text-gray-400">active customers</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Orders -->
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-            <div class="p-5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-indigo-500 rounded-md flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Orders</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="totalOrders">0</dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
-                <div class="text-sm">
-                    <span class="text-indigo-600 dark:text-indigo-400 font-medium" id="pendingOrders">0</span>
-                    <span class="text-gray-500 dark:text-gray-400">pending orders</span>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Sales Charts Section -->
     <div class="mb-6">
@@ -432,74 +331,17 @@
                 </div>
                 <div class="p-4">
                     <div class="flow-root">
-                        <ul class="-mb-8">
-                            <li>
-                                <div class="relative pb-8">
-                                    <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200 dark:bg-gray-700" aria-hidden="true"></span>
-                                    <div class="relative flex space-x-3">
-                                        <div>
-                                            <span class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center ring-8 ring-white dark:ring-gray-800">
-                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                                </svg>
-                                            </span>
-                                        </div>
-                                        <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
-                                            <div>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400">New product <span class="font-medium text-gray-900 dark:text-white">Premium Cat Food</span> added</p>
-                                            </div>
-                                            <div class="text-right text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                                                <time>3h ago</time>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="relative pb-8">
-                                    <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200 dark:bg-gray-700" aria-hidden="true"></span>
-                                    <div class="relative flex space-x-3">
-                                        <div>
-                                            <span class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center ring-8 ring-white dark:ring-gray-800">
-                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                                </svg>
-                                            </span>
-                                        </div>
-                                        <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
-                                            <div>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400">Order <span class="font-medium text-gray-900 dark:text-white">#12345</span> completed</p>
-                                            </div>
-                                            <div class="text-right text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                                                <time>5h ago</time>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="relative pb-8">
-                                    <div class="relative flex space-x-3">
-                                        <div>
-                                            <span class="h-8 w-8 rounded-full bg-yellow-500 flex items-center justify-center ring-8 ring-white dark:ring-gray-800">
-                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                                                </svg>
-                                            </span>
-                                        </div>
-                                        <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
-                                            <div>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400">Low stock alert for <span class="font-medium text-gray-900 dark:text-white">Dog Treats</span></p>
-                                            </div>
-                                            <div class="text-right text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                                                <time>1d ago</time>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <ul class="-mb-8" id="recent-activity-list">
+                            <!-- Loading state -->
+                            <li class="text-center py-4">
+                                <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Loading recent activity...</p>
                             </li>
                         </ul>
                     </div>
+                </div>
+                <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+                    <a href="{{ route('admin.audit-logs.index') }}" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500">View all activities</a>
                 </div>
             </div>
         </div>
@@ -571,68 +413,205 @@
         let salesTrendChart = null;
         let topProductsChart = null;
         let currentTimeframe = 'daily';
+        let refreshInterval = null;
 
         // Fetch dashboard data on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadDashboardData();
+            loadRecentActivity();
             initializeCharts();
             setupChartButtons();
+            
+            // Start real-time updates
+            startRealTimeUpdates();
         });
+
+        function startRealTimeUpdates() {
+            // Clear any existing interval
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+            
+            // Refresh data every 30 seconds for real-time updates
+            refreshInterval = setInterval(function() {
+                loadDashboardData();
+                loadRecentActivity();
+            }, 30000); // 30 seconds
+        }
 
         function loadDashboardData() {
             console.log('Loading dashboard data...');
+            
+            // Show loading state
+            showLoadingState();
+            
             // Fetch all dashboard data from single endpoint
-            fetch('{{ route("admin.dashboard.stats") }}')
+            fetch('{{ route("admin.dashboard.stats") }}', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+                cache: 'no-cache'
+            })
                 .then(response => {
                     console.log('Response status:', response.status);
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        throw new Error('Network response was not ok: ' + response.status);
                     }
                     return response.json();
                 })
                 .then(data => {
                     console.log('Dashboard data received:', data);
+                    console.log('Total Products value:', data.total_products);
+                    console.log('Active Products value:', data.active_products);
+                    
                     // Update sales statistics
-                    document.getElementById('today-sales').textContent = 'Rs. ' + parseFloat(data.today_sales || 0).toFixed(2);
-                    document.getElementById('today-refunds').textContent = 'Rs. ' + parseFloat(data.today_refunds || 0).toFixed(2);
-                    document.getElementById('net-sales').textContent = 'Rs. ' + parseFloat(data.today_net || 0).toFixed(2);
-                    document.getElementById('sales-target-progress').textContent = parseFloat(data.target_progress || 0).toFixed(1) + '%';
+                    updateElement('today-sales', 'Rs. ' + parseFloat(data.today_sales || 0).toFixed(2));
+                    updateElement('today-refunds', 'Rs. ' + parseFloat(data.today_refunds || 0).toFixed(2));
+                    updateElement('net-sales', 'Rs. ' + parseFloat(data.today_net || 0).toFixed(2));
+                    updateElement('sales-target-progress', parseFloat(data.target_progress || 0).toFixed(1) + '%');
                     
                     // Update product statistics
-                    document.getElementById('totalProducts').textContent = data.total_products || 0;
-                    document.getElementById('activeProducts').textContent = data.active_products || 0;
-                    document.getElementById('lowStockCount').textContent = data.low_stock_count || 0;
-                    document.getElementById('lowStockChange').textContent = data.low_stock_count || 0;
-                    document.getElementById('expiringCount').textContent = data.expiring_count || 0;
-                    document.getElementById('expiringChange').textContent = data.expiring_count || 0;
+                    updateElement('totalProducts', data.total_products || 0);
+                    updateElement('activeProducts', data.active_products || 0);
+                    updateElement('lowStockCount', data.low_stock_count || 0);
+                    updateElement('lowStockChange', data.low_stock_count || 0);
+                    updateElement('expiringCount', data.expiring_count || 0);
+                    updateElement('expiringChange', data.expiring_count || 0);
                     
                     // Update products in stock
-                    document.getElementById('productsInStock').textContent = data.products_in_stock || 0;
-                    document.getElementById('productsInStockChange').textContent = data.products_in_stock || 0;
+                    updateElement('productsInStock', data.products_in_stock || 0);
+                    updateElement('productsInStockChange', data.products_in_stock || 0);
                     
                     // Update customer statistics
-                    document.getElementById('totalCustomers').textContent = data.total_customers || 0;
-                    document.getElementById('activeCustomers').textContent = data.active_customers || 0;
+                    updateElement('totalCustomers', data.total_customers || 0);
+                    updateElement('activeCustomers', data.active_customers || 0);
                     
                     // Update order statistics
-                    document.getElementById('totalOrders').textContent = data.total_orders || 0;
-                    document.getElementById('pendingOrders').textContent = data.pending_orders || 0;
+                    updateElement('totalOrders', data.total_orders || 0);
+                    updateElement('pendingOrders', data.pending_orders || 0);
                     
                     // Update revenue statistics
-                    document.getElementById('monthlyRevenue').textContent = 'Rs. ' + parseFloat(data.monthly_revenue || 0).toFixed(2);
+                    updateElement('monthlyRevenue', 'Rs. ' + parseFloat(data.monthly_revenue || 0).toFixed(2));
                     const growthSign = data.revenue_growth >= 0 ? '+' : '';
-                    document.getElementById('revenueGrowth').textContent = growthSign + parseFloat(data.revenue_growth || 0).toFixed(1) + '%';
+                    updateElement('revenueGrowth', growthSign + parseFloat(data.revenue_growth || 0).toFixed(1) + '%');
                     
                     // Update recent orders
                     updateRecentOrders(data.recent_orders || []);
                     
                     // Update popular products
                     updatePopularProducts(data.popular_products || []);
+                    
+                    // Hide loading state
+                    hideLoadingState();
+                    
+                    // Update last refresh time
+                    updateLastRefreshTime();
                 })
                 .catch(error => {
                     console.error('Error loading dashboard data:', error);
                     console.error('Error details:', error.message);
+                    hideLoadingState();
+                    updateStatusIndicator('error');
+                    showErrorMessage('Failed to load dashboard data. Please refresh the page.');
                 });
+        }
+
+        function updateElement(elementId, value) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                // Add a subtle animation for value changes
+                element.style.transition = 'all 0.3s ease';
+                element.style.transform = 'scale(1.05)';
+                element.textContent = value;
+                
+                setTimeout(() => {
+                    element.style.transform = 'scale(1)';
+                }, 300);
+            }
+        }
+
+        function showLoadingState() {
+            // Add loading indicator to dashboard cards
+            const cards = document.querySelectorAll('.bg-white.dark\\:bg-gray-800');
+            cards.forEach(card => {
+                card.style.opacity = '0.7';
+            });
+            
+            // Update status indicator
+            updateStatusIndicator('loading');
+        }
+
+        function hideLoadingState() {
+            // Remove loading indicator
+            const cards = document.querySelectorAll('.bg-white.dark\\:bg-gray-800');
+            cards.forEach(card => {
+                card.style.opacity = '1';
+            });
+            
+            // Update status indicator
+            updateStatusIndicator('live');
+        }
+
+        function updateStatusIndicator(status) {
+            const indicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
+            
+            if (indicator && statusText) {
+                switch (status) {
+                    case 'loading':
+                        indicator.className = 'w-2 h-2 bg-yellow-500 rounded-full animate-pulse';
+                        statusText.textContent = 'Updating...';
+                        statusText.className = 'text-sm text-yellow-600 dark:text-yellow-400';
+                        break;
+                    case 'error':
+                        indicator.className = 'w-2 h-2 bg-red-500 rounded-full';
+                        statusText.textContent = 'Error';
+                        statusText.className = 'text-sm text-red-600 dark:text-red-400';
+                        break;
+                    case 'live':
+                    default:
+                        indicator.className = 'w-2 h-2 bg-green-500 rounded-full animate-pulse';
+                        statusText.textContent = 'Live';
+                        statusText.className = 'text-sm text-green-600 dark:text-green-400';
+                        break;
+                }
+            }
+        }
+
+        function showErrorMessage(message) {
+            // Create or update error message
+            let errorDiv = document.getElementById('dashboard-error');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.id = 'dashboard-error';
+                errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
+                document.body.appendChild(errorDiv);
+            }
+            errorDiv.textContent = message;
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    errorDiv.parentNode.removeChild(errorDiv);
+                }
+            }, 5000);
+        }
+
+        function updateLastRefreshTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            
+            // Update or create last refresh indicator
+            let refreshIndicator = document.getElementById('last-refresh');
+            if (!refreshIndicator) {
+                refreshIndicator = document.createElement('div');
+                refreshIndicator.id = 'last-refresh';
+                refreshIndicator.className = 'fixed bottom-4 right-4 bg-gray-800 text-white px-3 py-1 rounded text-xs z-40';
+                document.body.appendChild(refreshIndicator);
+            }
+            refreshIndicator.textContent = `Last updated: ${timeString}`;
         }
 
         function updateRecentOrders(orders) {
@@ -698,6 +677,91 @@
             });
             
             productsContainer.innerHTML = productsHtml;
+        }
+
+        function loadRecentActivity() {
+            console.log('Loading recent activity...');
+            fetch('{{ route("admin.dashboard.recent-activity") }}', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+                cache: 'no-cache'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Recent activity data received:', data);
+                    updateRecentActivity(data);
+                })
+                .catch(error => {
+                    console.error('Error loading recent activity:', error);
+                    const activityList = document.getElementById('recent-activity-list');
+                    if (activityList) {
+                        activityList.innerHTML = `
+                            <li class="text-center py-4 text-red-600">
+                                <svg class="mx-auto h-8 w-8 text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                                <p class="text-sm">Failed to load recent activity</p>
+                                <p class="text-xs text-gray-500 mt-1">${error.message}</p>
+                            </li>
+                        `;
+                    }
+                });
+        }
+
+        function updateRecentActivity(activities) {
+            const activityList = document.getElementById('recent-activity-list');
+            if (!activityList) return;
+            
+            if (activities.length === 0) {
+                activityList.innerHTML = `
+                    <li class="text-center py-4 text-gray-500 dark:text-gray-400">
+                        <p class="text-sm">No recent activity</p>
+                    </li>
+                `;
+                return;
+            }
+            
+            let activitiesHtml = '';
+            activities.forEach((activity, index) => {
+                const isLast = index === activities.length - 1;
+                const colorClass = `bg-${activity.color}-500`;
+                
+                activitiesHtml += `
+                    <li>
+                        <div class="relative ${isLast ? '' : 'pb-8'}">
+                            ${!isLast ? '<span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200 dark:bg-gray-700" aria-hidden="true"></span>' : ''}
+                            <div class="relative flex space-x-3">
+                                <div>
+                                    <span class="h-8 w-8 rounded-full ${colorClass} flex items-center justify-center ring-8 ring-white dark:ring-gray-800">
+                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${activity.icon}"></path>
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">${activity.description}</p>
+                                        <p class="text-xs text-gray-400 dark:text-gray-500">by ${activity.user_name}</p>
+                                    </div>
+                                    <div class="text-right text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                                        <time>${activity.time_ago}</time>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                `;
+            });
+            
+            activityList.innerHTML = activitiesHtml;
         }
 
         function setupChartButtons() {
@@ -863,8 +927,20 @@
         }
 
         function updateSalesTrendChart() {
-            fetch(`{{ route("admin.dashboard.charts", "daily") }}`)
-                .then(response => response.json())
+            fetch(`{{ route("admin.dashboard.charts", "daily") }}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+                cache: 'no-cache'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.status);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     const labels = data.map(item => currentTimeframe === 'daily' ? item.date : (currentTimeframe === 'weekly' ? item.week : item.month));
                     const salesData = data.map(item => item.sales);
@@ -875,33 +951,123 @@
                     salesTrendChart.data.datasets[0].data = salesData;
                     salesTrendChart.data.datasets[1].data = refundsData;
                     salesTrendChart.data.datasets[2].data = netData;
-                    salesTrendChart.update();
+                    salesTrendChart.update('none'); // Use 'none' for better performance
                 })
-                .catch(error => console.error('Error loading chart data:', error));
+                .catch(error => {
+                    console.error('Error loading chart data:', error);
+                    // Show error in chart area
+                    const chartContainer = document.getElementById('salesTrendChart').parentElement;
+                    if (chartContainer) {
+                        chartContainer.innerHTML = `
+                            <div class="flex items-center justify-center h-full text-red-600">
+                                <div class="text-center">
+                                    <svg class="mx-auto h-8 w-8 text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                    </svg>
+                                    <p class="text-sm">Failed to load chart data</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
         }
 
         function updateTopProductsChart() {
-            fetch('{{ route("admin.sales.charts.products") }}')
-                .then(response => response.json())
+            fetch('{{ route("admin.sales.charts.products") }}', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+                cache: 'no-cache'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.status);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     const labels = data.map(item => item.product);
                     const salesData = data.map(item => item.sales);
 
                     topProductsChart.data.labels = labels;
                     topProductsChart.data.datasets[0].data = salesData;
-                    topProductsChart.update();
+                    topProductsChart.update('none'); // Use 'none' for better performance
                 })
-                .catch(error => console.error('Error loading products chart data:', error));
+                .catch(error => {
+                    console.error('Error loading products chart data:', error);
+                    // Show error in chart area
+                    const chartContainer = document.getElementById('topProductsChart').parentElement;
+                    if (chartContainer) {
+                        chartContainer.innerHTML = `
+                            <div class="flex items-center justify-center h-full text-red-600">
+                                <div class="text-center">
+                                    <svg class="mx-auto h-8 w-8 text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                    </svg>
+                                    <p class="text-sm">Failed to load chart data</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
         }
 
-        // Load initial data
-        loadDashboardData();
+        // Add manual refresh button functionality
+        function addManualRefreshButton() {
+            const header = document.querySelector('.mb-4');
+            if (header && !document.getElementById('manual-refresh-btn')) {
+                const refreshButton = document.createElement('button');
+                refreshButton.id = 'manual-refresh-btn';
+                refreshButton.className = 'ml-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center';
+                refreshButton.innerHTML = `
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    Refresh Data
+                `;
+                
+                refreshButton.addEventListener('click', function() {
+                    this.disabled = true;
+                    this.innerHTML = `
+                        <svg class="w-4 h-4 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Refreshing...
+                    `;
+                    
+                    // Refresh all data
+                    Promise.all([
+                        loadDashboardData(),
+                        loadRecentActivity(),
+                        updateSalesTrendChart(),
+                        updateTopProductsChart()
+                    ]).finally(() => {
+                        setTimeout(() => {
+                            this.disabled = false;
+                            this.innerHTML = `
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                Refresh Data
+                            `;
+                        }, 1000);
+                    });
+                });
+                
+                header.appendChild(refreshButton);
+            }
+        }
+
+        // Initialize manual refresh button
+        addManualRefreshButton();
         
-        // Refresh data every 5 minutes
-        setInterval(loadDashboardData, 300000);
-        setInterval(() => {
-            updateSalesTrendChart();
-            updateTopProductsChart();
-        }, 300000);
+        // Cleanup function for when page is unloaded
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
     </script>
 </x-admin-layout>

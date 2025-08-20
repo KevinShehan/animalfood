@@ -152,6 +152,12 @@
                             <div id="creditDetails">Select a customer to view credit information</div>
                         </div>
                     </div>
+
+                    <!-- Notes Field -->
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes</label>
+                        <textarea id="billNotes" rows="3" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white" placeholder="Optional notes for the bill..."></textarea>
+                    </div>
                 </div>
 
                 <!-- Action Buttons -->
@@ -857,6 +863,67 @@
                 }
             });
 
+            // First, save the bill to database
+            saveBillToDatabase();
+        }
+
+        function saveBillToDatabase() {
+            const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
+            const tax = subtotal * 0.10;
+            const total = subtotal + tax;
+            const discountAmount = appliedDiscount.amount || 0;
+            const finalAmount = total - discountAmount;
+
+            const billData = {
+                customer_id: selectedCustomer.id,
+                items: billItems.map(item => ({
+                    product_id: item.productId,
+                    quantity: item.quantity,
+                    unit_price: item.price,
+                    total_price: item.total
+                })),
+                total_amount: subtotal,
+                tax_amount: tax,
+                discount_amount: discountAmount,
+                final_amount: finalAmount,
+                paid_amount: parseFloat(document.getElementById('amountPaid').value) || 0,
+                due_amount: finalAmount - (parseFloat(document.getElementById('amountPaid').value) || 0),
+                due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+                payment_method: currentPaymentMethod,
+                notes: document.getElementById('billNotes') ? document.getElementById('billNotes').value : '',
+                discount_code: appliedDiscount.code,
+                discount_type: appliedDiscount.type,
+                discount_percentage: appliedDiscount.type === 'percentage' ? appliedDiscount.value : 0
+            };
+
+            fetch('{{ route("admin.billing.api.create-bill") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(billData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Store the saved bill data for display
+                    window.savedBillData = data.bill;
+                    // Continue with bill generation
+                    generateBillDisplay();
+                } else {
+                    throw new Error(data.error || 'Failed to save bill');
+                }
+            })
+            .catch(error => {
+                console.error('Error saving bill:', error);
+                Swal.fire('Error!', 'Failed to save bill to database. Please try again.', 'error');
+            });
+        }
+
+        function generateBillDisplay() {
+
             // Generate bill content
             const billContent = document.getElementById('billContent');
             const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
@@ -931,7 +998,7 @@
                          </div>
                         <div class="text-right">
                             <h4 class="font-medium text-gray-900">Invoice #:</h4>
-                            <p class="text-gray-600">${header && header.invoice_prefix ? header.invoice_prefix : 'INV'}-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}</p>
+                            <p class="text-gray-600">${window.savedBillData ? window.savedBillData.invoice_number : (header && header.invoice_prefix ? header.invoice_prefix : 'INV') + '-' + new Date().getFullYear() + String(new Date().getMonth() + 1).padStart(2, '0') + String(new Date().getDate()).padStart(2, '0') + '-' + Math.floor(Math.random() * 1000).toString().padStart(3, '0')}</p>
                             <h4 class="font-medium text-gray-900 mt-2">Invoice Date:</h4>
                             <p class="text-gray-600">${new Date().toLocaleDateString()}</p>
                         </div>
@@ -1063,8 +1130,8 @@
                 printWindow.print();
             }, 500);
             
-            // Save bill to database (you would implement this)
-            Swal.fire('Success!', 'Bill has been printed and saved.', 'success').then(() => {
+            // Bill is already saved to database
+            Swal.fire('Success!', 'Bill has been printed and saved to database.', 'success').then(() => {
                 closePrintModal();
                 clearBill();
             });

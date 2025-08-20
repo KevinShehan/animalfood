@@ -7,6 +7,7 @@ use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -24,6 +25,8 @@ class User extends Authenticatable
         'role',
         'password',
         'avatar',
+        'old_passwords',
+        'password_changed_at',
     ];
 
     /**
@@ -46,6 +49,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'old_passwords' => 'array',
+            'password_changed_at' => 'datetime',
         ];
     }
     
@@ -73,4 +78,52 @@ class User extends Authenticatable
         'updated_at',
         'created_at'
     ];
+
+    /**
+     * Add current password to old passwords history
+     */
+    public function addToPasswordHistory($currentPassword)
+    {
+        $oldPasswords = $this->old_passwords ?? [];
+        
+        // Add current password to history
+        $oldPasswords[] = [
+            'password' => $currentPassword,
+            'changed_at' => now()->toISOString(),
+        ];
+        
+        // Keep only last 5 passwords
+        if (count($oldPasswords) > 5) {
+            $oldPasswords = array_slice($oldPasswords, -5);
+        }
+        
+        $this->old_passwords = $oldPasswords;
+        $this->password_changed_at = now();
+    }
+
+    /**
+     * Check if password was used before
+     */
+    public function isPasswordInHistory($password)
+    {
+        if (!$this->old_passwords) {
+            return false;
+        }
+        
+        foreach ($this->old_passwords as $oldPassword) {
+            if (Hash::check($password, $oldPassword['password'])) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Get password history with timestamps
+     */
+    public function getPasswordHistory()
+    {
+        return $this->old_passwords ?? [];
+    }
 }

@@ -237,6 +237,20 @@ class BillingController extends Controller
             $perPage = $request->get('per_page', 15);
             $bills = $query->paginate($perPage);
 
+            // Calculate summary before transformation
+            $summary = [
+                'total_bills' => $bills->total(),
+                'total_amount' => number_format($bills->getCollection()->sum(function($bill) {
+                    return is_numeric($bill->final_amount) ? (float)$bill->final_amount : 0;
+                }), 2),
+                'total_paid' => number_format($bills->getCollection()->sum(function($bill) {
+                    return is_numeric($bill->paid_amount) ? (float)$bill->paid_amount : 0;
+                }), 2),
+                'total_due' => number_format($bills->getCollection()->sum(function($bill) {
+                    return is_numeric($bill->due_amount) ? (float)$bill->due_amount : 0;
+                }), 2),
+            ];
+
             // Transform data for frontend
             $bills->getCollection()->transform(function ($bill) {
                 return [
@@ -250,9 +264,9 @@ class BillingController extends Controller
                     ],
                     'date' => $bill->invoice_date ? $bill->invoice_date->format('M d, Y') : $bill->created_at->format('M d, Y'),
                     'due_date' => $bill->due_date ? $bill->due_date->format('M d, Y') : 'N/A',
-                    'amount' => number_format($bill->final_amount, 2),
-                    'paid_amount' => number_format($bill->paid_amount, 2),
-                    'due_amount' => number_format($bill->due_amount, 2),
+                    'amount' => number_format(is_numeric($bill->final_amount) ? (float)$bill->final_amount : 0, 2),
+                    'paid_amount' => number_format(is_numeric($bill->paid_amount) ? (float)$bill->paid_amount : 0, 2),
+                    'due_amount' => number_format(is_numeric($bill->due_amount) ? (float)$bill->due_amount : 0, 2),
                     'status' => $this->getBillStatus($bill),
                     'status_class' => $this->getBillStatusClass($bill),
                     'created_by' => $bill->user->name ?? 'System',
@@ -272,12 +286,7 @@ class BillingController extends Controller
                     'from' => $bills->firstItem(),
                     'to' => $bills->lastItem(),
                 ],
-                'summary' => [
-                    'total_bills' => $bills->total(),
-                    'total_amount' => number_format($bills->sum('final_amount'), 2),
-                    'total_paid' => number_format($bills->sum('paid_amount'), 2),
-                    'total_due' => number_format($bills->sum('due_amount'), 2),
-                ]
+                'summary' => $summary
             ]);
 
         } catch (\Exception $e) {
@@ -413,6 +422,371 @@ class BillingController extends Controller
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Customer not found: ' . $e->getMessage()], 404);
+        }
+    }
+
+    public function createSampleBills(): JsonResponse
+    {
+        try {
+            // Get some customers and products
+            $customers = Customer::where('status', 'active')->take(5)->get();
+            $products = Product::where('status', 'active')->where('stock_quantity', '>', 0)->take(10)->get();
+            
+            if ($customers->isEmpty()) {
+                return response()->json(['error' => 'No active customers found. Please create some customers first.'], 400);
+            }
+            
+            if ($products->isEmpty()) {
+                return response()->json(['error' => 'No active products found. Please create some products first.'], 400);
+            }
+
+            $billHeader = BillHeader::getActive();
+            $createdBills = [];
+
+            for ($i = 1; $i <= 10; $i++) {
+                $customer = $customers->random();
+                
+                // Generate unique invoice number
+                $lastInvoice = Order::whereNotNull('invoice_number')->orderBy('id', 'desc')->first();
+                $lastNumber = $lastInvoice ? (int) substr($lastInvoice->invoice_number, strlen($billHeader->invoice_prefix) + 1) : 0;
+                $nextNumber = $lastNumber + $i;
+                $invoiceNumber = $billHeader->invoice_prefix . '-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+                
+                // Create order with invoice number
+                $order = Order::create([
+                    'order_number' => 'ORD-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT),
+                    'invoice_number' => $invoiceNumber,
+                    'customer_id' => $customer->id,
+                    'user_id' => auth()->id() ?? 1,
+                    'total_amount' => rand(1000, 5000),
+                    'tax_amount' => 0,
+                    'discount_amount' => 0,
+                    'final_amount' => rand(1000, 5000),
+                    'paid_amount' => rand(0, 5000),
+                    'due_amount' => rand(0, 2000),
+                    'due_date' => now()->addDays(rand(1, 30)),
+                    'status' => 'completed',
+                    'payment_status' => 'partial',
+                    'payment_method' => 'cash',
+                    'invoice_date' => now()->subDays(rand(1, 30)),
+                    'notes' => 'Sample bill for testing purposes'
+                ]);
+
+                // Create order items
+                $numItems = rand(1, 3);
+                for ($j = 0; $j < $numItems; $j++) {
+                    $product = $products->random();
+                    $quantity = rand(1, 5);
+                    $price = $product->price;
+                    
+                    \App\Models\OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $product->id,
+                        'quantity' => $quantity,
+                        'unit_price' => $price,
+                        'total_price' => $quantity * $price,
+                        'discount_amount' => 0,
+                        'tax_amount' => 0,
+                        'final_price' => $quantity * $price
+                    ]);
+                }
+
+                $createdBills[] = [
+                    'invoice_number' => $invoiceNumber,
+                    'customer_name' => $customer->name,
+                    'amount' => $order->final_amount,
+                    'status' => $this->getBillStatus($order)
+                ];
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Successfully created ' . count($createdBills) . ' sample bills',
+                'bills' => $createdBills
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Error creating sample bills: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createBill(Request $request): JsonResponse
+    {
+        try {
+            $request->validate([
+                'customer_id' => 'required', // we will resolve CASH special-case below
+                'items' => 'required|array|min:1',
+                'items.*.product_id' => 'required|exists:products,id',
+                'items.*.quantity' => 'required|integer|min:1',
+                'due_date' => 'nullable|date|after:today',
+                'notes' => 'nullable|string|max:500',
+                'payment_method' => 'nullable|string',
+                'paid_amount' => 'nullable|numeric|min:0'
+            ]);
+
+            // Resolve customer: support 'cash' pseudo-customer
+            if ($request->customer_id === 'cash' || empty($request->customer_id)) {
+                $customer = Customer::firstOrCreate(
+                    ['name' => 'Customer'],
+                    [
+                        'email' => 'customer@example.com',
+                        'phone' => 'N/A',
+                        'address' => 'Walk-in',
+                        'status' => 'active'
+                    ]
+                );
+            } else {
+                // Validate actual customer id
+                $request->validate(['customer_id' => 'exists:customers,id']);
+                $customer = Customer::findOrFail($request->customer_id);
+            }
+
+            $billHeader = BillHeader::getActive();
+            $prefix = $billHeader->invoice_prefix ?? 'INV';
+
+            // Generate invoice number
+            $lastOrder = Order::whereNotNull('invoice_number')->latest()->first();
+            $lastNumber = $lastOrder ? (int) preg_replace('/\D/', '', substr($lastOrder->invoice_number, -6)) : 0;
+            $invoiceNumber = $prefix . '-' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+
+            // Calculate totals from items
+            $totalAmount = 0.0;
+            $orderItems = [];
+            foreach ($request->items as $item) {
+                $product = Product::findOrFail($item['product_id']);
+                $quantity = (int) $item['quantity'];
+                $unitPrice = (float) $product->price;
+                $itemTotal = $quantity * $unitPrice;
+                $totalAmount += $itemTotal;
+
+                $orderItems[] = [
+                    'product_id' => $product->id,
+                    'quantity' => $quantity,
+                    'unit_price' => $unitPrice,
+                    'total_price' => $itemTotal,
+                    'discount_amount' => 0,
+                    'tax_amount' => 0,
+                    'final_price' => $itemTotal,
+                ];
+            }
+
+            // Apply simple 10% tax like the UI preview
+            $taxAmount = round($totalAmount * 0.10, 2);
+            $discountAmount = 0.0; // advanced discounts can be added later
+            $finalAmount = round($totalAmount - $discountAmount + $taxAmount, 2);
+
+            // Payment fields from request
+            $allowedMethods = ['cash', 'card', 'bank_transfer', 'credit', 'cheque', 'mobile_payment', 'mixed'];
+            $paymentMethod = in_array($request->input('payment_method'), $allowedMethods, true)
+                ? $request->input('payment_method')
+                : 'cash';
+            $paidAmount = (float) $request->input('paid_amount', 0);
+            $dueAmount = max($finalAmount - $paidAmount, 0);
+            $paymentStatus = $dueAmount <= 0 ? 'paid' : ($paidAmount > 0 ? 'partial' : 'pending');
+
+            // Create order
+            $order = Order::create([
+                'order_number' => 'ORD-' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT),
+                'invoice_number' => $invoiceNumber,
+                'customer_id' => $customer->id,
+                'user_id' => auth()->id() ?? 1,
+                'total_amount' => $totalAmount,
+                'tax_amount' => $taxAmount,
+                'discount_amount' => $discountAmount,
+                'final_amount' => $finalAmount,
+                'paid_amount' => $paidAmount,
+                'due_amount' => $dueAmount,
+                'due_date' => $request->due_date ?? now()->addDays(30),
+                'status' => 'completed',
+                'payment_status' => $paymentStatus,
+                'payment_method' => $paymentMethod,
+                'invoice_date' => now(),
+                'notes' => $request->notes,
+            ]);
+
+            // Create order items
+            foreach ($orderItems as $item) {
+                \App\Models\OrderItem::create(array_merge($item, [
+                    'order_id' => $order->id,
+                ]));
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Bill created successfully',
+                'bill' => [
+                    'id' => $order->id,
+                    'invoice_number' => $order->invoice_number,
+                    'customer_name' => $customer->name,
+                    'amount' => $order->final_amount,
+                    'due_date' => optional($order->due_date)->format('M d, Y'),
+                    'status' => $this->getBillStatus($order),
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Error creating bill: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function deleteBill(Order $bill): JsonResponse
+    {
+        try {
+            // Check if user has permission to delete bills
+            if (auth()->user()->role === 'cashier') {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'You do not have permission to delete bills.'
+                ], 403);
+            }
+
+            // Delete associated order items first
+            $bill->orderItems()->delete();
+            
+            // Delete the bill
+            $bill->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Bill deleted successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Error deleting bill: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function viewBill(Order $bill): JsonResponse
+    {
+        try {
+            $bill->load(['customer', 'user', 'orderItems.product']);
+
+            $billData = [
+                'id' => $bill->id,
+                'bill_number' => $bill->invoice_number,
+                'order_number' => $bill->order_number,
+                'customer' => [
+                    'name' => $bill->customer->name ?? 'N/A',
+                    'email' => $bill->customer->email ?? 'N/A',
+                    'phone' => $bill->customer->phone ?? 'N/A',
+                    'address' => $bill->customer->address ?? 'N/A',
+                ],
+                'date' => $bill->invoice_date ? $bill->invoice_date->format('M d, Y') : $bill->created_at->format('M d, Y'),
+                'due_date' => $bill->due_date ? $bill->due_date->format('M d, Y') : 'N/A',
+                'total_amount' => number_format($bill->total_amount, 2),
+                'tax_amount' => number_format($bill->tax_amount, 2),
+                'discount_amount' => number_format($bill->discount_amount, 2),
+                'final_amount' => number_format($bill->final_amount, 2),
+                'paid_amount' => number_format($bill->paid_amount, 2),
+                'due_amount' => number_format($bill->due_amount, 2),
+                'status' => $this->getBillStatus($bill),
+                'payment_status' => $bill->payment_status,
+                'payment_method' => $bill->payment_method,
+                'notes' => $bill->notes,
+                'created_by' => $bill->user->name ?? 'System',
+                'created_at' => $bill->created_at->format('M d, Y H:i:s'),
+                'items' => $bill->orderItems->map(function($item) {
+                    return [
+                        'product_name' => $item->product->name ?? 'N/A',
+                        'sku' => $item->product->sku ?? 'N/A',
+                        'quantity' => $item->quantity,
+                        'unit_price' => number_format($item->unit_price, 2),
+                        'total_price' => number_format($item->total_price, 2),
+                        'discount_amount' => number_format($item->discount_amount, 2),
+                        'tax_amount' => number_format($item->tax_amount, 2),
+                        'final_price' => number_format($item->final_price, 2),
+                    ];
+                })
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => $billData
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Error fetching bill details: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function reprintBill(Order $bill): JsonResponse
+    {
+        try {
+            $bill->load(['customer', 'user', 'orderItems.product']);
+            $billHeader = BillHeader::getActive();
+
+            // Generate reprint bill data
+            $billData = [
+                'id' => $bill->id,
+                'bill_number' => $bill->invoice_number,
+                'order_number' => $bill->order_number,
+                'is_reprint' => true, // Flag to identify this as a reprint
+                'customer' => [
+                    'name' => $bill->customer->name ?? 'N/A',
+                    'email' => $bill->customer->email ?? 'N/A',
+                    'phone' => $bill->customer->phone ?? 'N/A',
+                    'address' => $bill->customer->address ?? 'N/A',
+                ],
+                'date' => $bill->invoice_date ? $bill->invoice_date->format('M d, Y') : $bill->created_at->format('M d, Y'),
+                'due_date' => $bill->due_date ? $bill->due_date->format('M d, Y') : 'N/A',
+                'total_amount' => number_format($bill->total_amount, 2),
+                'tax_amount' => number_format($bill->tax_amount, 2),
+                'discount_amount' => number_format($bill->discount_amount, 2),
+                'final_amount' => number_format($bill->final_amount, 2),
+                'paid_amount' => number_format($bill->paid_amount, 2),
+                'due_amount' => number_format($bill->due_amount, 2),
+                'status' => $this->getBillStatus($bill),
+                'payment_status' => $bill->payment_status,
+                'payment_method' => $bill->payment_method,
+                'notes' => $bill->notes,
+                'created_by' => $bill->user->name ?? 'System',
+                'created_at' => $bill->created_at->format('M d, Y H:i:s'),
+                'reprint_date' => now()->format('M d, Y H:i:s'),
+                'items' => $bill->orderItems->map(function($item) {
+                    return [
+                        'product_name' => $item->product->name ?? 'N/A',
+                        'sku' => $item->product->sku ?? 'N/A',
+                        'quantity' => $item->quantity,
+                        'unit_price' => number_format($item->unit_price, 2),
+                        'total_price' => number_format($item->total_price, 2),
+                        'discount_amount' => number_format($item->discount_amount, 2),
+                        'tax_amount' => number_format($item->tax_amount, 2),
+                        'final_price' => number_format($item->final_price, 2),
+                    ];
+                }),
+                'bill_header' => $billHeader ? [
+                    'company_name' => $billHeader->company_name,
+                    'company_logo' => $billHeader->company_logo,
+                    'company_address' => $billHeader->company_address,
+                    'company_phone' => $billHeader->company_phone,
+                    'company_email' => $billHeader->company_email,
+                    'company_website' => $billHeader->company_website,
+                    'footer_text' => $billHeader->footer_text,
+                ] : null
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => $billData
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Error generating reprint: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

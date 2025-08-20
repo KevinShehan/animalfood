@@ -42,6 +42,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/change-password', [ChangePasswordController::class, 'show'])->name('password.change');
     Route::post('/change-password', [ChangePasswordController::class, 'update'])->name('password.change.update');
     
+    // AJAX Password Validation Routes
+    Route::post('/validate-current-password', [ChangePasswordController::class, 'validateCurrentPassword'])->name('password.validate.current');
+    Route::post('/validate-password-confirmation', [ChangePasswordController::class, 'validatePasswordConfirmation'])->name('password.validate.confirmation');
+    Route::post('/check-password-history', [ChangePasswordController::class, 'checkPasswordHistory'])->name('password.check.history');
+    Route::post('/generate-password', [ChangePasswordController::class, 'generatePassword'])->name('password.generate');
+    
     // Admin Routes
     Route::prefix('admin')->group(function () {
         // Products CRUD
@@ -204,9 +210,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/billing/products/{id}', [BillingController::class, 'getProductDetails'])->name('admin.billing.products.details');
         Route::get('/billing/customers/{id}', [BillingController::class, 'getCustomerDetails'])->name('admin.billing.customers.details');
         
-        Route::get('/billing/list', [BillingController::class, 'list'])->name('admin.bill.list');
-        Route::get('/billing/api/bills', [BillingController::class, 'getBills'])->name('admin.billing.api.bills');
-        Route::get('/billing/export', [BillingController::class, 'exportBills'])->name('admin.billing.export');
+        Route::get('/billing/list', [BillingController::class, 'list'])->name('admin.billing.list');
+                        Route::get('/billing/api/bills', [BillingController::class, 'getBills'])->name('admin.billing.api.bills');
+                Route::post('/billing/api/create-sample-bills', [BillingController::class, 'createSampleBills'])->name('admin.billing.api.create-sample-bills');
+                Route::post('/billing/api/create-bill', [BillingController::class, 'createBill'])->name('admin.billing.api.create-bill');
+                Route::delete('/billing/api/bills/{bill}', [BillingController::class, 'deleteBill'])->name('admin.billing.api.delete-bill');
+                Route::get('/billing/api/bills/{bill}/view', [BillingController::class, 'viewBill'])->name('admin.billing.api.view-bill');
+                Route::get('/billing/api/bills/{bill}/reprint', [BillingController::class, 'reprintBill'])->name('admin.billing.api.reprint-bill');
+                Route::get('/billing/export', [BillingController::class, 'exportBills'])->name('admin.billing.export');
         
         // Reports
         Route::get('/reports', function () {
@@ -236,6 +247,7 @@ Route::middleware('auth')->group(function () {
         // Dashboard Data
         Route::get('/dashboard/stats', [DashboardController::class, 'getStats'])->name('admin.dashboard.stats');
         Route::get('/dashboard/charts/{period}', [DashboardController::class, 'getChartData'])->name('admin.dashboard.charts');
+        Route::get('/dashboard/recent-activity', [DashboardController::class, 'getRecentActivity'])->name('admin.dashboard.recent-activity');
         
         // Bill Header Settings
         Route::get('/settings/bill-header', [BillHeaderController::class, 'index'])->name('admin.settings.bill-header');
