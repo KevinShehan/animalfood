@@ -139,7 +139,7 @@
                     @if($purchaseReturn->refund_amount)
                     <div class="flex justify-between">
                         <span class="text-gray-600 dark:text-gray-400">Refund Amount:</span>
-                        <span class="font-medium text-green-600 dark:text-green-400">${{ number_format($purchaseReturn->refund_amount, 2) }}</span>
+                        <span class="font-medium text-green-600 dark:text-green-400">{{ \App\Helpers\CurrencyHelper::format($purchaseReturn->refund_amount) }}</span>
                     </div>
                     @endif
                     @if($purchaseReturn->refund_method)

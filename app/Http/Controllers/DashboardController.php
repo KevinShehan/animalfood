@@ -146,7 +146,7 @@ class DashboardController extends Controller
     {
         $recentActivities = AuditLog::with('user')
             ->latest()
-            ->take(10)
+            ->take(5)
             ->get()
             ->map(function ($activity) {
                 return [

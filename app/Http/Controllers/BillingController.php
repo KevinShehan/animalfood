@@ -516,6 +516,8 @@ class BillingController extends Controller
     public function createBill(Request $request): JsonResponse
     {
         try {
+            \Log::info('Creating bill with data:', $request->all());
+            
             $request->validate([
                 'customer_id' => 'required', // we will resolve CASH special-case below
                 'items' => 'required|array|min:1',
@@ -544,6 +546,8 @@ class BillingController extends Controller
                 $customer = Customer::findOrFail($request->customer_id);
             }
 
+            \Log::info('Customer resolved:', ['customer_id' => $customer->id, 'customer_name' => $customer->name]);
+
             $billHeader = BillHeader::getActive();
             $prefix = $billHeader->invoice_prefix ?? 'INV';
 
@@ -551,6 +555,8 @@ class BillingController extends Controller
             $lastOrder = Order::whereNotNull('invoice_number')->latest()->first();
             $lastNumber = $lastOrder ? (int) preg_replace('/\D/', '', substr($lastOrder->invoice_number, -6)) : 0;
             $invoiceNumber = $prefix . '-' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+
+            \Log::info('Generated invoice number:', ['invoice_number' => $invoiceNumber]);
 
             // Calculate totals from items
             $totalAmount = 0.0;
@@ -567,11 +573,10 @@ class BillingController extends Controller
                     'quantity' => $quantity,
                     'unit_price' => $unitPrice,
                     'total_price' => $itemTotal,
-                    'discount_amount' => 0,
-                    'tax_amount' => 0,
-                    'final_price' => $itemTotal,
                 ];
             }
+
+            \Log::info('Calculated totals:', ['total_amount' => $totalAmount, 'items_count' => count($orderItems)]);
 
             // Apply simple 10% tax like the UI preview
             $taxAmount = round($totalAmount * 0.10, 2);
@@ -587,8 +592,15 @@ class BillingController extends Controller
             $dueAmount = max($finalAmount - $paidAmount, 0);
             $paymentStatus = $dueAmount <= 0 ? 'paid' : ($paidAmount > 0 ? 'partial' : 'pending');
 
-            // Create order
-            $order = Order::create([
+            \Log::info('Payment details:', [
+                'payment_method' => $paymentMethod,
+                'paid_amount' => $paidAmount,
+                'due_amount' => $dueAmount,
+                'payment_status' => $paymentStatus
+            ]);
+
+            // Prepare order data
+            $orderData = [
                 'order_number' => 'ORD-' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT),
                 'invoice_number' => $invoiceNumber,
                 'customer_id' => $customer->id,
@@ -599,13 +611,20 @@ class BillingController extends Controller
                 'final_amount' => $finalAmount,
                 'paid_amount' => $paidAmount,
                 'due_amount' => $dueAmount,
-                'due_date' => $request->due_date ?? now()->addDays(30),
+                'due_date' => $request->due_date ? \Carbon\Carbon::parse($request->due_date) : now()->addDays(30),
                 'status' => 'completed',
                 'payment_status' => $paymentStatus,
                 'payment_method' => $paymentMethod,
                 'invoice_date' => now(),
                 'notes' => $request->notes,
-            ]);
+            ];
+
+            \Log::info('Creating order with data:', $orderData);
+
+            // Create order
+            $order = Order::create($orderData);
+
+            \Log::info('Order created successfully:', ['order_id' => $order->id]);
 
             // Create order items
             foreach ($orderItems as $item) {
@@ -613,6 +632,8 @@ class BillingController extends Controller
                     'order_id' => $order->id,
                 ]));
             }
+
+            \Log::info('Order items created successfully');
 
             return response()->json([
                 'success' => true,
@@ -627,7 +648,20 @@ class BillingController extends Controller
                 ],
             ]);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation error in createBill:', ['errors' => $e->errors()]);
+            return response()->json([
+                'success' => false,
+                'error' => 'Validation error: ' . implode(', ', array_flatten($e->errors())),
+            ], 422);
+        } catch (\Illuminate\Database\QueryException $e) {
+            \Log::error('Database error in createBill:', ['error' => $e->getMessage(), 'sql' => $e->getSql()]);
+            return response()->json([
+                'success' => false,
+                'error' => 'Database error: ' . $e->getMessage(),
+            ], 500);
         } catch (\Exception $e) {
+            \Log::error('Unexpected error in createBill:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json([
                 'success' => false,
                 'error' => 'Error creating bill: ' . $e->getMessage(),

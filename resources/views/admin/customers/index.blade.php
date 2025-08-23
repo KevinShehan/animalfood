@@ -113,8 +113,8 @@
                         <th class="w-36 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Location</th>
                         <th class="w-20 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
                         <th class="w-16 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Orders</th>
-                        <th class="w-24 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Created</th>
-                        <th class="w-20 px-3 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                        <th class="w-28 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Created</th>
+                        <th class="w-24 px-3 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="customersTableBody">
@@ -171,11 +171,11 @@
                         <td class="w-16 px-3 py-3 text-sm text-gray-900 dark:text-white">
                             {{ $customer->orders->count() }}
                         </td>
-                        <td class="w-24 px-3 py-3 text-xs text-gray-500 dark:text-gray-400">
+                        <td class="w-28 px-3 py-3 text-xs text-gray-500 dark:text-gray-400">
                             {{ $customer->created_at->format('M d, Y') }}
                         </td>
-                        <td class="w-20 px-3 py-3 text-right text-sm font-medium">
-                            <div class="flex justify-end space-x-1">
+                        <td class="w-24 px-3 py-3 text-right text-sm font-medium">
+                            <div class="flex justify-end space-x-1 action-buttons">
                                 <button onclick="viewCustomer({{ $customer->id }})" class="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -217,7 +217,7 @@
                         <th class="w-24 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
                         <th class="w-20 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
                         <th class="w-16 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Orders</th>
-                        <th class="w-20 px-3 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                        <th class="w-24 px-3 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="customersTableBodyTablet">
@@ -267,8 +267,8 @@
                         <td class="w-16 px-3 py-3 text-sm text-gray-900 dark:text-white">
                             {{ $customer->orders->count() }}
                         </td>
-                        <td class="w-20 px-3 py-3 text-right text-sm font-medium">
-                            <div class="flex justify-end space-x-1">
+                        <td class="w-24 px-3 py-3 text-right text-sm font-medium">
+                            <div class="flex justify-end space-x-1 action-buttons">
                                 <button onclick="viewCustomer({{ $customer->id }})" class="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -546,6 +546,19 @@
         /* Ensure table fits within container */
         table {
             table-layout: fixed;
+        }
+        
+        /* Prevent text wrapping in table cells */
+        .whitespace-nowrap {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Ensure action buttons don't wrap */
+        .action-buttons {
+            white-space: nowrap;
+            min-width: 80px;
         }
         
         /* Responsive text sizing */
