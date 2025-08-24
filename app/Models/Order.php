@@ -113,7 +113,11 @@ class Order extends Model
         parent::boot();
         
         static::creating(function ($order) {
-            $order->order_number = 'ORD-' . date('Y') . '-' . str_pad(static::count() + 1, 6, '0', STR_PAD_LEFT);
+            if (!$order->order_number) {
+                $lastOrder = static::whereYear('created_at', date('Y'))->latest()->first();
+                $lastNumber = $lastOrder ? (int) substr($lastOrder->order_number, -6) : 0;
+                $order->order_number = 'ORD-' . date('Y') . '-' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+            }
         });
     }
 } 

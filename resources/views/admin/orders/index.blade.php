@@ -452,13 +452,13 @@
                                 <h4 class="font-medium text-gray-900 dark:text-white">Payment Information</h4>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">Status: ${order.payment_status}</p>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">Method: ${order.payment_method}</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Total: $${parseFloat(order.final_amount).toFixed(2)}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Total: Rs. ${parseFloat(order.final_amount).toFixed(2)}</p>
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-900 dark:text-white">Amount Breakdown</h4>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Subtotal: $${parseFloat(order.total_amount).toFixed(2)}</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Tax: $${parseFloat(order.tax_amount).toFixed(2)}</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Discount: $${parseFloat(order.discount_amount).toFixed(2)}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Subtotal: Rs. ${parseFloat(order.total_amount).toFixed(2)}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Tax: Rs. ${parseFloat(order.tax_amount).toFixed(2)}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Discount: Rs. ${parseFloat(order.discount_amount).toFixed(2)}</p>
                             </div>
                         </div>
                         ${order.notes ? `<div class="mt-4"><h4 class="font-medium text-gray-900 dark:text-white">Notes</h4><p class="text-sm text-gray-600 dark:text-gray-400">${order.notes}</p></div>` : ''}
@@ -469,9 +469,9 @@
                                     <div class="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
                                         <div>
                                             <p class="text-sm font-medium text-gray-900 dark:text-white">${item.product.name}</p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">Qty: ${item.quantity} × $${parseFloat(item.unit_price).toFixed(2)}</p>
-                                        </div>
-                                        <p class="text-sm font-medium text-gray-900 dark:text-white">$${parseFloat(item.total_price).toFixed(2)}</p>
+                                                                            <p class="text-xs text-gray-500 dark:text-gray-400">Qty: ${item.quantity} × Rs. ${parseFloat(item.unit_price).toFixed(2)}</p>
+                            </div>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">Rs. ${parseFloat(item.total_price).toFixed(2)}</p>
                                     </div>
                                 `).join('')}
                             </div>

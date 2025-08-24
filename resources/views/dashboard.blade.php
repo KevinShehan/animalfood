@@ -1,151 +1,151 @@
 <x-admin-layout>
     <!-- Page Header -->
-    <div class="mb-4">
+    <div class="mb-6">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Welcome back! Here's what's happening with your animal food business today.</p>
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent dark:from-green-400 dark:to-emerald-400">Dashboard</h1>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Welcome back! Here's what's happening with your animal food business today.</p>
             </div>
-            <div id="dashboard-status" class="flex items-center space-x-2">
-                <div id="status-indicator" class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span id="status-text" class="text-sm text-gray-600 dark:text-gray-400">Live</span>
+            <div id="dashboard-status" class="flex items-center space-x-3 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <div id="status-indicator" class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <span id="status-text" class="text-sm font-medium text-gray-700 dark:text-gray-200">Live</span>
             </div>
         </div>
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <!-- Today's Sales -->
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-            <div class="p-5">
+        <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 overflow-hidden card-shadow rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                             </svg>
                         </div>
                     </div>
-                    <div class="ml-5 w-0 flex-1">
+                    <div class="ml-4 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Today's Sales</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="today-sales">Rs. 0.00</dd>
+                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-300 truncate">Today's Sales</dt>
+                            <dd class="text-xl font-bold text-gray-900 dark:text-white" id="today-sales">Rs. 0.00</dd>
                         </dl>
                     </div>
                 </div>
             </div>
-            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 px-6 py-4">
                 <div class="text-sm">
-                    <span class="text-green-600 dark:text-green-400 font-medium" id="sales-target-progress">0%</span>
-                    <span class="text-gray-500 dark:text-gray-400">of daily target</span>
+                    <span class="text-green-700 dark:text-green-300 font-semibold" id="sales-target-progress">0%</span>
+                    <span class="text-gray-600 dark:text-gray-400">of daily target</span>
                 </div>
             </div>
         </div>
 
         <!-- Today's Refunds -->
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-            <div class="p-5">
+        <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 overflow-hidden card-shadow rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
                             </svg>
                         </div>
                     </div>
-                    <div class="ml-5 w-0 flex-1">
+                    <div class="ml-4 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Today's Refunds</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="today-refunds">Rs. 0.00</dd>
+                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-300 truncate">Today's Refunds</dt>
+                            <dd class="text-xl font-bold text-gray-900 dark:text-white" id="today-refunds">Rs. 0.00</dd>
                         </dl>
                     </div>
                 </div>
             </div>
-            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+            <div class="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 px-6 py-4">
                 <div class="text-sm">
-                    <span class="text-red-600 dark:text-red-400 font-medium" id="net-sales">Rs. 0.00</span>
-                    <span class="text-gray-500 dark:text-gray-400">net sales</span>
+                    <span class="text-red-700 dark:text-red-300 font-semibold" id="net-sales">Rs. 0.00</span>
+                    <span class="text-gray-600 dark:text-gray-400">net sales</span>
                 </div>
             </div>
         </div>
 
         <!-- Products in Stock -->
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-            <div class="p-5">
+        <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 overflow-hidden card-shadow rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                             </svg>
                         </div>
                     </div>
-                    <div class="ml-5 w-0 flex-1">
+                    <div class="ml-4 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Products in Stock</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="productsInStock">0</dd>
+                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-300 truncate">Products in Stock</dt>
+                            <dd class="text-xl font-bold text-gray-900 dark:text-white" id="productsInStock">0</dd>
                         </dl>
                     </div>
                 </div>
             </div>
-            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+            <div class="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 px-6 py-4">
                 <div class="text-sm">
-                    <span class="text-yellow-600 dark:text-yellow-400 font-medium" id="productsInStockChange">0</span>
-                    <span class="text-gray-500 dark:text-gray-400">products in stock</span>
+                    <span class="text-amber-700 dark:text-amber-300 font-semibold" id="productsInStockChange">0</span>
+                    <span class="text-gray-600 dark:text-gray-400">products in stock</span>
                 </div>
             </div>
         </div>
 
         <!-- Low Stock Items -->
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-            <div class="p-5">
+        <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 overflow-hidden card-shadow rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-gradient-to-br from-rose-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                             </svg>
                         </div>
                     </div>
-                    <div class="ml-5 w-0 flex-1">
+                    <div class="ml-4 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Low Stock Items</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="lowStockCount">0</dd>
+                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-300 truncate">Low Stock Items</dt>
+                            <dd class="text-xl font-bold text-gray-900 dark:text-white" id="lowStockCount">0</dd>
                         </dl>
                     </div>
                 </div>
             </div>
-            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+            <div class="bg-gradient-to-r from-rose-50 to-red-50 dark:from-rose-900/20 dark:to-red-900/20 px-6 py-4">
                 <div class="text-sm">
-                    <span class="text-red-600 dark:text-red-400 font-medium" id="lowStockChange">0</span>
-                    <span class="text-gray-500 dark:text-gray-400">items need attention</span>
+                    <span class="text-rose-700 dark:text-rose-300 font-semibold" id="lowStockChange">0</span>
+                    <span class="text-gray-600 dark:text-gray-400">items need attention</span>
                 </div>
             </div>
         </div>
 
         <!-- Monthly Revenue -->
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-            <div class="p-5">
+        <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 overflow-hidden shadow-lg rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-emerald-500 rounded-md flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                             </svg>
                         </div>
                     </div>
-                    <div class="ml-5 w-0 flex-1">
+                    <div class="ml-4 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Monthly Revenue</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white" id="monthlyRevenue">Rs. 0.00</dd>
+                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-300 truncate">Monthly Revenue</dt>
+                            <dd class="text-xl font-bold text-gray-900 dark:text-white" id="monthlyRevenue">Rs. 0.00</dd>
                         </dl>
                     </div>
                 </div>
             </div>
-            <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+            <div class="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 px-6 py-4">
                 <div class="text-sm">
-                    <span class="text-emerald-600 dark:text-emerald-400 font-medium" id="revenueGrowth">+0%</span>
-                    <span class="text-gray-500 dark:text-gray-400">from last month</span>
+                    <span class="text-teal-700 dark:text-teal-300 font-semibold" id="revenueGrowth">+0%</span>
+                    <span class="text-gray-600 dark:text-gray-400">from last month</span>
                 </div>
             </div>
         </div>
@@ -154,32 +154,42 @@
 
 
     <!-- Sales Charts Section -->
-    <div class="mb-6">
-        <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
-            <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+    <div class="mb-8">
+        <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-t-2xl">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Sales Trends</h3>
-                    <div class="flex space-x-2">
-                        <button id="daily-btn" class="px-3 py-1 text-sm font-medium text-green-600 bg-green-100 rounded-md hover:bg-green-200 dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800 transition-colors">Daily</button>
-                        <button id="weekly-btn" class="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors">Weekly</button>
-                        <button id="monthly-btn" class="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors">Monthly</button>
+                    <h3 class="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent dark:from-green-400 dark:to-emerald-400">Sales Analytics</h3>
+                    <div class="flex space-x-3">
+                        <button id="daily-btn" class="px-4 py-2 text-sm font-semibold text-green-700 bg-green-100 rounded-lg hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300 dark:hover:bg-green-900/50 transition-all duration-200 shadow-sm">Daily</button>
+                        <button id="weekly-btn" class="px-4 py-2 text-sm font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm">Weekly</button>
+                        <button id="monthly-btn" class="px-4 py-2 text-sm font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm">Monthly</button>
                     </div>
                 </div>
             </div>
-            <div class="p-4">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <!-- Line Chart -->
-                    <div>
-                        <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Sales Trend</h4>
-                        <div class="relative" style="height: 250px;">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                            </svg>
+                            Sales Trend
+                        </h4>
+                        <div class="relative" style="height: 280px;">
                             <canvas id="salesTrendChart"></canvas>
                         </div>
                     </div>
                     
                     <!-- Bar Chart -->
-                    <div>
-                        <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Top Products</h4>
-                        <div class="relative" style="height: 250px;">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                            Top Products
+                        </h4>
+                        <div class="relative" style="height: 280px;">
                             <canvas id="topProductsChart"></canvas>
                         </div>
                     </div>
@@ -192,9 +202,14 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Recent Orders -->
         <div class="lg:col-span-2">
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
-                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Recent Orders</h3>
+            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-t-2xl">
+                    <h3 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400 flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        Recent Orders
+                    </h3>
                 </div>
                 <div class="overflow-hidden">
                     <div class="flow-root">
@@ -280,43 +295,48 @@
         <!-- Quick Actions & Recent Activity -->
         <div class="space-y-6">
             <!-- Quick Actions -->
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
-                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Quick Actions</h3>
+            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-t-2xl">
+                    <h3 class="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400 flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        Quick Actions
+                    </h3>
                 </div>
-                <div class="p-4 space-y-3">
-                    <a href="{{ route('admin.products.create') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                        <svg class="w-5 h-5 mr-3 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-6 space-y-4">
+                    <a href="{{ route('admin.products.create') }}" class="flex items-center p-4 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/30 dark:hover:to-emerald-900/30 transition-all duration-200 border border-green-200 dark:border-green-800 hover:border-green-300 dark:hover:border-green-700 shadow-sm hover:shadow-md">
+                        <svg class="w-6 h-6 mr-3 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         Add New Product
                     </a>
-                    <a href="{{ route('admin.orders.create') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                        <svg class="w-5 h-5 mr-3 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.orders.create') }}" class="flex items-center p-4 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 transition-all duration-200 border border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-700 shadow-sm hover:shadow-md">
+                        <svg class="w-6 h-6 mr-3 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                         </svg>
                         Create Order
                     </a>
-                    <a href="{{ route('admin.billing.index') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                        <svg class="w-5 h-5 mr-3 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.billing.index') }}" class="flex items-center p-4 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 rounded-xl hover:from-orange-100 hover:to-amber-100 dark:hover:from-orange-900/30 dark:hover:to-amber-900/30 transition-all duration-200 border border-orange-200 dark:border-orange-800 hover:border-orange-300 dark:hover:border-orange-700 shadow-sm hover:shadow-md">
+                        <svg class="w-6 h-6 mr-3 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                         </svg>
                         Create Bill
                     </a>
-                    <a href="{{ route('admin.customers.create') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                        <svg class="w-5 h-5 mr-3 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.customers.create') }}" class="flex items-center p-4 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl hover:from-purple-100 hover:to-pink-100 dark:hover:from-purple-900/30 dark:hover:to-pink-900/30 transition-all duration-200 border border-purple-200 dark:border-purple-800 hover:border-purple-300 dark:hover:border-purple-700 shadow-sm hover:shadow-md">
+                        <svg class="w-6 h-6 mr-3 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                         </svg>
                         Add New Customer
                     </a>
-                    <a href="{{ route('admin.inventory.dashboard') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                        <svg class="w-5 h-5 mr-3 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.inventory.dashboard') }}" class="flex items-center p-4 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl hover:from-amber-100 hover:to-yellow-100 dark:hover:from-amber-900/30 dark:hover:to-yellow-900/30 transition-all duration-200 border border-amber-200 dark:border-amber-800 hover:border-amber-300 dark:hover:border-amber-700 shadow-sm hover:shadow-md">
+                        <svg class="w-6 h-6 mr-3 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                         </svg>
                         Inventory Management
                     </a>
-                    <a href="{{ route('admin.reports.index') }}" class="flex items-center p-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                        <svg class="w-5 h-5 mr-3 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.reports.index') }}" class="flex items-center p-4 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gradient-to-r from-indigo-50 to-cyan-50 dark:from-indigo-900/20 dark:to-cyan-900/20 rounded-xl hover:from-indigo-100 hover:to-cyan-100 dark:hover:from-indigo-900/30 dark:hover:to-cyan-900/30 transition-all duration-200 border border-indigo-200 dark:border-indigo-800 hover:border-indigo-300 dark:hover:border-indigo-700 shadow-sm hover:shadow-md">
+                        <svg class="w-6 h-6 mr-3 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                         </svg>
                         View Reports
@@ -325,11 +345,16 @@
             </div>
 
             <!-- Recent Activity -->
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
-                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Recent Activity</h3>
+            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-t-2xl">
+                    <h3 class="text-xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent dark:from-teal-400 dark:to-cyan-400 flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Recent Activity
+                    </h3>
                 </div>
-                <div class="p-4">
+                <div class="p-6">
                     <div class="flow-root">
                         <ul class="-mb-8" id="recent-activity-list">
                             <!-- Loading state -->
@@ -348,58 +373,63 @@
     </div>
 
     <!-- Bottom Section - Popular Products -->
-    <div class="mt-6">
-        <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
-            <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Popular Products</h3>
+    <div class="mt-8">
+        <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-t-2xl">
+                <h3 class="text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent dark:from-rose-400 dark:to-pink-400 flex items-center">
+                    <svg class="w-6 h-6 mr-3 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                    </svg>
+                    Popular Products
+                </h3>
             </div>
             <div class="overflow-hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 border border-green-200 dark:border-green-800 hover:shadow-lg transition-all duration-200">
                         <div class="flex items-center justify-between">
                             <div>
-                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Premium Dog Food</h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">25kg bags</p>
+                                <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Premium Dog Food</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">25kg bags</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">156 sold</p>
-                                <p class="text-sm text-green-600 dark:text-green-400">+12%</p>
+                                <p class="text-sm font-bold text-gray-900 dark:text-white">156 sold</p>
+                                <p class="text-sm text-green-600 dark:text-green-400 font-semibold">+12%</p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800 hover:shadow-lg transition-all duration-200">
                         <div class="flex items-center justify-between">
                             <div>
-                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Cat Food Mix</h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">15kg bags</p>
+                                <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Cat Food Mix</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">15kg bags</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">89 sold</p>
-                                <p class="text-sm text-green-600 dark:text-green-400">+8%</p>
+                                <p class="text-sm font-bold text-gray-900 dark:text-white">89 sold</p>
+                                <p class="text-sm text-blue-600 dark:text-blue-400 font-semibold">+8%</p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-800 hover:shadow-lg transition-all duration-200">
                         <div class="flex items-center justify-between">
                             <div>
-                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Bird Seed Mix</h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">5kg bags</p>
+                                <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Bird Seed Mix</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">5kg bags</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">67 sold</p>
-                                <p class="text-sm text-green-600 dark:text-green-400">+15%</p>
+                                <p class="text-sm font-bold text-gray-900 dark:text-white">67 sold</p>
+                                <p class="text-sm text-purple-600 dark:text-purple-400 font-semibold">+15%</p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                    <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-4 border border-amber-200 dark:border-amber-800 hover:shadow-lg transition-all duration-200">
                         <div class="flex items-center justify-between">
                             <div>
-                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Fish Food</h4>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">500g containers</p>
+                                <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Fish Food</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">500g containers</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">45 sold</p>
-                                <p class="text-sm text-green-600 dark:text-green-400">+5%</p>
+                                <p class="text-sm font-bold text-gray-900 dark:text-white">45 sold</p>
+                                <p class="text-sm text-amber-600 dark:text-amber-400 font-semibold">+5%</p>
                             </div>
                         </div>
                     </div>
@@ -561,20 +591,20 @@
             if (indicator && statusText) {
                 switch (status) {
                     case 'loading':
-                        indicator.className = 'w-2 h-2 bg-yellow-500 rounded-full animate-pulse';
+                        indicator.className = 'w-3 h-3 bg-amber-500 rounded-full animate-pulse';
                         statusText.textContent = 'Updating...';
-                        statusText.className = 'text-sm text-yellow-600 dark:text-yellow-400';
+                        statusText.className = 'text-sm font-medium text-amber-600 dark:text-amber-400';
                         break;
                     case 'error':
-                        indicator.className = 'w-2 h-2 bg-red-500 rounded-full';
+                        indicator.className = 'w-3 h-3 bg-rose-500 rounded-full';
                         statusText.textContent = 'Error';
-                        statusText.className = 'text-sm text-red-600 dark:text-red-400';
+                        statusText.className = 'text-sm font-medium text-rose-600 dark:text-rose-400';
                         break;
                     case 'live':
                     default:
-                        indicator.className = 'w-2 h-2 bg-green-500 rounded-full animate-pulse';
+                        indicator.className = 'w-3 h-3 bg-emerald-500 rounded-full animate-pulse';
                         statusText.textContent = 'Live';
-                        statusText.className = 'text-sm text-green-600 dark:text-green-400';
+                        statusText.className = 'text-sm font-medium text-emerald-600 dark:text-emerald-400';
                         break;
                 }
             }
@@ -775,12 +805,12 @@
             
             // Update button styles
             document.querySelectorAll('#daily-btn, #weekly-btn, #monthly-btn').forEach(btn => {
-                btn.classList.remove('text-green-600', 'bg-green-100', 'dark:bg-green-900', 'dark:text-green-300');
+                btn.classList.remove('text-green-700', 'bg-green-100', 'dark:bg-green-900/30', 'dark:text-green-300');
                 btn.classList.add('text-gray-600', 'bg-gray-100', 'dark:bg-gray-700', 'dark:text-gray-300');
             });
             
             document.getElementById(timeframe + '-btn').classList.remove('text-gray-600', 'bg-gray-100', 'dark:bg-gray-700', 'dark:text-gray-300');
-            document.getElementById(timeframe + '-btn').classList.add('text-green-600', 'bg-green-100', 'dark:bg-green-900', 'dark:text-green-300');
+            document.getElementById(timeframe + '-btn').classList.add('text-green-700', 'bg-green-100', 'dark:bg-green-900/30', 'dark:text-green-300');
             
             // Update charts
             updateSalesTrendChart();

@@ -26,25 +26,41 @@
         </script>
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+            <style>
+                .card-shadow {
+                    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                }
+                .card-shadow:hover {
+                    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                }
+                .dark .card-shadow {
+                    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+                }
+                .dark .card-shadow:hover {
+                    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+                }
+            </style>
             <!-- Sidebar -->
             <div x-data="{ sidebarOpen: false }" class="flex">
                 <!-- Sidebar for desktop -->
                 <div class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
-                    <div class="flex-1 flex flex-col min-h-0 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+                    <div class="flex-1 flex flex-col min-h-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 shadow-2xl border-r border-gray-700">
                         <!-- Logo -->
-                        <div class="flex items-center h-16 flex-shrink-0 px-4 bg-green-600 dark:bg-green-700">
+                        <div class="flex items-center h-20 flex-shrink-0 px-6 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 shadow-lg">
                             <div class="flex items-center">
-                                <img src="{{ asset('images/dog.png') }}" alt="Dog" class="h-8 w-8 rounded-full">
-                                <span class="ml-2 text-white font-semibold text-lg">Animal Food System</span>
+                                <div class="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                                    <img src="{{ asset('images/dog.png') }}" alt="Dog" class="h-8 w-8 rounded-lg">
+                                </div>
+                                <span class="ml-3 text-white font-bold text-lg tracking-wide">Animal Food System</span>
                             </div>
                         </div>
 
                         <!-- Navigation -->
-                        <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+                        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                             <!-- Dashboard -->
-                            <a href="{{ route('dashboard') }}" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('dashboard') ? 'bg-green-100 text-green-900 dark:bg-green-700 dark:text-green-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white' }}">
-                                <svg class="mr-3 h-6 w-6 {{ request()->routeIs('dashboard') ? 'text-green-500' : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <a href="{{ route('dashboard') }}" class="group flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg shadow-emerald-500/25' : 'text-gray-300 hover:bg-gray-800 hover:text-white hover:shadow-md' }}">
+                                <svg class="mr-3 h-6 w-6 {{ request()->routeIs('dashboard') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
                                 </svg>
@@ -52,8 +68,8 @@
                             </a>
 
                             <!-- Products -->
-                            <a href="{{ route('admin.products.index') }}" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.products.*') ? 'bg-green-100 text-green-900 dark:bg-green-700 dark:text-green-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white' }}">
-                                <svg class="mr-3 h-6 w-6 {{ request()->routeIs('admin.products.*') ? 'text-green-500' : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <a href="{{ route('admin.products.index') }}" class="group flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.products.*') ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/25' : 'text-gray-300 hover:bg-gray-800 hover:text-white hover:shadow-md' }}">
+                                <svg class="mr-3 h-6 w-6 {{ request()->routeIs('admin.products.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                                 </svg>
                                 Products
@@ -61,8 +77,8 @@
 
                                         <!-- Inventory Management -->
             <div x-data="{ open: false }">
-                <button @click="open = !open" class="group flex items-center w-full px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.inventory*') ? 'bg-green-100 text-green-900 dark:bg-green-700 dark:text-green-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white' }}">
-                    <svg class="mr-3 h-6 w-6 {{ request()->routeIs('admin.inventory*') ? 'text-green-500' : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button @click="open = !open" class="group flex items-center w-full px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.inventory*') ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25' : 'text-gray-300 hover:bg-gray-800 hover:text-white hover:shadow-md' }}">
+                    <svg class="mr-3 h-6 w-6 {{ request()->routeIs('admin.inventory*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-14 0h14"></path>
                     </svg>
                     Inventory
@@ -70,21 +86,21 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
-                <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="ml-8 space-y-1">
-                    <a href="{{ route('admin.inventory.dashboard') }}" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.inventory.dashboard') ? 'bg-green-100 text-green-900 dark:bg-green-700 dark:text-green-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white' }}">
-                        <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="ml-8 space-y-2 mt-2">
+                    <a href="{{ route('admin.inventory.dashboard') }}" class="group flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.inventory.dashboard') ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4"></path>
                         </svg>
                         Dashboard
                     </a>
-                    <a href="{{ route('admin.inventory.stock-levels') }}" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.inventory.stock-levels') ? 'bg-green-100 text-green-900 dark:bg-green-700 dark:text-green-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white' }}">
-                        <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.inventory.stock-levels') }}" class="group flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.inventory.stock-levels') ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
                         </svg>
                         Stock Levels
                     </a>
-                    <a href="{{ route('admin.inventory.scanner') }}" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.inventory.scanner') ? 'bg-green-100 text-green-900 dark:bg-green-700 dark:text-green-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white' }}">
-                        <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('admin.inventory.scanner') }}" class="group flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.inventory.scanner') ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                        <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V6a1 1 0 00-1-1H5a1 1 0 00-1 1v1a1 1 0 001 1zm12 0h2a1 1 0 001-1V6a1 1 0 00-1-1h-2a1 1 0 00-1 1v1a1 1 0 001 1zM5 20h2a1 1 0 001-1v-1a1 1 0 00-1-1H5a1 1 0 00-1 1v1a1 1 0 001 1z"></path>
                         </svg>
                         Scanner
@@ -93,24 +109,24 @@
             </div>
 
                             <!-- Sales -->
-                            <a href="{{ route('admin.sales.index') }}" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.sales.*') ? 'bg-green-100 text-green-900 dark:bg-green-700 dark:text-green-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white' }}">
-                                <svg class="mr-3 h-6 w-6 {{ request()->routeIs('admin.sales.*') ? 'text-green-500' : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <a href="{{ route('admin.sales.index') }}" class="group flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.sales.*') ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25' : 'text-gray-300 hover:bg-gray-800 hover:text-white hover:shadow-md' }}">
+                                <svg class="mr-3 h-6 w-6 {{ request()->routeIs('admin.sales.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                                 </svg>
                                 Sales
                             </a>
 
                             <!-- Orders -->
-                                                         <a href="{{ route('admin.orders.index') }}" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.orders.*') ? 'bg-green-100 text-green-900 dark:bg-green-700 dark:text-green-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white' }}">
-                                 <svg class="mr-3 h-6 w-6 {{ request()->routeIs('admin.orders.*') ? 'text-green-500' : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <a href="{{ route('admin.orders.index') }}" class="group flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.orders.*') ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/25' : 'text-gray-300 hover:bg-gray-800 hover:text-white hover:shadow-md' }}">
+                                <svg class="mr-3 h-6 w-6 {{ request()->routeIs('admin.orders.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                                 </svg>
                                 Orders
                             </a>
 
                             <!-- Customers -->
-                            <a href="{{ route('admin.customers.index') }}" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.customers.*') ? 'bg-green-100 text-green-900 dark:bg-green-700 dark:text-green-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white' }}">
-                                <svg class="mr-3 h-6 w-6 {{ request()->routeIs('admin.customers') ? 'text-green-500' : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <a href="{{ route('admin.customers.index') }}" class="group flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.customers.*') ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25' : 'text-gray-300 hover:bg-gray-800 hover:text-white hover:shadow-md' }}">
+                                <svg class="mr-3 h-6 w-6 {{ request()->routeIs('admin.customers') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                                 </svg>
                                 Customers
@@ -308,11 +324,11 @@
                         </nav>
                         
                         <!-- Desktop Logout Button -->
-                        <div class="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-800">
+                        <div class="flex-shrink-0 border-t border-gray-700 p-6 bg-gradient-to-r from-gray-900 to-gray-800">
                             <form method="POST" action="{{ route('logout') }}" class="w-full">
                                 @csrf
-                                <button type="submit" class="group flex items-center w-full px-3 py-2 text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 hover:text-red-800 dark:text-red-300 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:hover:text-red-200 transition-colors">
-                                    <svg class="mr-3 h-5 w-5 text-red-500 group-hover:text-red-600 dark:text-red-400 dark:group-hover:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <button type="submit" class="group flex items-center w-full px-4 py-3 text-sm font-semibold rounded-xl text-red-400 bg-red-500/10 hover:bg-red-500/20 hover:text-red-300 border border-red-500/20 hover:border-red-500/40 transition-all duration-200">
+                                    <svg class="mr-3 h-5 w-5 text-red-400 group-hover:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                     </svg>
                                     Logout
@@ -324,11 +340,11 @@
 
                 <!-- Mobile sidebar -->
                 <div x-show="sidebarOpen" class="fixed inset-0 flex z-40 md:hidden" x-cloak>
-                    <div x-show="sidebarOpen" class="fixed inset-0 bg-gray-600 bg-opacity-75" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="sidebarOpen = false"></div>
+                    <div x-show="sidebarOpen" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="sidebarOpen = false"></div>
                     
-                    <div x-show="sidebarOpen" class="relative flex-1 flex flex-col max-w-xs w-full bg-white dark:bg-gray-800" x-transition:enter="transition ease-in-out duration-300 transform" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full">
+                    <div x-show="sidebarOpen" class="relative flex-1 flex flex-col max-w-xs w-full bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 shadow-2xl" x-transition:enter="transition ease-in-out duration-300 transform" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full">
                         <div class="absolute top-0 right-0 -mr-12 pt-2">
-                            <button @click="sidebarOpen = false" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                            <button @click="sidebarOpen = false" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500 transition-all duration-200">
                                 <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
@@ -337,14 +353,16 @@
                         
                         <!-- Mobile navigation content -->
                         <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto flex flex-col">
-                            <div class="flex-shrink-0 flex items-center px-4">
-                                <img src="{{ asset('images/dog.png') }}" alt="Dog" class="h-8 w-8 rounded-full">
-                                <span class="ml-2 text-green-600 font-semibold text-lg">Animal Food System</span>
+                            <div class="flex-shrink-0 flex items-center px-6 py-4">
+                                <div class="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                                    <img src="{{ asset('images/dog.png') }}" alt="Dog" class="h-8 w-8 rounded-lg">
+                                </div>
+                                <span class="ml-3 text-white font-bold text-lg tracking-wide">Animal Food System</span>
                             </div>
-                            <nav class="mt-5 px-2 space-y-1 flex-1 overflow-y-auto">
+                            <nav class="mt-5 px-4 space-y-2 flex-1 overflow-y-auto">
                                 <!-- Mobile navigation items -->
-                                <a href="{{ route('dashboard') }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('dashboard') ? 'bg-green-100 text-green-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                                    <svg class="mr-4 h-6 w-6 {{ request()->routeIs('dashboard') ? 'text-green-500' : 'text-gray-400 group-hover:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <a href="{{ route('dashboard') }}" class="group flex items-center px-4 py-3 text-base font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg shadow-emerald-500/25' : 'text-gray-300 hover:bg-gray-800 hover:text-white hover:shadow-md' }}">
+                                    <svg class="mr-4 h-6 w-6 {{ request()->routeIs('dashboard') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
                                     </svg>
@@ -444,11 +462,11 @@
                             </nav>
                             
                             <!-- Mobile Logout Button -->
-                            <div class="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-800">
+                            <div class="flex-shrink-0 border-t border-gray-700 p-6 bg-gradient-to-r from-gray-900 to-gray-800">
                                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                                     @csrf
-                                    <button type="submit" class="group flex items-center w-full px-3 py-2 text-base font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 hover:text-red-800 dark:text-red-300 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:hover:text-red-200 transition-colors">
-                                        <svg class="mr-4 h-6 w-6 text-red-500 group-hover:text-red-600 dark:text-red-400 dark:group-hover:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <button type="submit" class="group flex items-center w-full px-4 py-3 text-base font-semibold rounded-xl text-red-400 bg-red-500/10 hover:bg-red-500/20 hover:text-red-300 border border-red-500/20 hover:border-red-500/40 transition-all duration-200">
+                                        <svg class="mr-4 h-6 w-6 text-red-400 group-hover:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                         </svg>
                                         Logout
@@ -462,11 +480,11 @@
                 <!-- Main content -->
                 <div class="md:pl-64 flex flex-col flex-1">
                     <!-- Top navigation bar -->
-                    <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white dark:bg-gray-800 shadow">
-                        <div class="flex-1 px-4 flex justify-between items-center">
+                    <div class="sticky top-0 z-10 flex-shrink-0 flex h-20 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 shadow-2xl border-b border-gray-700">
+                        <div class="flex-1 px-6 flex justify-between items-center">
                             <!-- Mobile menu button -->
                             <div class="md:hidden">
-                                <button @click="sidebarOpen = true" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500">
+                                <button @click="sidebarOpen = true" class="inline-flex items-center justify-center p-3 rounded-xl text-gray-300 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500 transition-all duration-200">
                                     <span class="sr-only">Open main menu</span>
                                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -474,34 +492,52 @@
                                 </button>
                             </div>
 
+                            <!-- Page Title -->
+                            <div class="hidden md:flex items-center">
+                                <h1 class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
+                                    @yield('page-title', 'Dashboard')
+                                </h1>
+                            </div>
+
                             <!-- Right side items - User icon positioned at far right -->
-                            <div class="flex items-center ml-auto">
+                            <div class="flex items-center ml-auto space-x-4">
+                                <!-- Notifications -->
+                                <button class="p-2 rounded-xl text-gray-300 hover:text-white hover:bg-gray-800 transition-all duration-200 relative">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4.19 4.19A2 2 0 014 5v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H6a2 2 0 00-1.41.59z"></path>
+                                    </svg>
+                                    <span class="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
+                                </button>
+
                                 <!-- Profile dropdown -->
                                 <div class="relative" x-data="{ open: false }">
                                     <div>
-                                        <button @click="open = !open" class="max-w-xs bg-white dark:bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" id="user-menu" aria-expanded="false" aria-haspopup="true">
+                                        <button @click="open = !open" class="max-w-xs bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 p-1 border border-gray-600 hover:border-gray-500 transition-all duration-200" id="user-menu" aria-expanded="false" aria-haspopup="true">
                                             <span class="sr-only">Open user menu</span>
-                                            <div class="h-8 w-8 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-600">
+                                            <div class="h-8 w-8 rounded-lg overflow-hidden border-2 border-gray-600">
                                                 <img id="top-nav-avatar" src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
                                             </div>
+                                            <svg class="ml-2 h-4 w-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
                                         </button>
                                     </div>
                                     
                                     <!-- Dropdown menu -->
-                                    <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <div class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
-                                            <div class="font-medium">{{ Auth::user()->name }}</div>
-                                            <div class="text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</div>
-                                            <div class="text-xs text-gray-400 dark:text-gray-500 capitalize">{{ str_replace('_', ' ', Auth::user()->role) }}</div>
+                                    <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 z-10 mt-3 w-56 origin-top-right rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 py-2 shadow-2xl ring-1 ring-gray-700 focus:outline-none border border-gray-700">
+                                        <div class="px-4 py-3 text-sm">
+                                            <div class="font-semibold text-white">{{ Auth::user()->name }}</div>
+                                            <div class="text-gray-400">{{ Auth::user()->email }}</div>
+                                            <div class="text-xs text-gray-500 capitalize mt-1">{{ str_replace('_', ' ', Auth::user()->role) }}</div>
                                         </div>
-                                        <div class="border-t border-gray-200 dark:border-gray-700">
-                                            <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <div class="border-t border-gray-700">
+                                            <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-3 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors">
                                                 <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                                 </svg>
                                                 Profile
                                             </a>
-                                            <a href="{{ route('password.change') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                            <a href="{{ route('password.change') }}" class="flex items-center px-4 py-3 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors">
                                                 <svg class="mr-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
                                                 </svg>
@@ -509,8 +545,8 @@
                                             </a>
                                             <form method="POST" action="{{ route('logout') }}">
                                                 @csrf
-                                                <button type="submit" class="flex items-center w-full px-4 py-2 text-sm text-red-700 bg-red-50 hover:bg-red-100 hover:text-red-800 dark:text-red-300 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:hover:text-red-200">
-                                                    <svg class="mr-3 h-4 w-4 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <button type="submit" class="flex items-center w-full px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors">
+                                                    <svg class="mr-3 h-4 w-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                                     </svg>
                                                     Sign out

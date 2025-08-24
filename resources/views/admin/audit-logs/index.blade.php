@@ -7,73 +7,73 @@
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div class="bg-gradient-to-br from-gray-800 to-gray-900 dark:from-gray-700 dark:to-gray-800 rounded-2xl shadow-2xl border border-gray-700 dark:border-gray-600 p-6 hover:shadow-3xl transition-all duration-300">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                     </div>
                 </div>
                 <div class="ml-5 w-0 flex-1">
                     <dl>
-                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Logs</dt>
-                        <dd class="text-lg font-medium text-gray-900 dark:text-white" id="total-logs">{{ number_format($stats['total_logs'] ?? 0) }}</dd>
+                        <dt class="text-sm font-medium text-gray-300 dark:text-gray-400 truncate">Total Logs</dt>
+                        <dd class="text-2xl font-bold text-white dark:text-white" id="total-logs">{{ number_format($stats['total_logs'] ?? 0) }}</dd>
                     </dl>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div class="bg-gradient-to-br from-gray-800 to-gray-900 dark:from-gray-700 dark:to-gray-800 rounded-2xl shadow-2xl border border-gray-700 dark:border-gray-600 p-6 hover:shadow-3xl transition-all duration-300">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                     </div>
                 </div>
                 <div class="ml-5 w-0 flex-1">
                     <dl>
-                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Today</dt>
-                        <dd class="text-lg font-medium text-gray-900 dark:text-white" id="today-logs">{{ number_format($stats['today_logs'] ?? 0) }}</dd>
+                        <dt class="text-sm font-medium text-gray-300 dark:text-gray-400 truncate">Today</dt>
+                        <dd class="text-2xl font-bold text-white dark:text-white" id="today-logs">{{ number_format($stats['today_logs'] ?? 0) }}</dd>
                     </dl>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div class="bg-gradient-to-br from-gray-800 to-gray-900 dark:from-gray-700 dark:to-gray-800 rounded-2xl shadow-2xl border border-gray-700 dark:border-gray-600 p-6 hover:shadow-3xl transition-all duration-300">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                     </div>
                 </div>
                 <div class="ml-5 w-0 flex-1">
                     <dl>
-                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">This Week</dt>
-                        <dd class="text-lg font-medium text-gray-900 dark:text-white" id="week-logs">{{ number_format($stats['this_week_logs'] ?? 0) }}</dd>
+                        <dt class="text-sm font-medium text-gray-300 dark:text-gray-400 truncate">This Week</dt>
+                        <dd class="text-2xl font-bold text-white dark:text-white" id="week-logs">{{ number_format($stats['this_week_logs'] ?? 0) }}</dd>
                     </dl>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div class="bg-gradient-to-br from-gray-800 to-gray-900 dark:from-gray-700 dark:to-gray-800 rounded-2xl shadow-2xl border border-gray-700 dark:border-gray-600 p-6 hover:shadow-3xl transition-all duration-300">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                     </div>
                 </div>
                 <div class="ml-5 w-0 flex-1">
                     <dl>
-                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">This Month</dt>
-                        <dd class="text-lg font-medium text-gray-900 dark:text-white" id="month-logs">{{ number_format($stats['this_month_logs'] ?? 0) }}</dd>
+                        <dt class="text-sm font-medium text-gray-300 dark:text-gray-400 truncate">This Month</dt>
+                        <dd class="text-2xl font-bold text-white dark:text-white" id="month-logs">{{ number_format($stats['this_month_logs'] ?? 0) }}</dd>
                     </dl>
                 </div>
             </div>
@@ -81,7 +81,7 @@
     </div>
 
     <!-- Filters and Actions -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6">
+    <div class="bg-gradient-to-br from-gray-800 to-gray-900 dark:from-gray-700 dark:to-gray-800 rounded-2xl shadow-2xl border border-gray-700 dark:border-gray-600 mb-6">
         <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <!-- Search -->

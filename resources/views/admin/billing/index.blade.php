@@ -9,26 +9,35 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Product Selection -->
         <div class="lg:col-span-2">
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Select Products</h3>
-                
-                <!-- Search Products -->
-                <div class="mb-4">
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
-                        <input type="text" id="productSearch" placeholder="Search products..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400">
-                    </div>
+            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">Select Products</h3>
+                    <button onclick="openProductSearchModal()" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-medium rounded-xl hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        Search Products
+                    </button>
                 </div>
-
-                <!-- Products List -->
-                <div id="productsList" class="space-y-2 max-h-96 overflow-y-auto">
-                    <div class="text-center py-8">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Loading products...</p>
+                
+                <!-- Products Table -->
+                <div class="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+                        <div class="grid grid-cols-12 gap-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <div class="col-span-4">Product</div>
+                            <div class="col-span-2 text-center">Price</div>
+                            <div class="col-span-2 text-center">Quantity</div>
+                            <div class="col-span-2 text-center">Total</div>
+                            <div class="col-span-2 text-center">Actions</div>
+                        </div>
+                    </div>
+                    
+                    <div id="productsList" class="max-h-96 overflow-y-auto">
+                        <div class="text-center py-12">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Loading products...</p>
+                            <p class="mt-2 text-xs text-gray-400 dark:text-gray-500">Click "Search Products" to add items to your bill</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -36,8 +45,8 @@
 
         <!-- Bill Summary -->
         <div class="lg:col-span-1">
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Bill Summary</h3>
+            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+                <h3 class="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent dark:from-green-400 dark:to-emerald-400 mb-6">Bill Summary</h3>
                 
                 <!-- Customer Selection -->
                 <div class="mb-4">
@@ -179,6 +188,42 @@
         </div>
     </div>
 
+    <!-- Product Search Modal -->
+    <div id="productSearchModal" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-4xl shadow-2xl rounded-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">Search Products</h3>
+                    <button onclick="closeProductSearchModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="mb-6">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <input type="text" id="modalProductSearch" placeholder="Search products by name, SKU, or category..." class="block w-full pl-12 pr-4 py-4 border border-gray-300 dark:border-gray-600 rounded-xl shadow-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 text-lg">
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div id="modalProductsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+                    <div class="text-center py-12">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                        <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Loading products...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Customer Selection Modal -->
     <div id="customerModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
         <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
@@ -269,6 +314,7 @@
             setupPaymentMethodChange();
             checkAutomaticDiscounts();
             setupCustomerSearch();
+            setupModalProductSearch();
         });
 
         // Customer modal functions
@@ -282,9 +328,101 @@
             document.getElementById('customerSearch').value = '';
         }
 
+        // Product search modal functions
+        function openProductSearchModal() {
+            document.getElementById('productSearchModal').classList.remove('hidden');
+            loadModalProducts();
+        }
+
+        function closeProductSearchModal() {
+            document.getElementById('productSearchModal').classList.add('hidden');
+            document.getElementById('modalProductSearch').value = '';
+        }
+
+        function setupModalProductSearch() {
+            document.getElementById('modalProductSearch').addEventListener('input', function(e) {
+                clearTimeout(searchTimeout);
+                const searchTerm = e.target.value;
+                
+                searchTimeout = setTimeout(() => {
+                    loadModalProducts(searchTerm);
+                }, 300);
+            });
+        }
+
+        function loadModalProducts(searchTerm = '') {
+            const url = searchTerm 
+                ? `{{ route("admin.billing.products") }}?search=${encodeURIComponent(searchTerm)}`
+                : '{{ route("admin.billing.products") }}';
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(products => {
+                    displayModalProducts(products);
+                })
+                .catch(error => {
+                    console.error('Error loading products:', error);
+                    document.getElementById('modalProductsList').innerHTML = `
+                        <div class="text-center py-4 text-red-500">
+                            <p>Error loading products. Please try again.</p>
+                        </div>
+                    `;
+                });
+        }
+
+        function displayModalProducts(products) {
+            const productsList = document.getElementById('modalProductsList');
+            productsList.innerHTML = '';
+
+            if (products.length === 0) {
+                productsList.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        <p class="mt-4 text-lg text-gray-500 dark:text-gray-400">No products found</p>
+                        <p class="mt-2 text-sm text-gray-400 dark:text-gray-500">Try adjusting your search terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 hover:shadow-lg transition-all duration-200 cursor-pointer';
+                productCard.onclick = () => addProductToBill(product);
+                
+                productCard.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-semibold text-gray-900 dark:text-white truncate">${product.name}</h4>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">SKU: ${product.sku || 'N/A'}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Stock: ${product.stock_quantity || 0}</p>
+                            <div class="mt-2 flex items-center justify-between">
+                                <span class="text-lg font-bold text-green-600 dark:text-green-400">Rs. ${parseFloat(product.selling_price || 0).toFixed(2)}</span>
+                                <button class="px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs font-medium rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-all duration-200">
+                                    Add to Bill
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                productsList.appendChild(productCard);
+            });
+        }
+
         function selectCashCustomer() {
             selectedCustomer = {
                 id: 'cash',
+                customer_id: 'cash',
                 name: 'CASH',
                 email: 'cash@default.com',
                 phone: 'N/A',
@@ -792,32 +930,58 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         <p>No items in bill</p>
-                        <p class="text-sm">Search and select products to add to your bill</p>
+                        <p class="text-sm">Click "Search Products" to add items to your bill</p>
                     </div>
                 `;
             } else {
-                // Add items to display
+                // Create table structure
+                billItemsContainer.innerHTML = `
+                    <div class="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
+                        <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-600">
+                            <div class="grid grid-cols-12 gap-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                <div class="col-span-4">Product</div>
+                                <div class="col-span-2 text-center">Price</div>
+                                <div class="col-span-2 text-center">Quantity</div>
+                                <div class="col-span-2 text-center">Total</div>
+                                <div class="col-span-2 text-center">Actions</div>
+                            </div>
+                        </div>
+                        <div id="billItemsTableBody">
+                        </div>
+                    </div>
+                `;
+                
+                const tableBody = document.getElementById('billItemsTableBody');
+                
+                // Add items to table
                 billItems.forEach(item => {
                     const itemElement = document.createElement('div');
-                    itemElement.className = 'flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600';
+                    itemElement.className = 'grid grid-cols-12 gap-4 px-4 py-3 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors';
                     itemElement.innerHTML = `
-                        <div class="flex-1">
+                        <div class="col-span-4">
                             <div class="text-sm font-medium text-gray-900 dark:text-white">${item.productName}</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">Rs. ${item.price.toFixed(2)} x ${item.quantity} ${item.unit}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">${item.unit}</div>
                         </div>
-                        <div class="flex items-center space-x-3">
+                        <div class="col-span-2 text-center">
+                            <span class="text-sm font-medium text-gray-900 dark:text-white">Rs. ${item.price.toFixed(2)}</span>
+                        </div>
+                        <div class="col-span-2 text-center">
                             <input type="number" value="${item.quantity}" min="1" max="999"
                                    onchange="updateQuantity(${item.id}, this.value)"
-                                   class="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500">
-                            <span class="text-sm font-medium text-gray-900 dark:text-white min-w-[60px] text-right">Rs. ${item.total.toFixed(2)}</span>
-                            <button onclick="removeItem(${item.id})" class="text-red-600 hover:text-red-800 transition-colors">
+                                   class="w-20 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div class="col-span-2 text-center">
+                            <span class="text-sm font-bold text-green-600 dark:text-green-400">Rs. ${item.total.toFixed(2)}</span>
+                        </div>
+                        <div class="col-span-2 text-center">
+                            <button onclick="removeItem(${item.id})" class="text-red-600 hover:text-red-800 dark:hover:text-red-400 transition-colors p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                 </svg>
                             </button>
                         </div>
                     `;
-                    billItemsContainer.appendChild(itemElement);
+                    tableBody.appendChild(itemElement);
                 });
             }
 
@@ -875,7 +1039,7 @@
             const finalAmount = total - discountAmount;
 
             const billData = {
-                customer_id: selectedCustomer.id,
+                customer_id: selectedCustomer.id || selectedCustomer.customer_id,
                 items: billItems.map(item => ({
                     product_id: item.productId,
                     quantity: item.quantity,
@@ -896,16 +1060,35 @@
                 discount_percentage: appliedDiscount.type === 'percentage' ? appliedDiscount.value : 0
             };
 
+            console.log('Sending bill data:', billData);
+
+            // Validate data before sending
+            if (!billData.customer_id) {
+                Swal.fire('Error!', 'Customer ID is missing. Please select a customer.', 'error');
+                return;
+            }
+
+            if (!billData.items || billData.items.length === 0) {
+                Swal.fire('Error!', 'No items in bill. Please add products.', 'error');
+                return;
+            }
+
             fetch('{{ route("admin.billing.api.create-bill") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: JSON.stringify(billData)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     // Store the saved bill data for display
@@ -918,7 +1101,12 @@
             })
             .catch(error => {
                 console.error('Error saving bill:', error);
-                Swal.fire('Error!', 'Failed to save bill to database. Please try again.', 'error');
+                let errorMessage = 'Failed to save bill to database. Please try again.';
+                if (error.message) {
+                    errorMessage = error.message;
+                }
+                console.log('Full error details:', error);
+                Swal.fire('Error!', errorMessage, 'error');
             });
         }
 
@@ -934,7 +1122,8 @@
             fetch('{{ route("admin.settings.bill-header.active") }}')
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Failed to fetch bill header settings');
+                        console.warn('Failed to fetch bill header settings, using default');
+                        return null;
                     }
                     return response.json();
                 })
@@ -1063,10 +1252,14 @@
                 document.getElementById('printModal').classList.remove('hidden');
                 Swal.close();
             })
-            .catch(error => {
-                console.error('Error generating bill:', error);
-                Swal.fire('Error!', 'Failed to generate bill. Please try again.', 'error');
-            });
+                            .catch(error => {
+                    console.error('Error generating bill:', error);
+                    let errorMessage = 'Failed to generate bill. Please try again.';
+                    if (error.message) {
+                        errorMessage = error.message;
+                    }
+                    Swal.fire('Error!', errorMessage, 'error');
+                });
         }
 
         function closePrintModal() {
@@ -1207,6 +1400,13 @@
             document.getElementById('customerModal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeCustomerModal();
+                }
+            });
+            
+            // Product search modal close on outside click
+            document.getElementById('productSearchModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeProductSearchModal();
                 }
             });
         });

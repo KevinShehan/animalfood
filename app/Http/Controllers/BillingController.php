@@ -517,16 +517,25 @@ class BillingController extends Controller
     {
         try {
             \Log::info('Creating bill with data:', $request->all());
+            \Log::info('Request headers:', $request->headers->all());
             
             $request->validate([
                 'customer_id' => 'required', // we will resolve CASH special-case below
                 'items' => 'required|array|min:1',
                 'items.*.product_id' => 'required|exists:products,id',
                 'items.*.quantity' => 'required|integer|min:1',
-                'due_date' => 'nullable|date|after:today',
+                'due_date' => 'nullable|date',
                 'notes' => 'nullable|string|max:500',
                 'payment_method' => 'nullable|string',
-                'paid_amount' => 'nullable|numeric|min:0'
+                'paid_amount' => 'nullable|numeric|min:0',
+                'total_amount' => 'nullable|numeric|min:0',
+                'tax_amount' => 'nullable|numeric|min:0',
+                'discount_amount' => 'nullable|numeric|min:0',
+                'final_amount' => 'nullable|numeric|min:0',
+                'due_amount' => 'nullable|numeric|min:0',
+                'discount_code' => 'nullable|string',
+                'discount_type' => 'nullable|string',
+                'discount_percentage' => 'nullable|numeric|min:0'
             ]);
 
             // Resolve customer: support 'cash' pseudo-customer
@@ -546,27 +555,71 @@ class BillingController extends Controller
                 $customer = Customer::findOrFail($request->customer_id);
             }
 
+            if (!$customer) {
+                throw new \Exception('Customer not found');
+            }
+
             \Log::info('Customer resolved:', ['customer_id' => $customer->id, 'customer_name' => $customer->name]);
 
             $billHeader = BillHeader::getActive();
-            $prefix = $billHeader->invoice_prefix ?? 'INV';
+            if (!$billHeader) {
+                // Create a default bill header if none exists
+                try {
+                    $billHeader = BillHeader::create([
+                        'company_name' => 'Your Company Name',
+                        'invoice_prefix' => 'INV',
+                        'is_active' => true
+                    ]);
+                } catch (\Exception $e) {
+                    \Log::error('Failed to create default bill header:', ['error' => $e->getMessage()]);
+                    // Use default prefix if creation fails
+                    $prefix = 'INV';
+                }
+            }
+            $prefix = $billHeader ? ($billHeader->invoice_prefix ?? 'INV') : 'INV';
 
             // Generate invoice number
-            $lastOrder = Order::whereNotNull('invoice_number')->latest()->first();
-            $lastNumber = $lastOrder ? (int) preg_replace('/\D/', '', substr($lastOrder->invoice_number, -6)) : 0;
-            $invoiceNumber = $prefix . '-' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+            try {
+                $lastOrder = Order::whereNotNull('invoice_number')->latest()->first();
+                $lastNumber = $lastOrder ? (int) preg_replace('/\D/', '', substr($lastOrder->invoice_number, -6)) : 0;
+                $invoiceNumber = $prefix . '-' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+            } catch (\Exception $e) {
+                \Log::error('Failed to generate invoice number:', ['error' => $e->getMessage()]);
+                $invoiceNumber = $prefix . '-' . str_pad(1, 6, '0', STR_PAD_LEFT);
+            }
 
             \Log::info('Generated invoice number:', ['invoice_number' => $invoiceNumber]);
 
-            // Calculate totals from items
-            $totalAmount = 0.0;
+            // Use values from request or calculate from items
+            $totalAmount = (float) $request->input('total_amount', 0);
+            $taxAmount = (float) $request->input('tax_amount', 0);
+            $discountAmount = (float) $request->input('discount_amount', 0);
+            $finalAmount = (float) $request->input('final_amount', 0);
+            
+            // If values not provided, calculate from items
+            if ($totalAmount == 0) {
+                $totalAmount = 0.0;
+                foreach ($request->items as $item) {
+                    $product = Product::findOrFail($item['product_id']);
+                    $quantity = (int) $item['quantity'];
+                    $unitPrice = (float) $product->price;
+                    $itemTotal = $quantity * $unitPrice;
+                    $totalAmount += $itemTotal;
+                }
+                $taxAmount = round($totalAmount * 0.10, 2);
+                $finalAmount = round($totalAmount - $discountAmount + $taxAmount, 2);
+            }
+
+            // Prepare order items
             $orderItems = [];
             foreach ($request->items as $item) {
                 $product = Product::findOrFail($item['product_id']);
+                if (!$product) {
+                    throw new \Exception("Product with ID {$item['product_id']} not found");
+                }
                 $quantity = (int) $item['quantity'];
                 $unitPrice = (float) $product->price;
                 $itemTotal = $quantity * $unitPrice;
-                $totalAmount += $itemTotal;
 
                 $orderItems[] = [
                     'product_id' => $product->id,
@@ -576,12 +629,7 @@ class BillingController extends Controller
                 ];
             }
 
-            \Log::info('Calculated totals:', ['total_amount' => $totalAmount, 'items_count' => count($orderItems)]);
-
-            // Apply simple 10% tax like the UI preview
-            $taxAmount = round($totalAmount * 0.10, 2);
-            $discountAmount = 0.0; // advanced discounts can be added later
-            $finalAmount = round($totalAmount - $discountAmount + $taxAmount, 2);
+            \Log::info('Calculated totals:', ['total_amount' => $totalAmount, 'tax_amount' => $taxAmount, 'discount_amount' => $discountAmount, 'final_amount' => $finalAmount, 'items_count' => count($orderItems)]);
 
             // Payment fields from request
             $allowedMethods = ['cash', 'card', 'bank_transfer', 'credit', 'cheque', 'mobile_payment', 'mixed'];
@@ -589,7 +637,7 @@ class BillingController extends Controller
                 ? $request->input('payment_method')
                 : 'cash';
             $paidAmount = (float) $request->input('paid_amount', 0);
-            $dueAmount = max($finalAmount - $paidAmount, 0);
+            $dueAmount = (float) $request->input('due_amount', max($finalAmount - $paidAmount, 0));
             $paymentStatus = $dueAmount <= 0 ? 'paid' : ($paidAmount > 0 ? 'partial' : 'pending');
 
             \Log::info('Payment details:', [
@@ -608,6 +656,9 @@ class BillingController extends Controller
                 'total_amount' => $totalAmount,
                 'tax_amount' => $taxAmount,
                 'discount_amount' => $discountAmount,
+                'discount_code' => $request->input('discount_code'),
+                'discount_type' => $request->input('discount_type'),
+                'discount_percentage' => $request->input('discount_percentage'),
                 'final_amount' => $finalAmount,
                 'paid_amount' => $paidAmount,
                 'due_amount' => $dueAmount,
@@ -622,18 +673,34 @@ class BillingController extends Controller
             \Log::info('Creating order with data:', $orderData);
 
             // Create order
-            $order = Order::create($orderData);
-
-            \Log::info('Order created successfully:', ['order_id' => $order->id]);
-
-            // Create order items
-            foreach ($orderItems as $item) {
-                \App\Models\OrderItem::create(array_merge($item, [
-                    'order_id' => $order->id,
-                ]));
+            try {
+                $order = Order::create($orderData);
+                if (!$order) {
+                    throw new \Exception('Failed to create order');
+                }
+                \Log::info('Order created successfully:', ['order_id' => $order->id]);
+            } catch (\Exception $e) {
+                \Log::error('Failed to create order:', ['error' => $e->getMessage(), 'data' => $orderData]);
+                throw new \Exception('Failed to create order: ' . $e->getMessage());
             }
 
-            \Log::info('Order items created successfully');
+            // Create order items
+            try {
+                foreach ($orderItems as $item) {
+                    $orderItem = \App\Models\OrderItem::create(array_merge($item, [
+                        'order_id' => $order->id,
+                    ]));
+                    if (!$orderItem) {
+                        throw new \Exception('Failed to create order item');
+                    }
+                }
+                \Log::info('Order items created successfully');
+            } catch (\Exception $e) {
+                \Log::error('Failed to create order items:', ['error' => $e->getMessage(), 'order_id' => $order->id]);
+                // Delete the order if items creation fails
+                $order->delete();
+                throw new \Exception('Failed to create order items: ' . $e->getMessage());
+            }
 
             return response()->json([
                 'success' => true,
