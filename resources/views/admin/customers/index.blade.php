@@ -1,19 +1,19 @@
 <x-admin-layout>
     <!-- Page Header -->
-    <div class="mb-8">
-        <div class="flex justify-between items-center">
+    <div class="mb-6 sm:mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
             <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Customers Management</h1>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Manage customer information and relationships.</p>
-    </div>
-            <div class="flex space-x-3">
-                <button onclick="exportCustomers()" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Customers Management</h1>
+                <p class="mt-1 sm:mt-2 text-sm text-gray-600 dark:text-gray-400">Manage customer information and relationships.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                <button onclick="exportCustomers()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     Export
                 </button>
-                <button onclick="openAddModal()" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                <button onclick="openAddModal()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
@@ -24,25 +24,25 @@
     </div>
 
     <!-- Search and Filters -->
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <!-- Search -->
-            <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Search Customers</label>
+            <div class="sm:col-span-2 lg:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">Search Customers</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
                     <input type="text" id="searchInput" placeholder="Search by name, email, phone, city..." 
-                           class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400">
+                           class="block w-full pl-8 sm:pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400">
                 </div>
             </div>
             
             <!-- Status Filter -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">Status</label>
                 <select id="statusFilter" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
                     <option value="">All Status</option>
                     <option value="active">Active</option>
@@ -53,7 +53,7 @@
 
             <!-- Customer Type Filter -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Customer Type</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">Customer Type</label>
                 <select id="customerTypeFilter" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
                     <option value="">All Types</option>
                     <option value="individual">Individual</option>
@@ -63,34 +63,45 @@
                 </select>
             </div>
             
-            <!-- Sort -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sort By</label>
-                <select id="sortBy" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
-                    <option value="created_at">Date Created</option>
-                    <option value="name">Name</option>
-                    <option value="email">Email</option>
-                    <option value="city">City</option>
-                </select>
-            </div>
+                            <!-- Sort -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">Sort By</label>
+                    <select id="sortBy" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        <option value="created_at">Date Created</option>
+                        <option value="name">Name</option>
+                        <option value="email">Email</option>
+                        <option value="city">City</option>
+                    </select>
+                </div>
+                
+                <!-- Clear Filters Button -->
+                <div class="flex items-end">
+                    <button onclick="clearFilters()" class="w-full px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors duration-200">
+                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        Clear Filters
+                    </button>
+                </div>
         </div>
     </div>
 
     <!-- Customers Table -->
     <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Customers List</h3>
+        <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                <h3 class="text-base sm:text-lg font-medium text-gray-900 dark:text-white">Customers List</h3>
                 <div class="flex items-center space-x-2">
                     <span class="text-sm text-gray-500 dark:text-gray-400" id="customerCount">
                         {{ $customers->total() }} customers
                     </span>
                     @if(auth()->user()->role !== 'cashier')
-                    <button onclick="bulkDelete()" id="bulkDeleteBtn" class="hidden inline-flex items-center px-3 py-1 border border-red-300 text-red-700 text-sm rounded-md hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <button onclick="bulkDelete()" id="bulkDeleteBtn" class="hidden inline-flex items-center px-2 sm:px-3 py-1 border border-red-300 text-red-700 text-sm rounded-md hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                         </svg>
-                        Delete Selected
+                        <span class="hidden sm:inline">Delete Selected</span>
+                        <span class="sm:hidden">Delete</span>
                     </button>
                     @endif
                 </div>
@@ -296,39 +307,40 @@
         </div>
 
         <!-- Mobile Card View -->
-        <div class="md:hidden space-y-4">
+        <div class="md:hidden space-y-3 p-3 sm:p-4">
             @foreach($customers as $customer)
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4">
-                <div class="flex items-start justify-between">
-                    <div class="flex items-center space-x-3">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-3 sm:p-4">
+                <!-- Header with checkbox and actions -->
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
                         @if(auth()->user()->role !== 'cashier')
-                        <input type="checkbox" class="customer-checkbox rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50" value="{{ $customer->id }}">
+                        <input type="checkbox" class="customer-checkbox rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 flex-shrink-0" value="{{ $customer->id }}">
                         @endif
-                        <div class="h-12 w-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
-                            <span class="text-sm font-medium text-green-800 dark:text-green-200">
+                        <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center flex-shrink-0">
+                            <span class="text-xs sm:text-sm font-medium text-green-800 dark:text-green-200">
                                 {{ strtoupper(substr($customer->name, 0, 2)) }}
                             </span>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-white truncate">{{ $customer->name }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">ID: {{ $customer->customer_id }}</p>
+                            <h3 class="text-base sm:text-lg font-medium text-gray-900 dark:text-white truncate">{{ $customer->name }}</h3>
+                            <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">ID: {{ $customer->customer_id }}</p>
                         </div>
                     </div>
-                    <div class="flex space-x-2">
-                        <button onclick="viewCustomer({{ $customer->id }})" class="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400 p-2 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex space-x-1 sm:space-x-2 flex-shrink-0">
+                        <button onclick="viewCustomer({{ $customer->id }})" class="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400 p-1.5 sm:p-2 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                             </svg>
                         </button>
-                        <button onclick="editCustomer({{ $customer->id }})" class="text-green-600 hover:text-green-900 dark:hover:text-green-400 p-2 rounded hover:bg-green-50 dark:hover:bg-green-900/20">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button onclick="editCustomer({{ $customer->id }})" class="text-green-600 hover:text-green-900 dark:hover:text-green-400 p-1.5 sm:p-2 rounded hover:bg-green-50 dark:hover:bg-green-900/20">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
                         </button>
                         @if(auth()->user()->role !== 'cashier')
-                        <button onclick="deleteCustomer({{ $customer->id }})" class="text-red-600 hover:text-red-900 dark:hover:text-red-400 p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button onclick="deleteCustomer({{ $customer->id }})" class="text-red-600 hover:text-red-900 dark:hover:text-red-400 p-1.5 sm:p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                             </svg>
                         </button>
@@ -336,58 +348,69 @@
                     </div>
                 </div>
                 
-                <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <span class="font-medium text-gray-500 dark:text-gray-400">Contact:</span>
-                        <div class="text-gray-900 dark:text-white">{{ $customer->email }}</div>
-                        <div class="text-gray-500 dark:text-gray-400">{{ $customer->phone }}</div>
+                <!-- Customer details in a more compact layout -->
+                <div class="space-y-2 sm:space-y-3">
+                    <!-- Contact and Type row -->
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-2 sm:space-y-0">
+                        <div class="flex-1">
+                            <div class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Contact</div>
+                            <div class="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate">{{ $customer->email }}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ $customer->phone }}</div>
+                        </div>
+                        <div class="flex-1 sm:text-right">
+                            <div class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Type</div>
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                @if($customer->customer_type === 'individual') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                                @elseif($customer->customer_type === 'shop') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($customer->customer_type === 'institute') bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200
+                                @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
+                                {{ ucfirst($customer->customer_type ?? 'individual') }}
+                            </span>
+                            @if($customer->company_name)
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">{{ $customer->company_name }}</div>
+                            @endif
+                        </div>
                     </div>
-                    <div>
-                        <span class="font-medium text-gray-500 dark:text-gray-400">Type:</span>
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                            @if($customer->customer_type === 'individual') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
-                            @elseif($customer->customer_type === 'shop') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                            @elseif($customer->customer_type === 'institute') bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200
-                            @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
-                            {{ ucfirst($customer->customer_type ?? 'individual') }}
-                        </span>
-                        @if($customer->company_name)
-                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $customer->company_name }}</div>
-                        @endif
-                    </div>
-                    <div>
-                        <span class="font-medium text-gray-500 dark:text-gray-400">Location:</span>
-                        <div class="text-gray-900 dark:text-white">{{ $customer->city }}, {{ $customer->state }}</div>
-                        <div class="text-gray-500 dark:text-gray-400">{{ $customer->postal_code }}</div>
-                    </div>
-                    <div>
-                        <span class="font-medium text-gray-500 dark:text-gray-400">Status:</span>
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                            @if($customer->status === 'active') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                            @elseif($customer->status === 'inactive') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
-                            @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
-                            {{ ucfirst($customer->status ?? 'active') }}
-                        </span>
+                    
+                    <!-- Location and Status row -->
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
+                        <div>
+                            <div class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Location</div>
+                            <div class="text-sm sm:text-base text-gray-900 dark:text-white">{{ $customer->city }}, {{ $customer->state }}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ $customer->postal_code }}</div>
+                        </div>
+                        <div>
+                            <div class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Status</div>
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                @if($customer->status === 'active') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($customer->status === 'inactive') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
+                                {{ ucfirst($customer->status ?? 'active') }}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="mt-4 flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
-                    <span>Orders: {{ $customer->orders->count() }}</span>
-                    <span>Created: {{ $customer->created_at->format('M d, Y') }}</span>
+                <!-- Orders and Date -->
+                <div class="mt-3 pt-2 border-t border-gray-100 dark:border-gray-700">
+                    <div class="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
+                        <span>Orders: {{ $customer->orders->count() }}</span>
+                        <span>Created: {{ $customer->created_at->format('M d, Y') }}</span>
+                    </div>
                 </div>
             </div>
             @endforeach
         </div>
         
         <!-- Pagination -->
-        <div class="bg-white dark:bg-gray-800 px-4 py-3 border-t border-gray-200 dark:border-gray-700 sm:px-6">
+        <div class="bg-white dark:bg-gray-800 px-3 sm:px-4 py-3 border-t border-gray-200 dark:border-gray-700 sm:px-6">
             {{ $customers->links() }}
         </div>
     </div>
 
     <!-- Add/Edit Customer Modal -->
     <div id="customerModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-        <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
+        <div class="relative top-4 sm:top-10 mx-auto p-3 sm:p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
             <div class="mt-3">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white" id="modalTitle">Add New Customer</h3>
@@ -398,10 +421,10 @@
                     </button>
                 </div>
                 
-                <form id="customerForm" class="space-y-4">
+                <form id="customerForm" class="space-y-3 sm:space-y-4">
                     <input type="hidden" id="customerId">
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
                             <input type="text" id="name" name="name" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
@@ -454,7 +477,7 @@
                         <textarea id="address" name="address" rows="2" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"></textarea>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">City *</label>
                             <input type="text" id="city" name="city" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
@@ -471,7 +494,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tax Number</label>
                             <input type="text" id="tax_number" name="tax_number" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
@@ -498,7 +521,7 @@
 
     <!-- View Customer Modal -->
     <div id="viewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-        <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
+        <div class="relative top-4 sm:top-10 mx-auto p-3 sm:p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
             <div class="mt-3">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Customer Details</h3>
@@ -662,6 +685,17 @@
             }
         });
 
+        function setupCheckboxListeners() {
+            // Reattach event listeners to checkboxes
+            const checkboxes = document.querySelectorAll('.customer-checkbox, .customer-checkbox-tablet');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateBulkDeleteButton();
+                    updateSelectAll();
+                });
+            });
+        }
+
         function updateBulkDeleteButton() {
             const checkedBoxes = document.querySelectorAll('.customer-checkbox:checked, .customer-checkbox-tablet:checked');
             const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
@@ -720,7 +754,25 @@
                     tabletTableBody.innerHTML = data.html_tablet || data.html;
                 }
                 
+                // Update mobile view - reload the entire page for mobile view
+                if (window.innerWidth < 768) {
+                    window.location.href = `{{ route('admin.customers.index') }}?${params.toString()}`;
+                    return;
+                }
+                
                 document.getElementById('customerCount').textContent = `${data.customers.total} customers`;
+                
+                // Reattach checkbox listeners
+                setupCheckboxListeners();
+                
+                // Reset select all checkboxes
+                const selectAll = document.getElementById('selectAll');
+                const selectAllTablet = document.getElementById('selectAllTablet');
+                if (selectAll) selectAll.checked = false;
+                if (selectAllTablet) selectAllTablet.checked = false;
+                
+                // Update bulk delete button
+                updateBulkDeleteButton();
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -975,6 +1027,14 @@
             if (customerType) url += `customer_type=${encodeURIComponent(customerType)}&`;
             
             window.location.href = url;
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('customerTypeFilter').value = '';
+            document.getElementById('sortBy').value = 'created_at';
+            searchCustomers();
         }
 
         // Form submission

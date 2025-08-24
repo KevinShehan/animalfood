@@ -1,19 +1,19 @@
 <x-admin-layout>
     <!-- Page Header -->
     <div class="mb-4">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Orders Management</h1>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Orders Management</h1>
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Manage customer orders and track order status.</p>
             </div>
-            <div class="flex space-x-3">
-                <button onclick="exportOrders()" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600">
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                <button onclick="exportOrders()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600">
                     <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     Export
                 </button>
-                <button onclick="openAddOrderModal()" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                <button onclick="openAddOrderModal()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                     <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
@@ -25,10 +25,10 @@
 
     <!-- Filters and Search -->
     <div class="bg-white dark:bg-gray-800 shadow rounded-lg mb-4">
-        <div class="p-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="p-3 sm:p-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
                 <!-- Search -->
-                <div class="lg:col-span-2">
+                <div class="sm:col-span-2 lg:col-span-2">
                     <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
                     <input type="text" id="search" placeholder="Search by order number, customer..." class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 </div>
@@ -74,9 +74,9 @@
 
     <!-- Orders Table -->
     <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
-        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-            <div class="flex items-center justify-between">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Orders List</h3>
+        <div class="px-3 sm:px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                <h3 class="text-base sm:text-lg font-medium text-gray-900 dark:text-white">Orders List</h3>
                 <div class="flex items-center space-x-2">
                     <button id="select-all-btn" onclick="toggleSelectAll()" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                         Select All
@@ -112,94 +112,106 @@
         </div>
 
         <!-- Mobile Card View -->
-        <div class="md:hidden space-y-4 p-4">
+        <div class="md:hidden space-y-3 p-3 sm:p-4">
             @foreach($orders as $order)
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4">
-                <div class="flex items-start justify-between">
-                    <div class="flex items-center space-x-3">
-                        <input type="checkbox" class="order-checkbox rounded border-gray-300 text-green-600 focus:ring-green-500" value="{{ $order->id }}">
-                        <div class="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                            <svg class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-3 sm:p-4">
+                <!-- Header with checkbox and actions -->
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
+                        <input type="checkbox" class="order-checkbox rounded border-gray-300 text-green-600 focus:ring-green-500 flex-shrink-0" value="{{ $order->id }}">
+                        <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center flex-shrink-0">
+                            <svg class="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                             </svg>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-white truncate">{{ $order->order_number }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $order->orderItems->count() }} items</p>
+                            <h3 class="text-base sm:text-lg font-medium text-gray-900 dark:text-white truncate">{{ $order->order_number }}</h3>
+                            <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{{ $order->orderItems->count() }} items</p>
                         </div>
                     </div>
-                    <div class="flex space-x-2">
-                        <button onclick="viewOrder({{ $order->id }})" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-2 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20">
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex space-x-1 sm:space-x-2 flex-shrink-0">
+                        <button onclick="viewOrder({{ $order->id }})" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1.5 sm:p-2 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20">
+                            <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                             </svg>
                         </button>
-                        <button onclick="editOrder({{ $order->id }})" class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 p-2 rounded hover:bg-green-50 dark:hover:bg-green-900/20">
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button onclick="editOrder({{ $order->id }})" class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 p-1.5 sm:p-2 rounded hover:bg-green-50 dark:hover:bg-green-900/20">
+                            <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
                         </button>
-                        <button onclick="deleteOrder({{ $order->id }})" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button onclick="deleteOrder({{ $order->id }})" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1.5 sm:p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+                            <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                             </svg>
                         </button>
                     </div>
                 </div>
                 
-                <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <span class="font-medium text-gray-500 dark:text-gray-400">Customer:</span>
-                        <div class="text-gray-900 dark:text-white">{{ $order->customer->name }}</div>
-                        <div class="text-gray-500 dark:text-gray-400">{{ $order->customer->email }}</div>
+                <!-- Order details in a more compact layout -->
+                <div class="space-y-2 sm:space-y-3">
+                    <!-- Customer and Amount row -->
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-2 sm:space-y-0">
+                        <div class="flex-1">
+                            <div class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Customer</div>
+                            <div class="text-sm sm:text-base font-medium text-gray-900 dark:text-white">{{ $order->customer->name }}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $order->customer->email }}</div>
+                        </div>
+                        <div class="flex-1 sm:text-right">
+                            <div class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Amount</div>
+                            <div class="text-sm sm:text-base font-bold text-gray-900 dark:text-white">Rs. {{ number_format($order->final_amount, 2) }}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ ucfirst(str_replace('_', ' ', $order->payment_method)) }}</div>
+                        </div>
                     </div>
-                    <div>
-                        <span class="font-medium text-gray-500 dark:text-gray-400">Amount:</span>
-                        <div class="text-gray-900 dark:text-white">Rs. {{ number_format($order->final_amount, 2) }}</div>
-                        <div class="text-gray-500 dark:text-gray-400">{{ ucfirst(str_replace('_', ' ', $order->payment_method)) }}</div>
-                    </div>
-                    <div>
-                        <span class="font-medium text-gray-500 dark:text-gray-400">Status:</span>
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                            @if($order->status === 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
-                            @elseif($order->status === 'processing') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
-                            @elseif($order->status === 'shipped') bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200
-                            @elseif($order->status === 'delivered') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                            @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
-                            @endif">
-                            {{ ucfirst($order->status) }}
-                        </span>
-                    </div>
-                    <div>
-                        <span class="font-medium text-gray-500 dark:text-gray-400">Payment:</span>
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                            @if($order->payment_status === 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
-                            @elseif($order->payment_status === 'paid') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                            @elseif($order->payment_status === 'failed') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
-                            @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200
-                            @endif">
-                            {{ ucfirst($order->payment_status) }}
-                        </span>
+                    
+                    <!-- Status and Payment row -->
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
+                        <div>
+                            <div class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Status</div>
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                @if($order->status === 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                                @elseif($order->status === 'processing') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                                @elseif($order->status === 'shipped') bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200
+                                @elseif($order->status === 'delivered') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @endif">
+                                {{ ucfirst($order->status) }}
+                            </span>
+                        </div>
+                        <div>
+                            <div class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Payment</div>
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                @if($order->payment_status === 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                                @elseif($order->payment_status === 'paid') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($order->payment_status === 'failed') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200
+                                @endif">
+                                {{ ucfirst($order->payment_status) }}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                    Date: {{ $order->created_at->format('M d, Y') }}
+                <!-- Date -->
+                <div class="mt-3 pt-2 border-t border-gray-100 dark:border-gray-700">
+                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                        Date: {{ $order->created_at->format('M d, Y') }}
+                    </div>
                 </div>
             </div>
             @endforeach
         </div>
 
         <!-- Pagination -->
-        <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+        <div class="px-3 sm:px-4 py-3 border-t border-gray-200 dark:border-gray-700">
             {{ $orders->links() }}
         </div>
     </div>
 
     <!-- Add/Edit Order Modal -->
     <div id="order-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white dark:bg-gray-800">
+        <div class="relative top-4 sm:top-20 mx-auto p-3 sm:p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
             <div class="mt-3">
                 <div class="flex items-center justify-between mb-4">
                     <h3 id="modal-title" class="text-lg font-medium text-gray-900 dark:text-white">Add New Order</h3>
@@ -210,11 +222,11 @@
                     </button>
                 </div>
 
-                <form id="order-form" class="space-y-4">
+                <form id="order-form" class="space-y-3 sm:space-y-4">
                     @csrf
                     <input type="hidden" id="order-id" name="order_id">
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
                             <label for="customer_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Customer</label>
                             <select id="customer_id" name="customer_id" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
@@ -294,7 +306,7 @@
 
     <!-- View Order Modal -->
     <div id="view-order-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white dark:bg-gray-800">
+        <div class="relative top-4 sm:top-20 mx-auto p-3 sm:p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
             <div class="mt-3">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Order Details</h3>
@@ -469,9 +481,9 @@
                                     <div class="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
                                         <div>
                                             <p class="text-sm font-medium text-gray-900 dark:text-white">${item.product.name}</p>
-                                                                            <p class="text-xs text-gray-500 dark:text-gray-400">Qty: ${item.quantity} × Rs. ${parseFloat(item.unit_price).toFixed(2)}</p>
-                            </div>
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Rs. ${parseFloat(item.total_price).toFixed(2)}</p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">Qty: ${item.quantity} × Rs. ${parseFloat(item.unit_price).toFixed(2)}</p>
+                                        </div>
+                                        <p class="text-sm font-medium text-gray-900 dark:text-white">Rs. ${parseFloat(item.total_price).toFixed(2)}</p>
                                     </div>
                                 `).join('')}
                             </div>

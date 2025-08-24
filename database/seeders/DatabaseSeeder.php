@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             SalesSeeder::class,
             BillHeaderSeeder::class,
+            SriLankanCustomerSeeder::class,
         ]);
     }
 }

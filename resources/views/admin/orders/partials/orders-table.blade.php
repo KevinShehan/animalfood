@@ -12,7 +12,7 @@
         <div class="text-sm text-gray-500 dark:text-gray-400">{{ $order->customer->email }}</div>
     </td>
     <td class="px-6 py-4 whitespace-nowrap">
-        <div class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($order->final_amount, 2) }}</div>
+        <div class="text-sm font-medium text-gray-900 dark:text-white">Rs. {{ number_format($order->final_amount, 2) }}</div>
         <div class="text-sm text-gray-500 dark:text-gray-400">{{ ucfirst(str_replace('_', ' ', $order->payment_method)) }}</div>
     </td>
     <td class="px-6 py-4 whitespace-nowrap">

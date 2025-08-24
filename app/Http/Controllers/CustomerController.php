@@ -47,7 +47,8 @@ class CustomerController extends Controller
         if ($request->ajax()) {
             return response()->json([
                 'customers' => $customers,
-                'html' => view('admin.customers.partials.customers-table', compact('customers'))->render()
+                'html' => view('admin.customers.partials.customers-table', compact('customers'))->render(),
+                'html_tablet' => view('admin.customers.partials.customers-table', compact('customers'))->render()
             ]);
         }
         

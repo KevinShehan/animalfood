@@ -115,10 +115,10 @@
         </div>
         @if($customer->credit)
         <div class="info-row">
-            <span class="label">Credit Limit:</span> ${{ number_format($customer->credit->credit_limit, 2) }}
+                            <span class="label">Credit Limit:</span> Rs. {{ number_format($customer->credit->credit_limit, 2) }}
         </div>
         <div class="info-row">
-            <span class="label">Available Credit:</span> ${{ number_format($customer->credit->available_credit, 2) }}
+                            <span class="label">Available Credit:</span> Rs. {{ number_format($customer->credit->available_credit, 2) }}
         </div>
         @endif
     </div>
@@ -147,9 +147,9 @@
                 <td>{{ $order->created_at->format('M d, Y') }}</td>
                 <td>{{ $order->invoice_number ?? '-' }}</td>
                 <td>{{ $order->order_number }}</td>
-                <td class="text-right">${{ number_format($order->final_amount, 2) }}</td>
-                <td class="text-right">${{ number_format($order->paid_amount, 2) }}</td>
-                <td class="text-right">${{ number_format($order->due_amount, 2) }}</td>
+                                        <td class="text-right">Rs. {{ number_format($order->final_amount, 2) }}</td>
+                        <td class="text-right">Rs. {{ number_format($order->paid_amount, 2) }}</td>
+                        <td class="text-right">Rs. {{ number_format($order->due_amount, 2) }}</td>
                 <td>{{ ucfirst($order->payment_status) }}</td>
             </tr>
             @endforeach
@@ -177,7 +177,7 @@
                 <td>{{ $payment->transaction_number }}</td>
                 <td>{{ $payment->formatted_payment_method }}</td>
                 <td>{{ $payment->reference_number ?? '-' }}</td>
-                <td class="text-right">${{ number_format($payment->amount, 2) }}</td>
+                                        <td class="text-right">Rs. {{ number_format($payment->amount, 2) }}</td>
                 <td>{{ $payment->description ?? '-' }}</td>
             </tr>
             @endforeach
@@ -187,16 +187,16 @@
 
     <div class="summary">
         <div class="summary-row">
-            <span class="summary-label">Total Orders Amount:</span>
-            <span>${{ number_format($total_orders, 2) }}</span>
+                            <span class="summary-label">Total Orders Amount:</span>
+                <span>Rs. {{ number_format($total_orders, 2) }}</span>
         </div>
         <div class="summary-row">
-            <span class="summary-label">Total Payments:</span>
-            <span>${{ number_format($total_payments, 2) }}</span>
+                            <span class="summary-label">Total Payments:</span>
+                <span>Rs. {{ number_format($total_payments, 2) }}</span>
         </div>
         <div class="summary-row total-row">
-            <span class="summary-label">Outstanding Balance:</span>
-            <span>${{ number_format($total_due, 2) }}</span>
+                            <span class="summary-label">Outstanding Balance:</span>
+                <span>Rs. {{ number_format($total_due, 2) }}</span>
         </div>
     </div>
 

@@ -1,29 +1,57 @@
 <x-admin-layout>
     <!-- Page Header -->
-    <div class="mb-8">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Billing System</h1>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Create and manage customer bills and invoices.</p>
+    <div class="mb-6 sm:mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Billing System</h1>
+                <p class="mt-1 sm:mt-2 text-sm text-gray-600 dark:text-gray-400">Create and manage customer bills and invoices.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                <button onclick="openProductSearchModal()" class="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-medium rounded-xl hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <span class="hidden sm:inline">Search Products</span>
+                    <span class="sm:hidden">Add Products</span>
+                </button>
+                <button onclick="clearBill()" class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    Clear Bill
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Billing Interface -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Product Selection -->
-        <div class="lg:col-span-2">
-            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">Select Products</h3>
-                    <button onclick="openProductSearchModal()" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-medium rounded-xl hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        Search Products
-                    </button>
+    <div class="space-y-8">
+        <!-- Product Selection - Full Width -->
+        <div class="w-full">
+            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-3 sm:space-y-0">
+                    <h3 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">Selected Products</h3>
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                        <button onclick="openProductSearchModal()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-medium rounded-xl hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Add Products
+                        </button>
+                        <button onclick="openQuickAddModal()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Quick Add
+                        </button>
+                    </div>
                 </div>
                 
-                <!-- Products Table -->
+                <!-- Products Table - Mobile Responsive -->
                 <div class="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
-                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-                        <div class="grid grid-cols-12 gap-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    <!-- Desktop Table Header -->
+                    <div class="hidden sm:block bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+                        <div class="grid grid-cols-12 gap-6 text-sm font-semibold text-gray-700 dark:text-gray-300">
                             <div class="col-span-4">Product</div>
                             <div class="col-span-2 text-center">Price</div>
                             <div class="col-span-2 text-center">Quantity</div>
@@ -32,30 +60,38 @@
                         </div>
                     </div>
                     
-                    <div id="productsList" class="max-h-96 overflow-y-auto">
-                        <div class="text-center py-12">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Loading products...</p>
-                            <p class="mt-2 text-xs text-gray-400 dark:text-gray-500">Click "Search Products" to add items to your bill</p>
+                    <!-- Mobile Table Header -->
+                    <div class="sm:hidden bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+                        <div class="flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <span>Products in Bill</span>
+                            <span id="mobileItemCount" class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-2 rounded-full">0 items</span>
                         </div>
+                    </div>
+                    
+                    <div id="productsList" class="max-h-[500px] overflow-y-auto">
+                                             <div class="text-center py-16">
+                         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                         <p class="mt-6 text-base text-gray-500 dark:text-gray-400">Loading products...</p>
+                         <p class="mt-3 text-sm text-gray-400 dark:text-gray-500">Click "Add Products" to add items to your bill</p>
+                     </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bill Summary -->
-        <div class="lg:col-span-1">
-            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-                <h3 class="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent dark:from-green-400 dark:to-emerald-400 mb-6">Bill Summary</h3>
+        <!-- Bill Summary - Full Width -->
+        <div class="w-full">
+            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
+                <h3 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent dark:from-green-400 dark:to-emerald-400 mb-4 sm:mb-6">Bill Summary</h3>
                 
                 <!-- Customer Selection -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Customer</label>
-                    <div class="flex space-x-2">
-                        <button type="button" onclick="openCustomerModal()" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-left">
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Customer</label>
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                        <button type="button" onclick="openCustomerModal()" class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-left text-sm">
                             <span id="selectedCustomerText">Select Customer</span>
                         </button>
-                        <button type="button" onclick="selectCashCustomer()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm">
+                        <button type="button" onclick="selectCashCustomer()" class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm font-medium">
                             CASH
                         </button>
                     </div>
@@ -63,62 +99,62 @@
                 </div>
 
                 <!-- Bill Items -->
-                <div class="space-y-2 mb-4">
-                    <div id="billItems">
+                <div class="space-y-4 mb-8">
+                    <div id="billItems" class="min-h-[400px]">
                         <!-- Bill items will be added here dynamically -->
                     </div>
                 </div>
 
                 <!-- Discount Section -->
-                <div class="border-t border-gray-200 dark:border-gray-600 pt-4 space-y-4">
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-8 space-y-8">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Apply Discount</label>
-                        <div class="flex space-x-2">
-                            <input type="text" id="discountCode" placeholder="Enter discount code" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm">
-                            <button onclick="applyDiscount()" class="px-3 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Apply Discount</label>
+                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                            <input type="text" id="discountCode" placeholder="Enter discount code" class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm">
+                            <button onclick="applyDiscount()" class="px-6 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                 Apply
                             </button>
                         </div>
-                        <div id="discountStatus" class="mt-2 text-sm"></div>
+                        <div id="discountStatus" class="mt-3 text-sm"></div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Or Manual Discount</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <select id="discountType" onchange="applyManualDiscount()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Or Manual Discount</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <select id="discountType" onchange="applyManualDiscount()" class="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm">
                                 <option value="percentage">Percentage</option>
                                 <option value="fixed">Fixed Amount</option>
                             </select>
-                            <input type="number" id="discountValue" placeholder="0" step="0.01" min="0" oninput="applyManualDiscount()" onchange="applyManualDiscount()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm">
+                            <input type="number" id="discountValue" placeholder="0" step="0.01" min="0" oninput="applyManualDiscount()" onchange="applyManualDiscount()" class="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm">
                         </div>
                     </div>
                 </div>
 
                 <!-- Bill Totals -->
-                <div class="border-t border-gray-200 dark:border-gray-600 pt-4 space-y-2">
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-600 dark:text-gray-400">Subtotal:</span>
-                        <span class="text-gray-900 dark:text-white" id="subtotal">Rs. 0.00</span>
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-8 space-y-4">
+                    <div class="flex justify-between text-base">
+                        <span class="text-gray-600 dark:text-gray-400 font-medium">Subtotal:</span>
+                        <span class="text-gray-900 dark:text-white font-semibold" id="subtotal">Rs. 0.00</span>
                     </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-600 dark:text-gray-400">Tax (10%):</span>
-                        <span class="text-gray-900 dark:text-white" id="tax">Rs. 0.00</span>
+                    <div class="flex justify-between text-base">
+                        <span class="text-gray-600 dark:text-gray-400 font-medium">Tax (10%):</span>
+                        <span class="text-gray-900 dark:text-white font-semibold" id="tax">Rs. 0.00</span>
                     </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-600 dark:text-gray-400">Discount:</span>
-                        <span class="text-gray-900 dark:text-white" id="discount">Rs. 0.00</span>
+                    <div class="flex justify-between text-base">
+                        <span class="text-gray-600 dark:text-gray-400 font-medium">Discount:</span>
+                        <span class="text-gray-900 dark:text-white font-semibold" id="discount">Rs. 0.00</span>
                     </div>
-                    <div class="flex justify-between text-lg font-medium border-t border-gray-200 dark:border-gray-600 pt-2">
+                    <div class="flex justify-between text-xl font-bold border-t border-gray-200 dark:border-gray-600 pt-4">
                         <span class="text-gray-900 dark:text-white">Total:</span>
                         <span class="text-gray-900 dark:text-white" id="total">Rs. 0.00</span>
                     </div>
                 </div>
 
                 <!-- Payment Section -->
-                <div class="border-t border-gray-200 dark:border-gray-600 pt-4 space-y-4">
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-8 space-y-8">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Method</label>
-                        <select id="paymentMethod" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Payment Method</label>
+                        <select id="paymentMethod" class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
                             <option value="cash">Cash</option>
                             <option value="card">Card</option>
                             <option value="bank_transfer">Bank Transfer</option>
@@ -130,8 +166,8 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount Paid</label>
-                        <input type="number" id="amountPaid" placeholder="0.00" step="0.01" min="0" oninput="calculateBalance()" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Amount Paid</label>
+                        <input type="number" id="amountPaid" placeholder="0.00" step="0.01" min="0" oninput="calculateBalance()" class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
                     </div>
 
                     <div id="balanceDisplay" class="hidden p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
@@ -163,26 +199,31 @@
                     </div>
 
                     <!-- Notes Field -->
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes</label>
-                        <textarea id="billNotes" rows="3" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white" placeholder="Optional notes for the bill..."></textarea>
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Notes</label>
+                        <textarea id="billNotes" rows="4" class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white" placeholder="Optional notes for the bill..."></textarea>
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="space-y-3 mt-6">
-                    <button onclick="generateBill()" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <!-- Action Buttons -->
+                <div class="space-y-6 mt-10">
+                    <button onclick="generateBill()" class="w-full inline-flex justify-center items-center px-6 py-4 border border-transparent text-base font-medium rounded-xl text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 shadow-lg">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        Generate Bill
+                        <span class="hidden sm:inline">Generate Bill</span>
+                        <span class="sm:hidden">Generate</span>
                     </button>
-                    <button onclick="clearBill()" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
-                        Clear Bill
-                    </button>
-                    <button onclick="testBillHeader()" class="w-full inline-flex justify-center items-center px-4 py-2 border border-blue-300 dark:border-blue-600 text-sm font-medium rounded-lg text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                        Test Bill Header
-                    </button>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="clearBill()" class="inline-flex justify-center items-center px-4 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                            <span class="hidden sm:inline">Clear Bill</span>
+                            <span class="sm:hidden">Clear</span>
+                        </button>
+                        <button onclick="testBillHeader()" class="inline-flex justify-center items-center px-4 py-3 border border-blue-300 dark:border-blue-600 text-sm font-medium rounded-lg text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                            <span class="hidden sm:inline">Test Header</span>
+                            <span class="sm:hidden">Test</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -190,31 +231,31 @@
 
     <!-- Product Search Modal -->
     <div id="productSearchModal" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-        <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-4xl shadow-2xl rounded-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+        <div class="relative top-4 sm:top-10 mx-auto p-4 sm:p-5 border w-11/12 max-w-4xl shadow-2xl rounded-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
             <div class="mt-3">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">Search Products</h3>
+                <div class="flex items-center justify-between mb-4 sm:mb-6">
+                    <h3 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">Search Products</h3>
                     <button onclick="closeProductSearchModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
                 
                 <!-- Search Bar -->
-                <div class="mb-6">
+                <div class="mb-4 sm:mb-6">
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 sm:h-6 sm:w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input type="text" id="modalProductSearch" placeholder="Search products by name, SKU, or category..." class="block w-full pl-12 pr-4 py-4 border border-gray-300 dark:border-gray-600 rounded-xl shadow-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 text-lg">
+                        <input type="text" id="modalProductSearch" placeholder="Search products by name, SKU, or category..." class="block w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-xl shadow-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 text-base sm:text-lg">
                     </div>
                 </div>
 
                 <!-- Products Grid -->
-                <div id="modalProductsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+                <div id="modalProductsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-h-96 overflow-y-auto">
                     <div class="text-center py-12">
                         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
                         <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Loading products...</p>
@@ -224,9 +265,73 @@
         </div>
     </div>
 
+    <!-- Quick Add Modal -->
+    <div id="quickAddModal" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-4 sm:top-10 mx-auto p-4 sm:p-5 border w-11/12 max-w-2xl shadow-2xl rounded-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4 sm:mb-6">
+                    <h3 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent dark:from-green-400 dark:to-emerald-400">Quick Add Product</h3>
+                    <button onclick="closeQuickAddModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                        <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Quick Add Form -->
+                <form id="quickAddForm" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Product Name</label>
+                            <input type="text" id="quickProductName" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Price (Rs.)</label>
+                            <input type="number" id="quickProductPrice" step="0.01" min="0" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quantity</label>
+                            <input type="number" id="quickProductQuantity" min="1" value="1" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Unit</label>
+                            <select id="quickProductUnit" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                                <option value="unit">Unit</option>
+                                <option value="kg">Kilogram</option>
+                                <option value="g">Gram</option>
+                                <option value="l">Liter</option>
+                                <option value="ml">Milliliter</option>
+                                <option value="pack">Pack</option>
+                                <option value="box">Box</option>
+                                <option value="bag">Bag</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description (Optional)</label>
+                        <textarea id="quickProductDescription" rows="2" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white" placeholder="Brief description of the product..."></textarea>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" onclick="closeQuickAddModal()" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            Add to Bill
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Customer Selection Modal -->
     <div id="customerModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
+        <div class="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
             <div class="mt-3">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Select Customer</h3>
@@ -339,6 +444,62 @@
             document.getElementById('modalProductSearch').value = '';
         }
 
+        // Quick Add modal functions
+        function openQuickAddModal() {
+            document.getElementById('quickAddModal').classList.remove('hidden');
+            document.getElementById('quickAddForm').reset();
+        }
+
+        function closeQuickAddModal() {
+            document.getElementById('quickAddModal').classList.add('hidden');
+            document.getElementById('quickAddForm').reset();
+        }
+
+        // Quick Add form submission
+        document.getElementById('quickAddForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('quickProductName').value;
+            const price = parseFloat(document.getElementById('quickProductPrice').value);
+            const quantity = parseInt(document.getElementById('quickProductQuantity').value);
+            const unit = document.getElementById('quickProductUnit').value;
+            const description = document.getElementById('quickProductDescription').value;
+            
+            if (!name || !price || !quantity) {
+                Swal.fire('Error!', 'Please fill in all required fields.', 'error');
+                return;
+            }
+            
+            // Add to bill as a custom product
+            addCustomProductToBill(name, price, quantity, unit, description);
+            closeQuickAddModal();
+        });
+
+        function addCustomProductToBill(name, price, quantity, unit, description) {
+            const customProduct = {
+                id: ++billCounter,
+                productId: 'custom_' + Date.now(),
+                productName: name,
+                price: price,
+                unit: unit,
+                quantity: quantity,
+                total: price * quantity,
+                description: description,
+                isCustom: true
+            };
+            
+            billItems.push(customProduct);
+            updateBillDisplay();
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Added to Bill',
+                text: `${name} has been added to the bill`,
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
         function setupModalProductSearch() {
             document.getElementById('modalProductSearch').addEventListener('input', function(e) {
                 clearTimeout(searchTimeout);
@@ -389,14 +550,14 @@
 
             products.forEach(product => {
                 const productCard = document.createElement('div');
-                productCard.className = 'bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 hover:shadow-lg transition-all duration-200 cursor-pointer';
+                productCard.className = 'bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-3 sm:p-4 hover:shadow-lg transition-all duration-200 cursor-pointer';
                 productCard.onclick = () => addProductToBill(product);
                 
                 productCard.innerHTML = `
-                    <div class="flex items-start space-x-3">
+                    <div class="flex items-start space-x-2 sm:space-x-3">
                         <div class="flex-shrink-0">
-                            <div class="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 rounded-lg flex items-center justify-center">
-                                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                 </svg>
                             </div>
@@ -405,9 +566,9 @@
                             <h4 class="text-sm font-semibold text-gray-900 dark:text-white truncate">${product.name}</h4>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">SKU: ${product.sku || 'N/A'}</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">Stock: ${product.stock_quantity || 0}</p>
-                            <div class="mt-2 flex items-center justify-between">
-                                <span class="text-lg font-bold text-green-600 dark:text-green-400">Rs. ${parseFloat(product.selling_price || 0).toFixed(2)}</span>
-                                <button class="px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs font-medium rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-all duration-200">
+                            <div class="mt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                                <span class="text-base sm:text-lg font-bold text-green-600 dark:text-green-400">Rs. ${parseFloat(product.selling_price || 0).toFixed(2)}</span>
+                                <button class="px-2 sm:px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs font-medium rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-all duration-200">
                                     Add to Bill
                                 </button>
                             </div>
@@ -919,44 +1080,50 @@
             const taxElement = document.getElementById('tax');
             const discountElement = document.getElementById('discount');
             const totalElement = document.getElementById('total');
+            const mobileItemCount = document.getElementById('mobileItemCount');
+
+            // Update mobile item count
+            if (mobileItemCount) {
+                mobileItemCount.textContent = `${billItems.length} item${billItems.length !== 1 ? 's' : ''}`;
+            }
 
             // Clear current items
             billItemsContainer.innerHTML = '';
 
-            if (billItems.length === 0) {
-                billItemsContainer.innerHTML = `
-                    <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-                        <svg class="mx-auto h-12 w-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <p>No items in bill</p>
-                        <p class="text-sm">Click "Search Products" to add items to your bill</p>
-                    </div>
-                `;
+                             if (billItems.length === 0) {
+                     billItemsContainer.innerHTML = `
+                         <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                             <svg class="mx-auto h-16 w-16 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                             </svg>
+                             <p class="text-lg font-medium">No items in bill</p>
+                             <p class="text-base mt-2">Click "Add Products" to add items to your bill</p>
+                         </div>
+                     `;
             } else {
-                // Create table structure
-                billItemsContainer.innerHTML = `
-                    <div class="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
-                        <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-600">
-                            <div class="grid grid-cols-12 gap-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                <div class="col-span-4">Product</div>
-                                <div class="col-span-2 text-center">Price</div>
-                                <div class="col-span-2 text-center">Quantity</div>
-                                <div class="col-span-2 text-center">Total</div>
-                                <div class="col-span-2 text-center">Actions</div>
-                            </div>
-                        </div>
-                        <div id="billItemsTableBody">
-                        </div>
-                    </div>
-                `;
+                                 // Desktop table structure
+                 billItemsContainer.innerHTML = `
+                     <div class="hidden sm:block overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
+                         <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+                             <div class="grid grid-cols-12 gap-6 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                 <div class="col-span-4">Product</div>
+                                 <div class="col-span-2 text-center">Price</div>
+                                 <div class="col-span-2 text-center">Quantity</div>
+                                 <div class="col-span-2 text-center">Total</div>
+                                 <div class="col-span-2 text-center">Actions</div>
+                             </div>
+                         </div>
+                         <div id="billItemsTableBody">
+                         </div>
+                     </div>
+                 `;
                 
                 const tableBody = document.getElementById('billItemsTableBody');
                 
-                // Add items to table
-                billItems.forEach(item => {
-                    const itemElement = document.createElement('div');
-                    itemElement.className = 'grid grid-cols-12 gap-4 px-4 py-3 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors';
+                                 // Add items to desktop table
+                 billItems.forEach(item => {
+                     const itemElement = document.createElement('div');
+                     itemElement.className = 'grid grid-cols-12 gap-6 px-6 py-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors';
                     itemElement.innerHTML = `
                         <div class="col-span-4">
                             <div class="text-sm font-medium text-gray-900 dark:text-white">${item.productName}</div>
@@ -983,6 +1150,42 @@
                     `;
                     tableBody.appendChild(itemElement);
                 });
+
+                                 // Mobile card view
+                 const mobileView = document.createElement('div');
+                 mobileView.className = 'sm:hidden space-y-4';
+                 
+                 billItems.forEach(item => {
+                     const itemCard = document.createElement('div');
+                     itemCard.className = 'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6';
+                    itemCard.innerHTML = `
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">${item.productName}</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">${item.unit} • Rs. ${item.price.toFixed(2)} each</p>
+                            </div>
+                            <button onclick="removeItem(${item.id})" class="text-red-600 hover:text-red-800 dark:hover:text-red-400 transition-colors p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 ml-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-xs text-gray-600 dark:text-gray-400">Qty:</label>
+                                <input type="number" value="${item.quantity}" min="1" max="999"
+                                       onchange="updateQuantity(${item.id}, this.value)"
+                                       class="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm font-bold text-green-600 dark:text-green-400">Rs. ${item.total.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `;
+                    mobileView.appendChild(itemCard);
+                });
+                
+                billItemsContainer.appendChild(mobileView);
             }
 
             // Calculate totals
@@ -1407,6 +1610,13 @@
             document.getElementById('productSearchModal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeProductSearchModal();
+                }
+            });
+
+            // Quick Add modal close on outside click
+            document.getElementById('quickAddModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeQuickAddModal();
                 }
             });
         });
