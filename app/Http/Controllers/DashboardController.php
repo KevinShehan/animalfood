@@ -19,20 +19,23 @@ class DashboardController extends Controller
         $today = Carbon::today();
         $yesterday = Carbon::yesterday();
         
-        // Today's sales (only completed sales)
-        $todaySales = Sales::whereDate('created_at', $today)
-            ->where('type', 'sale')
+        // Today's sales (from Orders table - actual billing data)
+        $todaySales = Order::whereDate('created_at', $today)
             ->where('status', 'completed')
-            ->sum('total_amount');
-        $yesterdaySales = Sales::whereDate('created_at', $yesterday)
-            ->where('type', 'sale')
+            ->whereNotNull('invoice_number')
+            ->sum('final_amount');
+        $yesterdaySales = Order::whereDate('created_at', $yesterday)
             ->where('status', 'completed')
-            ->sum('total_amount');
+            ->whereNotNull('invoice_number')
+            ->sum('final_amount');
         
-        // Today's refunds
-        $todayRefunds = Sales::whereDate('created_at', $today)
-            ->where('type', 'refund')
-            ->sum('total_amount');
+        // Today's refunds (from Orders with negative amounts or refund status)
+        $todayRefunds = Order::whereDate('created_at', $today)
+            ->where(function($query) {
+                $query->where('status', 'refunded')
+                      ->orWhere('final_amount', '<', 0);
+            })
+            ->sum(DB::raw('ABS(final_amount)'));
         
         // Net sales
         $todayNet = $todaySales - $todayRefunds;
@@ -103,20 +106,20 @@ class DashboardController extends Controller
         $totalOrders = Order::count();
         $pendingOrders = Order::where('status', 'pending')->count();
         
-        // Monthly revenue
+        // Monthly revenue (from Orders table)
         $currentMonth = Carbon::now()->startOfMonth();
         $lastMonth = Carbon::now()->subMonth()->startOfMonth();
         
-        $monthlyRevenue = Sales::where('created_at', '>=', $currentMonth)
-            ->where('type', 'sale')
+        $monthlyRevenue = Order::where('created_at', '>=', $currentMonth)
             ->where('status', 'completed')
-            ->sum('total_amount');
+            ->whereNotNull('invoice_number')
+            ->sum('final_amount');
             
-        $lastMonthRevenue = Sales::where('created_at', '>=', $lastMonth)
+        $lastMonthRevenue = Order::where('created_at', '>=', $lastMonth)
             ->where('created_at', '<', $currentMonth)
-            ->where('type', 'sale')
             ->where('status', 'completed')
-            ->sum('total_amount');
+            ->whereNotNull('invoice_number')
+            ->sum('final_amount');
             
         $revenueGrowth = $lastMonthRevenue > 0 ? (($monthlyRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100 : 0;
         
@@ -233,10 +236,13 @@ class DashboardController extends Controller
         
         for ($i = $days - 1; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i);
-            $sales = Sales::whereDate('created_at', $date)->sum('total_amount');
-            $refunds = Sales::whereDate('created_at', $date)
+            $sales = Order::whereDate('created_at', $date)
+                ->where('status', 'completed')
+                ->whereNotNull('invoice_number')
+                ->sum('final_amount');
+            $refunds = Order::whereDate('created_at', $date)
                 ->where('status', 'refunded')
-                ->sum('total_amount');
+                ->sum(DB::raw('ABS(final_amount)'));
             
             $data[] = [
                 'date' => $date->format('M d'),
@@ -258,10 +264,13 @@ class DashboardController extends Controller
             $startOfWeek = Carbon::now()->subWeeks($i)->startOfWeek();
             $endOfWeek = Carbon::now()->subWeeks($i)->endOfWeek();
             
-            $sales = Sales::whereBetween('created_at', [$startOfWeek, $endOfWeek])->sum('total_amount');
-            $refunds = Sales::whereBetween('created_at', [$startOfWeek, $endOfWeek])
+            $sales = Order::whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->where('status', 'completed')
+                ->whereNotNull('invoice_number')
+                ->sum('final_amount');
+            $refunds = Order::whereBetween('created_at', [$startOfWeek, $endOfWeek])
                 ->where('status', 'refunded')
-                ->sum('total_amount');
+                ->sum(DB::raw('ABS(final_amount)'));
             
             $data[] = [
                 'week' => 'Week ' . $startOfWeek->format('M d'),
@@ -281,13 +290,15 @@ class DashboardController extends Controller
         
         for ($i = $months - 1; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
-            $sales = Sales::whereYear('created_at', $date->year)
+            $sales = Order::whereYear('created_at', $date->year)
                 ->whereMonth('created_at', $date->month)
-                ->sum('total_amount');
-            $refunds = Sales::whereYear('created_at', $date->year)
+                ->where('status', 'completed')
+                ->whereNotNull('invoice_number')
+                ->sum('final_amount');
+            $refunds = Order::whereYear('created_at', $date->year)
                 ->whereMonth('created_at', $date->month)
                 ->where('status', 'refunded')
-                ->sum('total_amount');
+                ->sum(DB::raw('ABS(final_amount)'));
             
             $data[] = [
                 'month' => $date->format('M Y'),

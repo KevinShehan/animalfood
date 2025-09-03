@@ -261,68 +261,118 @@ class CustomerController extends Controller
 
     public function export(Request $request)
     {
-        $query = Customer::query();
-        
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%")
-                  ->orWhere('phone', 'LIKE', "%{$search}%")
-                  ->orWhere('city', 'LIKE', "%{$search}%")
-                  ->orWhere('state', 'LIKE', "%{$search}%")
-                  ->orWhere('customer_id', 'LIKE', "%{$search}%")
-                  ->orWhere('company_name', 'LIKE', "%{$search}%");
-            });
-        }
-        
-        if ($request->has('status') && $request->status !== '') {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->has('customer_type') && $request->customer_type !== '') {
-            $query->where('customer_type', $request->customer_type);
-        }
-        
-        $customers = $query->get();
-        
-        $filename = 'customers_' . date('Y-m-d_H-i-s') . '.csv';
-        
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
-        
-        $callback = function() use ($customers) {
-            $file = fopen('php://output', 'w');
+        try {
+            // Log the export request
+            \Log::info('Customer export requested', [
+                'user_id' => auth()->id(),
+                'filters' => $request->all()
+            ]);
             
-            // Add headers
-            fputcsv($file, ['Customer ID', 'Name', 'Email', 'Phone', 'Customer Type', 'Company Name', 'Contact Person', 'Address', 'City', 'State', 'Postal Code', 'Tax Number', 'Status', 'Notes', 'Created At']);
+            $query = Customer::query();
             
-            // Add data
-            foreach ($customers as $customer) {
-                fputcsv($file, [
-                    $customer->customer_id,
-                    $customer->name,
-                    $customer->email,
-                    $customer->phone,
-                    $customer->customer_type,
-                    $customer->company_name,
-                    $customer->contact_person,
-                    $customer->address,
-                    $customer->city,
-                    $customer->state,
-                    $customer->postal_code,
-                    $customer->tax_number,
-                    $customer->status,
-                    $customer->notes,
-                    $customer->created_at->format('Y-m-d H:i:s')
-                ]);
+            // Apply search filter
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                      ->orWhere('email', 'LIKE', "%{$search}%")
+                      ->orWhere('phone', 'LIKE', "%{$search}%")
+                      ->orWhere('city', 'LIKE', "%{$search}%")
+                      ->orWhere('state', 'LIKE', "%{$search}%")
+                      ->orWhere('customer_id', 'LIKE', "%{$search}%")
+                      ->orWhere('company_name', 'LIKE', "%{$search}%")
+                      ->orWhere('contact_person', 'LIKE', "%{$search}%");
+                });
             }
             
-            fclose($file);
-        };
-        
-        return response()->stream($callback, 200, $headers);
+            // Apply status filter
+            if ($request->has('status') && $request->status !== '') {
+                $query->where('status', $request->status);
+            }
+
+            // Apply customer type filter
+            if ($request->has('customer_type') && $request->customer_type !== '') {
+                $query->where('customer_type', $request->customer_type);
+            }
+            
+            // Order by creation date
+            $query->orderBy('created_at', 'desc');
+            
+            $customers = $query->get();
+            
+            // Log the number of customers found
+            \Log::info('Customers found for export', ['count' => $customers->count()]);
+            
+            $filename = 'customers_' . date('Y-m-d_H-i-s') . '.csv';
+            
+            $headers = [
+                'Content-Type' => 'text/csv; charset=UTF-8',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                'Cache-Control' => 'no-cache, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0'
+            ];
+            
+            $callback = function() use ($customers) {
+                $file = fopen('php://output', 'w');
+                
+                // Add BOM for UTF-8
+                fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+                
+                // Add headers
+                fputcsv($file, [
+                    'Customer ID',
+                    'Name',
+                    'Email',
+                    'Phone',
+                    'Customer Type',
+                    'Company Name',
+                    'Contact Person',
+                    'Address',
+                    'City',
+                    'State',
+                    'Postal Code',
+                    'Tax Number',
+                    'Status',
+                    'Notes',
+                    'Created At'
+                ]);
+                
+                // Add data
+                foreach ($customers as $customer) {
+                    fputcsv($file, [
+                        $customer->customer_id ?? 'N/A',
+                        $customer->name ?? 'N/A',
+                        $customer->email ?? 'N/A',
+                        $customer->phone ?? 'N/A',
+                        $customer->customer_type ?? 'N/A',
+                        $customer->company_name ?? 'N/A',
+                        $customer->contact_person ?? 'N/A',
+                        $customer->address ?? 'N/A',
+                        $customer->city ?? 'N/A',
+                        $customer->state ?? 'N/A',
+                        $customer->postal_code ?? 'N/A',
+                        $customer->tax_number ?? 'N/A',
+                        $customer->status ?? 'N/A',
+                        $customer->notes ?? 'N/A',
+                        $customer->created_at ? $customer->created_at->format('Y-m-d H:i:s') : 'N/A'
+                    ]);
+                }
+                
+                fclose($file);
+            };
+            
+            return response()->stream($callback, 200, $headers);
+            
+        } catch (\Exception $e) {
+            \Log::error('Customer export error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error exporting customers: ' . $e->getMessage()
+            ], 500);
+        }
     }
 } 

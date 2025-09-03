@@ -8,7 +8,8 @@ use App\Models\Order;
 use App\Models\BillHeader;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class BillingController extends Controller
 {
@@ -152,12 +153,22 @@ class BillingController extends Controller
             'includeDetails'
         ))->render();
 
-        $pdf = Pdf::loadHTML($html);
-        $pdf->setPaper('A4', 'portrait');
+        // Initialize DomPDF
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
         
         $filename = 'bills_report_' . date('Y-m-d_H-i-s') . '.pdf';
         
-        return $pdf->download($filename);
+        return response($dompdf->output())
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
     }
 
     private function generatePrintPreview($billsData, $summary, $billHeader, $reportTitle, $includeSummary, $includeDetails)
@@ -546,6 +557,9 @@ class BillingController extends Controller
                         'email' => 'customer@example.com',
                         'phone' => 'N/A',
                         'address' => 'Walk-in',
+                        'city' => 'N/A',
+                        'state' => 'N/A',
+                        'postal_code' => 'N/A',
                         'status' => 'active'
                     ]
                 );
@@ -580,12 +594,29 @@ class BillingController extends Controller
 
             // Generate invoice number
             try {
-                $lastOrder = Order::whereNotNull('invoice_number')->latest()->first();
-                $lastNumber = $lastOrder ? (int) preg_replace('/\D/', '', substr($lastOrder->invoice_number, -6)) : 0;
-                $invoiceNumber = $prefix . '-' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+                $lastOrder = Order::whereNotNull('invoice_number')
+                                  ->where('invoice_number', 'like', $prefix . '-%')
+                                  ->orderBy('id', 'desc')
+                                  ->first();
+                
+                if ($lastOrder) {
+                    // Extract number from invoice number like "INV-000123"
+                    $lastNumber = (int) preg_replace('/\D/', '', substr($lastOrder->invoice_number, strlen($prefix) + 1));
+                } else {
+                    $lastNumber = 0;
+                }
+                
+                // Keep trying until we find a unique invoice number
+                do {
+                    $lastNumber++;
+                    $invoiceNumber = $prefix . '-' . str_pad($lastNumber, 6, '0', STR_PAD_LEFT);
+                    $exists = Order::where('invoice_number', $invoiceNumber)->exists();
+                } while ($exists);
+                
             } catch (\Exception $e) {
                 \Log::error('Failed to generate invoice number:', ['error' => $e->getMessage()]);
-                $invoiceNumber = $prefix . '-' . str_pad(1, 6, '0', STR_PAD_LEFT);
+                // Fallback to timestamp-based number
+                $invoiceNumber = $prefix . '-' . str_pad(time() % 1000000, 6, '0', STR_PAD_LEFT);
             }
 
             \Log::info('Generated invoice number:', ['invoice_number' => $invoiceNumber]);
@@ -647,9 +678,12 @@ class BillingController extends Controller
                 'payment_status' => $paymentStatus
             ]);
 
+            // Generate order number to match invoice number
+            $orderNumber = 'ORD-' . str_pad($lastNumber, 6, '0', STR_PAD_LEFT);
+            
             // Prepare order data
             $orderData = [
-                'order_number' => 'ORD-' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT),
+                'order_number' => $orderNumber,
                 'invoice_number' => $invoiceNumber,
                 'customer_id' => $customer->id,
                 'user_id' => auth()->id() ?? 1,
@@ -657,8 +691,8 @@ class BillingController extends Controller
                 'tax_amount' => $taxAmount,
                 'discount_amount' => $discountAmount,
                 'discount_code' => $request->input('discount_code'),
-                'discount_type' => $request->input('discount_type'),
-                'discount_percentage' => $request->input('discount_percentage'),
+                'discount_type' => $request->input('discount_type') ?? 'fixed_amount',
+                'discount_percentage' => $request->input('discount_percentage') ?? 0,
                 'final_amount' => $finalAmount,
                 'paid_amount' => $paidAmount,
                 'due_amount' => $dueAmount,
@@ -667,7 +701,7 @@ class BillingController extends Controller
                 'payment_status' => $paymentStatus,
                 'payment_method' => $paymentMethod,
                 'invoice_date' => now(),
-                'notes' => $request->notes,
+                'notes' => $request->notes ?? '',
             ];
 
             \Log::info('Creating order with data:', $orderData);

@@ -308,4 +308,232 @@ class PaymentController extends Controller
             'message' => 'Payment reversed successfully!'
         ]);
     }
+
+    /**
+     * Get payments summary for dashboard
+     */
+    public function getSummary()
+    {
+        $today = now()->startOfDay();
+        
+        // Today's payments
+        $todayPayments = PaymentTransaction::where('payment_date', '>=', $today)
+            ->where('type', 'payment')
+            ->where('status', 'completed')
+            ->sum('amount');
+
+        // Outstanding dues
+        $outstandingDues = Order::where('due_amount', '>', 0)
+            ->where('status', 'completed')
+            ->sum('due_amount');
+
+        // Overdue amounts (due date passed)
+        $overdueAmount = Order::where('due_amount', '>', 0)
+            ->where('due_date', '<', now())
+            ->where('status', 'completed')
+            ->sum('due_amount');
+
+        // Customers with dues
+        $customersWithDues = Order::where('due_amount', '>', 0)
+            ->where('status', 'completed')
+            ->distinct('customer_id')
+            ->count('customer_id');
+
+        return response()->json([
+            'success' => true,
+            'today_payments' => number_format($todayPayments, 2),
+            'outstanding_dues' => number_format($outstandingDues, 2),
+            'overdue_amount' => number_format($overdueAmount, 2),
+            'customers_with_dues' => $customersWithDues
+        ]);
+    }
+
+    /**
+     * Get payments API for AJAX loading
+     */
+    public function getPaymentsApi(Request $request)
+    {
+        $query = PaymentTransaction::with(['customer', 'order', 'user'])
+                                  ->orderBy('created_at', 'desc');
+
+        // Apply filters
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', $request->customer_id);
+        }
+
+        if ($request->filled('payment_method')) {
+            $query->where('payment_method', $request->payment_method);
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->where('payment_date', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->where('payment_date', '<=', $request->date_to);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('transaction_number', 'like', "%{$search}%")
+                  ->orWhere('reference_number', 'like', "%{$search}%")
+                  ->orWhereHas('customer', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $payments = $query->paginate(15);
+
+        return response()->json([
+            'success' => true,
+            'payments' => $payments
+        ]);
+    }
+
+    /**
+     * Generate customer dues report
+     */
+    public function getDuesReport(Request $request)
+    {
+        $query = Customer::with(['orders' => function($q) {
+            $q->where('due_amount', '>', 0)
+              ->where('status', 'completed')
+              ->orderBy('due_date', 'asc');
+        }])->whereHas('orders', function($q) {
+            $q->where('due_amount', '>', 0)
+              ->where('status', 'completed');
+        });
+
+        // Filter by customer if specified
+        if ($request->filled('customer_id')) {
+            $query->where('id', $request->customer_id);
+        }
+
+        $customers = $query->get();
+
+        $report = [
+            'summary' => [
+                'total_dues' => 0,
+                'overdue_amount' => 0,
+                'customers_count' => 0
+            ],
+            'customers' => []
+        ];
+
+        foreach ($customers as $customer) {
+            $totalDue = $customer->orders->sum('due_amount');
+            $overdueAmount = $customer->orders->where('due_date', '<', now())->sum('due_amount');
+            $billsCount = $customer->orders->count();
+            $oldestBillDate = $customer->orders->min('due_date');
+
+            // Apply status filter
+            if ($request->filled('status')) {
+                if ($request->status === 'overdue' && $overdueAmount <= 0) {
+                    continue;
+                }
+                if ($request->status === 'current' && $overdueAmount > 0) {
+                    continue;
+                }
+            }
+
+            $customerData = [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'email' => $customer->email,
+                'phone' => $customer->phone,
+                'total_due' => number_format($totalDue, 2),
+                'overdue_amount' => number_format($overdueAmount, 2),
+                'bills_count' => $billsCount,
+                'oldest_bill_date' => $oldestBillDate,
+                'bills' => $customer->orders->map(function($order) {
+                    return [
+                        'id' => $order->id,
+                        'invoice_number' => $order->invoice_number,
+                        'order_date' => $order->created_at->format('Y-m-d'),
+                        'due_date' => $order->due_date ? $order->due_date->format('Y-m-d') : null,
+                        'total_amount' => number_format($order->final_amount, 2),
+                        'paid_amount' => number_format($order->paid_amount, 2),
+                        'due_amount' => number_format($order->due_amount, 2),
+                        'is_overdue' => $order->due_date && $order->due_date->isPast(),
+                        'days_overdue' => $order->due_date ? max(0, now()->diffInDays($order->due_date, false)) : 0,
+                    ];
+                })
+            ];
+
+            $report['customers'][] = $customerData;
+            $report['summary']['total_dues'] += $totalDue;
+            $report['summary']['overdue_amount'] += $overdueAmount;
+        }
+
+        $report['summary']['total_dues'] = number_format($report['summary']['total_dues'], 2);
+        $report['summary']['overdue_amount'] = number_format($report['summary']['overdue_amount'], 2);
+        $report['summary']['customers_count'] = count($report['customers']);
+
+        // Sort customers by total due amount (descending)
+        usort($report['customers'], function($a, $b) {
+            return (float)str_replace(',', '', $b['total_due']) <=> (float)str_replace(',', '', $a['total_due']);
+        });
+
+        return response()->json([
+            'success' => true,
+            'report' => $report
+        ]);
+    }
+
+    /**
+     * Get customer bills for detailed view
+     */
+    public function getCustomerBills(Customer $customer)
+    {
+        $bills = Order::where('customer_id', $customer->id)
+                     ->where('due_amount', '>', 0)
+                     ->with(['orderItems.product'])
+                     ->orderBy('due_date', 'asc')
+                     ->get();
+
+        $data = $bills->map(function($bill) {
+            return [
+                'id' => $bill->id,
+                'invoice_number' => $bill->invoice_number,
+                'order_number' => $bill->order_number,
+                'order_date' => $bill->created_at->format('Y-m-d'),
+                'due_date' => $bill->due_date ? $bill->due_date->format('Y-m-d') : null,
+                'total_amount' => $bill->final_amount,
+                'paid_amount' => $bill->paid_amount,
+                'due_amount' => $bill->due_amount,
+                'is_overdue' => $bill->due_date && $bill->due_date->isPast(),
+                'days_overdue' => $bill->due_date ? max(0, now()->diffInDays($bill->due_date, false)) : 0,
+                'items' => $bill->orderItems->map(function($item) {
+                    return [
+                        'product_name' => $item->product->name ?? 'N/A',
+                        'quantity' => $item->quantity,
+                        'unit_price' => $item->unit_price,
+                        'total_price' => $item->total_price
+                    ];
+                })
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'customer' => [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'email' => $customer->email,
+                'phone' => $customer->phone
+            ],
+            'bills' => $data,
+            'summary' => [
+                'total_due' => $bills->sum('due_amount'),
+                'overdue_amount' => $bills->where('due_date', '<', now())->sum('due_amount'),
+                'bills_count' => $bills->count()
+            ]
+        ]);
+    }
 }

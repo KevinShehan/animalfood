@@ -6,78 +6,13 @@
                 <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Billing System</h1>
                 <p class="mt-1 sm:mt-2 text-sm text-gray-600 dark:text-gray-400">Create and manage customer bills and invoices.</p>
             </div>
-            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                <button onclick="openProductSearchModal()" class="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-medium rounded-xl hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                    <span class="hidden sm:inline">Search Products</span>
-                    <span class="sm:hidden">Add Products</span>
-                </button>
-                <button onclick="clearBill()" class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                    </svg>
-                    Clear Bill
-                </button>
-            </div>
+
         </div>
     </div>
 
     <!-- Billing Interface -->
     <div class="space-y-8">
-        <!-- Product Selection - Full Width -->
-        <div class="w-full">
-            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-3 sm:space-y-0">
-                    <h3 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">Selected Products</h3>
-                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                        <button onclick="openProductSearchModal()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-medium rounded-xl hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                            Add Products
-                        </button>
-                        <button onclick="openQuickAddModal()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                            Quick Add
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Products Table - Mobile Responsive -->
-                <div class="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
-                    <!-- Desktop Table Header -->
-                    <div class="hidden sm:block bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-                        <div class="grid grid-cols-12 gap-6 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                            <div class="col-span-4">Product</div>
-                            <div class="col-span-2 text-center">Price</div>
-                            <div class="col-span-2 text-center">Quantity</div>
-                            <div class="col-span-2 text-center">Total</div>
-                            <div class="col-span-2 text-center">Actions</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Mobile Table Header -->
-                    <div class="sm:hidden bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-                        <div class="flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300">
-                            <span>Products in Bill</span>
-                            <span id="mobileItemCount" class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-2 rounded-full">0 items</span>
-                        </div>
-                    </div>
-                    
-                    <div id="productsList" class="max-h-[500px] overflow-y-auto">
-                                             <div class="text-center py-16">
-                         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                         <p class="mt-6 text-base text-gray-500 dark:text-gray-400">Loading products...</p>
-                         <p class="mt-3 text-sm text-gray-400 dark:text-gray-500">Click "Add Products" to add items to your bill</p>
-                     </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <!-- Bill Summary - Full Width -->
         <div class="w-full">
@@ -87,21 +22,38 @@
                 <!-- Customer Selection -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Customer</label>
-                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
-                        <button type="button" onclick="openCustomerModal()" class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-left text-sm">
-                            <span id="selectedCustomerText">Select Customer</span>
-                        </button>
-                        <button type="button" onclick="selectCashCustomer()" class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm font-medium">
-                            CASH
-                        </button>
-                    </div>
+                                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                <button type="button" onclick="openCustomerModal()" class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-left text-sm">
+                    <span id="selectedCustomerText">Select Customer</span>
+                </button>
+                <button type="button" onclick="selectCashCustomer()" class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm font-medium">
+                    CASH
+                </button>
+                <button type="button" onclick="openProductSearchModal()" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-medium rounded-lg hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg">
+                    <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Add Product
+                </button>
+            </div>
                     <input type="hidden" id="selectedCustomerId" value="">
                 </div>
 
-                <!-- Bill Items -->
-                <div class="space-y-4 mb-8">
-                    <div id="billItems" class="min-h-[400px]">
-                        <!-- Bill items will be added here dynamically -->
+                <!-- Bill Items Display -->
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-lg font-medium text-gray-900 dark:text-white">Bill Items</h4>
+                        <span id="itemCount" class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-2 rounded-full">0 items</span>
+                    </div>
+                    
+                    <div id="billItemsContainer" class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 min-h-[200px]">
+                        <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                            <svg class="mx-auto h-16 w-16 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <p class="text-lg font-medium">No items in bill</p>
+                            <p class="text-base mt-2">Click "Add Product" to add items to your bill</p>
+                        </div>
                     </div>
                 </div>
 
@@ -205,7 +157,7 @@
                     </div>
                 </div>
 
-                                <!-- Action Buttons -->
+                <!-- Action Buttons -->
                 <div class="space-y-6 mt-10">
                     <button onclick="generateBill()" class="w-full inline-flex justify-center items-center px-6 py-4 border border-transparent text-base font-medium rounded-xl text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 shadow-lg">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,8 +166,11 @@
                         <span class="hidden sm:inline">Generate Bill</span>
                         <span class="sm:hidden">Generate</span>
                     </button>
-                    <div class="grid grid-cols-2 gap-4">
-                        <button onclick="clearBill()" class="inline-flex justify-center items-center px-4 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button onclick="clearBill()" class="inline-flex justify-center items-center px-4 py-3 border border-red-300 dark:border-red-600 text-sm font-medium rounded-lg text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
                             <span class="hidden sm:inline">Clear Bill</span>
                             <span class="sm:hidden">Clear</span>
                         </button>
@@ -228,6 +183,8 @@
             </div>
         </div>
     </div>
+
+
 
     <!-- Product Search Modal -->
     <div id="productSearchModal" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
@@ -261,70 +218,6 @@
                         <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">Loading products...</p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Add Modal -->
-    <div id="quickAddModal" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-        <div class="relative top-4 sm:top-10 mx-auto p-4 sm:p-5 border w-11/12 max-w-2xl shadow-2xl rounded-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
-            <div class="mt-3">
-                <div class="flex items-center justify-between mb-4 sm:mb-6">
-                    <h3 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent dark:from-green-400 dark:to-emerald-400">Quick Add Product</h3>
-                    <button onclick="closeQuickAddModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                        <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                
-                <!-- Quick Add Form -->
-                <form id="quickAddForm" class="space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Product Name</label>
-                            <input type="text" id="quickProductName" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Price (Rs.)</label>
-                            <input type="number" id="quickProductPrice" step="0.01" min="0" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quantity</label>
-                            <input type="number" id="quickProductQuantity" min="1" value="1" required class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Unit</label>
-                            <select id="quickProductUnit" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
-                                <option value="unit">Unit</option>
-                                <option value="kg">Kilogram</option>
-                                <option value="g">Gram</option>
-                                <option value="l">Liter</option>
-                                <option value="ml">Milliliter</option>
-                                <option value="pack">Pack</option>
-                                <option value="box">Box</option>
-                                <option value="bag">Bag</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description (Optional)</label>
-                        <textarea id="quickProductDescription" rows="2" class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white" placeholder="Brief description of the product..."></textarea>
-                    </div>
-                    
-                    <div class="flex justify-end space-x-3 pt-4">
-                        <button type="button" onclick="closeQuickAddModal()" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                            Cancel
-                        </button>
-                        <button type="submit" class="px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                            Add to Bill
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
@@ -407,97 +300,58 @@
         let billItems = [];
         let billCounter = 0;
         let allCustomers = [];
-        let searchTimeout;
         let customerSearchTimeout;
+        let searchTimeout;
         let appliedDiscount = { type: null, value: 0, amount: 0, code: null };
         let currentPaymentMethod = 'cash';
         let selectedCustomer = null;
 
         // Load data on page load
         document.addEventListener('DOMContentLoaded', function() {
-            loadProducts();
-            setupPaymentMethodChange();
-            checkAutomaticDiscounts();
-            setupCustomerSearch();
-            setupModalProductSearch();
+            try {
+                console.log('Initializing billing page...');
+                console.log('CSRF Token:', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'));
+                console.log('Available routes:', {
+                    customers: '{{ route("admin.billing.customers") }}',
+                    products: '{{ route("admin.billing.products") }}',
+                    createBill: '{{ route("admin.billing.api.create-bill") }}',
+                    billHeader: '{{ route("admin.settings.bill-header.active") }}'
+                });
+                
+                setupPaymentMethodChange();
+                checkAutomaticDiscounts();
+                setupCustomerSearch();
+                setupModalProductSearch();
+                updateBillDisplay();
+                console.log('Billing page initialized successfully');
+                
+                // Test initial data loading
+                console.log('Testing customer data loading...');
+                loadCustomers();
+                console.log('Testing product data loading...');
+                loadModalProducts();
+                
+            } catch (error) {
+                console.error('Error initializing billing page:', error);
+                Swal.fire('Error!', 'Failed to initialize billing page. Please refresh and try again.', 'error');
+            }
         });
-
-        // Customer modal functions
-        function openCustomerModal() {
-            document.getElementById('customerModal').classList.remove('hidden');
-            loadCustomers();
-        }
-
-        function closeCustomerModal() {
-            document.getElementById('customerModal').classList.add('hidden');
-            document.getElementById('customerSearch').value = '';
-        }
 
         // Product search modal functions
         function openProductSearchModal() {
-            document.getElementById('productSearchModal').classList.remove('hidden');
-            loadModalProducts();
+            console.log('Opening product search modal...');
+            const modal = document.getElementById('productSearchModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                loadModalProducts();
+            } else {
+                console.error('Product search modal not found!');
+            }
         }
 
         function closeProductSearchModal() {
             document.getElementById('productSearchModal').classList.add('hidden');
             document.getElementById('modalProductSearch').value = '';
-        }
-
-        // Quick Add modal functions
-        function openQuickAddModal() {
-            document.getElementById('quickAddModal').classList.remove('hidden');
-            document.getElementById('quickAddForm').reset();
-        }
-
-        function closeQuickAddModal() {
-            document.getElementById('quickAddModal').classList.add('hidden');
-            document.getElementById('quickAddForm').reset();
-        }
-
-        // Quick Add form submission
-        document.getElementById('quickAddForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('quickProductName').value;
-            const price = parseFloat(document.getElementById('quickProductPrice').value);
-            const quantity = parseInt(document.getElementById('quickProductQuantity').value);
-            const unit = document.getElementById('quickProductUnit').value;
-            const description = document.getElementById('quickProductDescription').value;
-            
-            if (!name || !price || !quantity) {
-                Swal.fire('Error!', 'Please fill in all required fields.', 'error');
-                return;
-            }
-            
-            // Add to bill as a custom product
-            addCustomProductToBill(name, price, quantity, unit, description);
-            closeQuickAddModal();
-        });
-
-        function addCustomProductToBill(name, price, quantity, unit, description) {
-            const customProduct = {
-                id: ++billCounter,
-                productId: 'custom_' + Date.now(),
-                productName: name,
-                price: price,
-                unit: unit,
-                quantity: quantity,
-                total: price * quantity,
-                description: description,
-                isCustom: true
-            };
-            
-            billItems.push(customProduct);
-            updateBillDisplay();
-            
-            Swal.fire({
-                icon: 'success',
-                title: 'Added to Bill',
-                text: `${name} has been added to the bill`,
-                timer: 1500,
-                showConfirmButton: false
-            });
         }
 
         function setupModalProductSearch() {
@@ -516,19 +370,38 @@
                 ? `{{ route("admin.billing.products") }}?search=${encodeURIComponent(searchTerm)}`
                 : '{{ route("admin.billing.products") }}';
             
-            fetch(url)
-                .then(response => response.json())
-                .then(products => {
-                    displayModalProducts(products);
-                })
-                .catch(error => {
-                    console.error('Error loading products:', error);
-                    document.getElementById('modalProductsList').innerHTML = `
-                        <div class="text-center py-4 text-red-500">
-                            <p>Error loading products. Please try again.</p>
-                        </div>
-                    `;
-                });
+            console.log('Loading products from URL:', url);
+            
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => {
+                console.log('Products response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(products => {
+                console.log('Products loaded:', products);
+                displayModalProducts(products);
+            })
+            .catch(error => {
+                console.error('Error loading products:', error);
+                document.getElementById('modalProductsList').innerHTML = `
+                    <div class="text-center py-4 text-red-500">
+                        <p>Error loading products: ${error.message}</p>
+                        <button onclick="loadModalProducts()" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            Try Again
+                        </button>
+                    </div>
+                `;
+            });
         }
 
         function displayModalProducts(products) {
@@ -567,7 +440,7 @@
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">SKU: ${product.sku || 'N/A'}</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">Stock: ${product.stock_quantity || 0}</p>
                             <div class="mt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                                <span class="text-base sm:text-lg font-bold text-green-600 dark:text-green-400">Rs. ${parseFloat(product.selling_price || 0).toFixed(2)}</span>
+                                <span class="text-base sm:text-lg font-bold text-green-600 dark:text-green-400">Rs. ${parseFloat(product.price || 0).toFixed(2)}</span>
                                 <button class="px-2 sm:px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs font-medium rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-all duration-200">
                                     Add to Bill
                                 </button>
@@ -579,6 +452,221 @@
                 productsList.appendChild(productCard);
             });
         }
+
+        function addProductToBill(product) {
+            const existingItem = billItems.find(item => item.productId === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+                existingItem.total = existingItem.quantity * existingItem.price;
+            } else {
+                billItems.push({
+                    id: ++billCounter,
+                    productId: product.id,
+                    productName: product.name,
+                    price: parseFloat(product.price || 0),
+                    unit: product.unit || 'unit',
+                    quantity: 1,
+                    total: parseFloat(product.price || 0)
+                });
+            }
+            
+            updateBillDisplay();
+            closeProductSearchModal();
+            
+            // Show success message
+            Swal.fire({
+                icon: 'success',
+                title: 'Added to Bill',
+                text: `${product.name} has been added to the bill`,
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        function updateQuantity(itemId, newQuantity) {
+            const item = billItems.find(item => item.id === itemId);
+            if (item) {
+                item.quantity = parseInt(newQuantity);
+                item.total = item.quantity * item.price;
+                updateBillDisplay();
+            }
+        }
+
+        function removeItem(itemId) {
+            const item = billItems.find(item => item.id === itemId);
+            if (item) {
+                Swal.fire({
+                    title: 'Remove Item?',
+                    text: `Are you sure you want to remove ${item.productName}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, remove it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        billItems = billItems.filter(item => item.id !== itemId);
+                        updateBillDisplay();
+                        Swal.fire('Removed!', 'Item has been removed from the bill.', 'success');
+                    }
+                });
+            }
+        }
+
+        function updateBillDisplay() {
+            const billItemsContainer = document.getElementById('billItemsContainer');
+            const subtotalElement = document.getElementById('subtotal');
+            const taxElement = document.getElementById('tax');
+            const discountElement = document.getElementById('discount');
+            const totalElement = document.getElementById('total');
+            const itemCount = document.getElementById('itemCount');
+
+            // Update item count
+            if (itemCount) {
+                itemCount.textContent = `${billItems.length} item${billItems.length !== 1 ? 's' : ''}`;
+            }
+
+            // Clear current items
+            billItemsContainer.innerHTML = '';
+
+            if (billItems.length === 0) {
+                billItemsContainer.innerHTML = `
+                    <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                        <svg class="mx-auto h-16 w-16 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p class="text-lg font-medium">No items in bill</p>
+                        <p class="text-base mt-2">Click "Add Product" to add items to your bill</p>
+                    </div>
+                `;
+            } else {
+                // Desktop table structure
+                billItemsContainer.innerHTML = `
+                    <div class="hidden sm:block overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
+                        <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+                            <div class="grid grid-cols-12 gap-6 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                <div class="col-span-4">Product</div>
+                                <div class="col-span-2 text-center">Price</div>
+                                <div class="col-span-2 text-center">Quantity</div>
+                                <div class="col-span-2 text-center">Total</div>
+                                <div class="col-span-2 text-center">Actions</div>
+                            </div>
+                        </div>
+                        <div id="billItemsTableBody">
+                        </div>
+                    </div>
+                `;
+                
+                const tableBody = document.getElementById('billItemsTableBody');
+                
+                // Add items to desktop table
+                billItems.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'grid grid-cols-12 gap-6 px-6 py-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors';
+                    itemElement.innerHTML = `
+                        <div class="col-span-4">
+                            <div class="text-sm font-medium text-gray-900 dark:text-white">${item.productName}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">${item.unit}</div>
+                        </div>
+                        <div class="col-span-2 text-center">
+                            <span class="text-sm font-medium text-gray-900 dark:text-white">Rs. ${item.price.toFixed(2)}</span>
+                        </div>
+                        <div class="col-span-2 text-center">
+                            <input type="number" value="${item.quantity}" min="1" max="999"
+                                   onchange="updateQuantity(${item.id}, this.value)"
+                                   class="w-20 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div class="col-span-2 text-center">
+                            <span class="text-sm font-bold text-green-600 dark:text-green-400">Rs. ${item.total.toFixed(2)}</span>
+                        </div>
+                        <div class="col-span-2 text-center">
+                            <button onclick="removeItem(${item.id})" class="text-red-600 hover:text-red-800 dark:hover:text-red-400 transition-colors p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    tableBody.appendChild(itemElement);
+                });
+
+                // Mobile card view
+                const mobileView = document.createElement('div');
+                mobileView.className = 'sm:hidden space-y-4';
+                
+                billItems.forEach(item => {
+                    const itemCard = document.createElement('div');
+                    itemCard.className = 'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6';
+                    itemCard.innerHTML = `
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">${item.productName}</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">${item.unit} • Rs. ${item.price.toFixed(2)} each</p>
+                            </div>
+                            <button onclick="removeItem(${item.id})" class="text-red-600 hover:text-red-800 dark:hover:text-red-400 transition-colors p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 ml-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-xs text-gray-600 dark:text-gray-400">Qty:</label>
+                                <input type="number" value="${item.quantity}" min="1" max="999"
+                                       onchange="updateQuantity(${item.id}, this.value)"
+                                       class="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm font-bold text-green-600 dark:text-green-400">Rs. ${item.total.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `;
+                    mobileView.appendChild(itemCard);
+                });
+                
+                billItemsContainer.appendChild(mobileView);
+            }
+
+            // Calculate totals
+            const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
+            const discountAmount = appliedDiscount.amount || 0;
+            const discountedSubtotal = subtotal - discountAmount;
+            const tax = discountedSubtotal * 0.10; // 10% tax on discounted amount
+            const total = discountedSubtotal + tax;
+
+            subtotalElement.textContent = `Rs. ${subtotal.toFixed(2)}`;
+            taxElement.textContent = `Rs. ${tax.toFixed(2)}`;
+            discountElement.textContent = `Rs. ${discountAmount.toFixed(2)}`;
+            totalElement.textContent = `Rs. ${total.toFixed(2)}`;
+            
+            // Check for automatic discounts when items change
+            if (billItems.length > 0) {
+                checkAutomaticDiscounts();
+            }
+            
+            // Update balance calculation if amount is paid
+            calculateBalance();
+        }
+
+        // Customer modal functions
+        function openCustomerModal() {
+            console.log('Opening customer modal...');
+            const modal = document.getElementById('customerModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                loadCustomers();
+            } else {
+                console.error('Customer modal not found!');
+            }
+        }
+
+        function closeCustomerModal() {
+            document.getElementById('customerModal').classList.add('hidden');
+            document.getElementById('customerSearch').value = '';
+        }
+
+
 
         function selectCashCustomer() {
             selectedCustomer = {
@@ -617,24 +705,64 @@
 
         // Load customers from database
         function loadCustomers(searchTerm = '') {
-            const url = searchTerm 
-                ? `{{ route("admin.billing.customers") }}?search=${encodeURIComponent(searchTerm)}`
-                : '{{ route("admin.billing.customers") }}';
-            
-            fetch(url)
-                .then(response => response.json())
+            try {
+                console.log('Loading customers...', searchTerm ? `with search: ${searchTerm}` : '');
+                const url = searchTerm 
+                    ? `{{ route("admin.billing.customers") }}?search=${encodeURIComponent(searchTerm)}`
+                    : '{{ route("admin.billing.customers") }}';
+                
+                console.log('Fetching customers from URL:', url);
+                
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => {
+                    console.log('Customers response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(customers => {
+                    console.log('Customers loaded:', customers);
                     allCustomers = customers;
                     displayCustomers(customers);
                 })
                 .catch(error => {
                     console.error('Error loading customers:', error);
                     document.getElementById('customersList').innerHTML = `
-                        <div class="text-center py-4 text-red-500">
-                            <p>Error loading customers. Please try again.</p>
+                        <div class="text-center py-8">
+                            <svg class="mx-auto h-12 w-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                            </svg>
+                            <p class="mt-4 text-lg font-medium text-gray-900 dark:text-white">Error Loading Customers</p>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">${error.message}</p>
+                            <button onclick="loadCustomers()" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                Try Again
+                            </button>
                         </div>
                     `;
                 });
+            } catch (error) {
+                console.error('Error in loadCustomers function:', error);
+                document.getElementById('customersList').innerHTML = `
+                    <div class="text-center py-8">
+                        <svg class="mx-auto h-12 w-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                        <p class="mt-4 text-lg font-medium text-gray-900 dark:text-white">Unexpected Error</p>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">${error.message}</p>
+                        <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            Reload Page
+                        </button>
+                    </div>
+                `;
+            }
         }
 
         function displayCustomers(customers) {
@@ -783,146 +911,9 @@
                 });
         }
 
-        // Product search functionality with debouncing
-        document.getElementById('productSearch').addEventListener('input', function(e) {
-            clearTimeout(searchTimeout);
-            const searchTerm = e.target.value;
-            
-            // Show loading state
-            const productsList = document.getElementById('productsList');
-            productsList.innerHTML = `
-                <div class="text-center py-4">
-                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 mx-auto"></div>
-                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Searching...</p>
-                </div>
-            `;
-            
-            // Debounce the search
-            searchTimeout = setTimeout(() => {
-                loadProducts(searchTerm);
-            }, 300);
-        });
 
-        // Load products from database
-        function loadProducts(searchTerm = '') {
-            const url = searchTerm 
-                ? `{{ route('admin.billing.products') }}?search=${encodeURIComponent(searchTerm)}`
-                : '{{ route("admin.billing.products") }}';
-            
-            fetch(url)
-                .then(response => response.json())
-                .then(products => {
-                    displayProducts(products);
-                })
-                .catch(error => {
-                    console.error('Error loading products:', error);
-                    const productsList = document.getElementById('productsList');
-                    productsList.innerHTML = `
-                        <div class="text-center py-4 text-red-500">
-                            <p>Error loading products. Please try again.</p>
-                        </div>
-                    `;
-                });
-        }
 
-        // Display products in the list
-        function displayProducts(products) {
-            const productsList = document.getElementById('productsList');
-            productsList.innerHTML = '';
 
-            if (products.length === 0) {
-                productsList.innerHTML = `
-                    <div class="text-center py-8">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-                        </svg>
-                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">No products found</p>
-                    </div>
-                `;
-                return;
-            }
-
-            products.forEach(product => {
-                const productElement = document.createElement('div');
-                productElement.className = 'border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-200';
-                productElement.onclick = () => addToBill(product.id, product.name, product.price, product.unit || 'unit');
-                
-                productElement.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <div class="flex-1">
-                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">${product.name}</h4>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">${product.sku} - In Stock: ${product.stock_quantity}</p>
-                            ${product.description ? `<p class="text-xs text-gray-400 dark:text-gray-500 mt-1">${product.description}</p>` : ''}
-                        </div>
-                        <div class="text-right ml-4">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Rs. ${parseFloat(product.price).toFixed(2)}</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">per ${product.unit || 'unit'}</p>
-                        </div>
-                    </div>
-                `;
-                productsList.appendChild(productElement);
-            });
-        }
-
-        function addToBill(productId, productName, price, unit) {
-            const existingItem = billItems.find(item => item.productId === productId);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-                existingItem.total = existingItem.quantity * existingItem.price;
-            } else {
-                billItems.push({
-                    id: ++billCounter,
-                    productId: productId,
-                    productName: productName,
-                    price: parseFloat(price),
-                    unit: unit,
-                    quantity: 1,
-                    total: parseFloat(price)
-                });
-            }
-            
-            updateBillDisplay();
-            
-            // Show success message
-            Swal.fire({
-                icon: 'success',
-                title: 'Added to Bill',
-                text: `${productName} has been added to the bill`,
-                timer: 1500,
-                showConfirmButton: false
-            });
-        }
-
-        function updateQuantity(itemId, newQuantity) {
-            const item = billItems.find(item => item.id === itemId);
-            if (item) {
-                item.quantity = parseInt(newQuantity);
-                item.total = item.quantity * item.price;
-                updateBillDisplay();
-            }
-        }
-
-        function removeItem(itemId) {
-            const item = billItems.find(item => item.id === itemId);
-            if (item) {
-                Swal.fire({
-                    title: 'Remove Item?',
-                    text: `Are you sure you want to remove ${item.productName}?`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Yes, remove it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        billItems = billItems.filter(item => item.id !== itemId);
-                        updateBillDisplay();
-                        Swal.fire('Removed!', 'Item has been removed from the bill.', 'success');
-                    }
-                });
-            }
-        }
 
         // Discount functions
         function applyDiscount() {
@@ -1074,252 +1065,136 @@
             }
         }
 
-        function updateBillDisplay() {
-            const billItemsContainer = document.getElementById('billItems');
-            const subtotalElement = document.getElementById('subtotal');
-            const taxElement = document.getElementById('tax');
-            const discountElement = document.getElementById('discount');
-            const totalElement = document.getElementById('total');
-            const mobileItemCount = document.getElementById('mobileItemCount');
 
-            // Update mobile item count
-            if (mobileItemCount) {
-                mobileItemCount.textContent = `${billItems.length} item${billItems.length !== 1 ? 's' : ''}`;
-            }
-
-            // Clear current items
-            billItemsContainer.innerHTML = '';
-
-                             if (billItems.length === 0) {
-                     billItemsContainer.innerHTML = `
-                         <div class="text-center py-12 text-gray-500 dark:text-gray-400">
-                             <svg class="mx-auto h-16 w-16 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                             </svg>
-                             <p class="text-lg font-medium">No items in bill</p>
-                             <p class="text-base mt-2">Click "Add Products" to add items to your bill</p>
-                         </div>
-                     `;
-            } else {
-                                 // Desktop table structure
-                 billItemsContainer.innerHTML = `
-                     <div class="hidden sm:block overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
-                         <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-                             <div class="grid grid-cols-12 gap-6 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                 <div class="col-span-4">Product</div>
-                                 <div class="col-span-2 text-center">Price</div>
-                                 <div class="col-span-2 text-center">Quantity</div>
-                                 <div class="col-span-2 text-center">Total</div>
-                                 <div class="col-span-2 text-center">Actions</div>
-                             </div>
-                         </div>
-                         <div id="billItemsTableBody">
-                         </div>
-                     </div>
-                 `;
-                
-                const tableBody = document.getElementById('billItemsTableBody');
-                
-                                 // Add items to desktop table
-                 billItems.forEach(item => {
-                     const itemElement = document.createElement('div');
-                     itemElement.className = 'grid grid-cols-12 gap-6 px-6 py-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors';
-                    itemElement.innerHTML = `
-                        <div class="col-span-4">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">${item.productName}</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">${item.unit}</div>
-                        </div>
-                        <div class="col-span-2 text-center">
-                            <span class="text-sm font-medium text-gray-900 dark:text-white">Rs. ${item.price.toFixed(2)}</span>
-                        </div>
-                        <div class="col-span-2 text-center">
-                            <input type="number" value="${item.quantity}" min="1" max="999"
-                                   onchange="updateQuantity(${item.id}, this.value)"
-                                   class="w-20 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                        </div>
-                        <div class="col-span-2 text-center">
-                            <span class="text-sm font-bold text-green-600 dark:text-green-400">Rs. ${item.total.toFixed(2)}</span>
-                        </div>
-                        <div class="col-span-2 text-center">
-                            <button onclick="removeItem(${item.id})" class="text-red-600 hover:text-red-800 dark:hover:text-red-400 transition-colors p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    `;
-                    tableBody.appendChild(itemElement);
-                });
-
-                                 // Mobile card view
-                 const mobileView = document.createElement('div');
-                 mobileView.className = 'sm:hidden space-y-4';
-                 
-                 billItems.forEach(item => {
-                     const itemCard = document.createElement('div');
-                     itemCard.className = 'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6';
-                    itemCard.innerHTML = `
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="flex-1">
-                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">${item.productName}</h4>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">${item.unit} • Rs. ${item.price.toFixed(2)} each</p>
-                            </div>
-                            <button onclick="removeItem(${item.id})" class="text-red-600 hover:text-red-800 dark:hover:text-red-400 transition-colors p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 ml-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center space-x-2">
-                                <label class="text-xs text-gray-600 dark:text-gray-400">Qty:</label>
-                                <input type="number" value="${item.quantity}" min="1" max="999"
-                                       onchange="updateQuantity(${item.id}, this.value)"
-                                       class="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                            </div>
-                            <div class="text-right">
-                                <span class="text-sm font-bold text-green-600 dark:text-green-400">Rs. ${item.total.toFixed(2)}</span>
-                            </div>
-                        </div>
-                    `;
-                    mobileView.appendChild(itemCard);
-                });
-                
-                billItemsContainer.appendChild(mobileView);
-            }
-
-            // Calculate totals
-            const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
-            const discountAmount = appliedDiscount.amount || 0;
-            const discountedSubtotal = subtotal - discountAmount;
-            const tax = discountedSubtotal * 0.10; // 10% tax on discounted amount
-            const total = discountedSubtotal + tax;
-
-            subtotalElement.textContent = `Rs. ${subtotal.toFixed(2)}`;
-            taxElement.textContent = `Rs. ${tax.toFixed(2)}`;
-            discountElement.textContent = `Rs. ${discountAmount.toFixed(2)}`;
-            totalElement.textContent = `Rs. ${total.toFixed(2)}`;
-            
-            // Check for automatic discounts when items change
-            if (billItems.length > 0) {
-                checkAutomaticDiscounts();
-            }
-            
-            // Update balance calculation if amount is paid
-            calculateBalance();
-        }
 
         function generateBill() {
-            if (!selectedCustomer) {
-                Swal.fire('Error!', 'Please select a customer.', 'error');
-                return;
-            }
-
-            if (billItems.length === 0) {
-                Swal.fire('Error!', 'Please add items to the bill.', 'error');
-                return;
-            }
-
-            // Show loading state
-            Swal.fire({
-                title: 'Generating Bill...',
-                text: 'Please wait while we prepare your bill',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
+            try {
+                console.log('Generating bill...');
+                console.log('Selected customer:', selectedCustomer);
+                console.log('Bill items:', billItems);
+                
+                if (!selectedCustomer) {
+                    Swal.fire('Error!', 'Please select a customer.', 'error');
+                    return;
                 }
-            });
 
-            // First, save the bill to database
-            saveBillToDatabase();
+                if (billItems.length === 0) {
+                    Swal.fire('Error!', 'Please add items to the bill.', 'error');
+                    return;
+                }
+
+                // Show loading state
+                Swal.fire({
+                    title: 'Generating Bill...',
+                    text: 'Please wait while we prepare your bill',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Calculate totals
+                const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
+                const discountAmount = appliedDiscount.amount || 0;
+                const discountedSubtotal = subtotal - discountAmount;
+                const tax = discountedSubtotal * 0.10;
+                const total = discountedSubtotal + tax;
+                
+                // Get payment information
+                const paymentMethod = document.getElementById('paymentMethod').value;
+                const amountPaid = parseFloat(document.getElementById('amountPaid').value) || 0;
+                const dueAmount = Math.max(total - amountPaid, 0);
+                const notes = document.getElementById('billNotes').value;
+
+                // Prepare bill data
+                const billData = {
+                    customer_id: selectedCustomer.id,
+                    items: billItems.map(item => ({
+                        product_id: item.productId,
+                        quantity: item.quantity
+                    })),
+                    total_amount: subtotal,
+                    tax_amount: tax,
+                    discount_amount: discountAmount,
+                    final_amount: total,
+                    paid_amount: amountPaid,
+                    due_amount: dueAmount,
+                    payment_method: paymentMethod,
+                    notes: notes,
+                    discount_code: appliedDiscount.code || null,
+                    discount_type: appliedDiscount.type === 'percentage' ? 'percentage' : 'fixed_amount',
+                    discount_percentage: appliedDiscount.type === 'percentage' ? appliedDiscount.value : null
+                };
+
+                console.log('Sending bill data:', billData);
+
+                // Create the bill
+                fetch('{{ route("admin.billing.api.create-bill") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(billData)
+                })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Bill creation response:', data);
+                    if (data.success) {
+                        // Store the bill data globally for display
+                        window.savedBillData = data.bill;
+                        
+                        // Generate bill display
+                        generateBillDisplay();
+                        
+                        // Show success message after display is ready
+                        setTimeout(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Bill Created!',
+                                text: `Bill ${data.bill.invoice_number} has been created successfully.`,
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK',
+                                timer: 5000
+                            }).then(() => {
+                                // Reset the form after successful bill creation
+                                resetBillForm();
+                            });
+                        }, 500);
+                    } else {
+                        throw new Error(data.error || 'Failed to create bill');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creating bill:', error);
+                    Swal.fire('Error!', 'Failed to create bill: ' + error.message, 'error');
+                });
+
+            } catch (error) {
+                console.error('Error in generateBill function:', error);
+                Swal.fire('Error!', 'Failed to generate bill: ' + error.message, 'error');
+            }
         }
 
-        function saveBillToDatabase() {
-            const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
-            const tax = subtotal * 0.10;
-            const total = subtotal + tax;
-            const discountAmount = appliedDiscount.amount || 0;
-            const finalAmount = total - discountAmount;
 
-            const billData = {
-                customer_id: selectedCustomer.id || selectedCustomer.customer_id,
-                items: billItems.map(item => ({
-                    product_id: item.productId,
-                    quantity: item.quantity,
-                    unit_price: item.price,
-                    total_price: item.total
-                })),
-                total_amount: subtotal,
-                tax_amount: tax,
-                discount_amount: discountAmount,
-                final_amount: finalAmount,
-                paid_amount: parseFloat(document.getElementById('amountPaid').value) || 0,
-                due_amount: finalAmount - (parseFloat(document.getElementById('amountPaid').value) || 0),
-                due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
-                payment_method: currentPaymentMethod,
-                notes: document.getElementById('billNotes') ? document.getElementById('billNotes').value : '',
-                discount_code: appliedDiscount.code,
-                discount_type: appliedDiscount.type,
-                discount_percentage: appliedDiscount.type === 'percentage' ? appliedDiscount.value : 0
-            };
-
-            console.log('Sending bill data:', billData);
-
-            // Validate data before sending
-            if (!billData.customer_id) {
-                Swal.fire('Error!', 'Customer ID is missing. Please select a customer.', 'error');
-                return;
-            }
-
-            if (!billData.items || billData.items.length === 0) {
-                Swal.fire('Error!', 'No items in bill. Please add products.', 'error');
-                return;
-            }
-
-            fetch('{{ route("admin.billing.api.create-bill") }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify(billData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    // Store the saved bill data for display
-                    window.savedBillData = data.bill;
-                    // Continue with bill generation
-                    generateBillDisplay();
-                } else {
-                    throw new Error(data.error || 'Failed to save bill');
-                }
-            })
-            .catch(error => {
-                console.error('Error saving bill:', error);
-                let errorMessage = 'Failed to save bill to database. Please try again.';
-                if (error.message) {
-                    errorMessage = error.message;
-                }
-                console.log('Full error details:', error);
-                Swal.fire('Error!', errorMessage, 'error');
-            });
-        }
 
         function generateBillDisplay() {
 
             // Generate bill content
             const billContent = document.getElementById('billContent');
             const subtotal = billItems.reduce((sum, item) => sum + item.total, 0);
-            const tax = subtotal * 0.10;
-            const total = subtotal + tax;
+            const discountAmount = appliedDiscount.amount || 0;
+            const discountedSubtotal = subtotal - discountAmount;
+            const tax = discountedSubtotal * 0.10;
+            const total = discountedSubtotal + tax;
 
             // Fetch bill header settings
             fetch('{{ route("admin.settings.bill-header.active") }}')
@@ -1526,10 +1401,30 @@
                 printWindow.print();
             }, 500);
             
-            // Bill is already saved to database
-            Swal.fire('Success!', 'Bill has been printed and saved to database.', 'success').then(() => {
+            // Bill has been printed
+            Swal.fire({
+                icon: 'success',
+                title: 'Bill Printed!',
+                text: 'Bill has been printed successfully.',
+                showConfirmButton: true,
+                confirmButtonText: 'OK'
+            }).then(() => {
                 closePrintModal();
-                clearBill();
+                // Ask if user wants to create a new bill
+                Swal.fire({
+                    title: 'Create New Bill?',
+                    text: 'Would you like to clear the form and start a new bill?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Yes, start new',
+                    cancelButtonText: 'Keep current'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        resetBillForm();
+                    }
+                });
             });
         }
 
@@ -1544,24 +1439,40 @@
                 confirmButtonText: 'Yes, clear it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    billItems = [];
-                    billCounter = 0;
-                    appliedDiscount = { type: null, value: 0, amount: 0, code: null };
-                    currentPaymentMethod = 'cash';
-                    selectedCustomer = null;
-                    updateBillDisplay();
-                    document.getElementById('selectedCustomerText').textContent = 'Select Customer';
-                    document.getElementById('selectedCustomerId').value = '';
-                    document.getElementById('paymentMethod').value = 'cash';
-                    document.getElementById('discountCode').value = '';
-                    document.getElementById('discountValue').value = '';
-                    document.getElementById('discountStatus').innerHTML = '';
-                    document.getElementById('amountPaid').value = '';
-                    document.getElementById('balanceDisplay').classList.add('hidden');
-                    updatePaymentDetails();
+                    resetBillForm();
                     Swal.fire('Cleared!', 'Bill has been cleared.', 'success');
                 }
             });
+        }
+
+        function resetBillForm() {
+            // Reset bill data
+            billItems = [];
+            billCounter = 0;
+            appliedDiscount = { type: null, value: 0, amount: 0, code: null };
+            currentPaymentMethod = 'cash';
+            selectedCustomer = null;
+            
+            // Reset UI elements
+            updateBillDisplay();
+            document.getElementById('selectedCustomerText').textContent = 'Select Customer';
+            document.getElementById('selectedCustomerId').value = '';
+            document.getElementById('paymentMethod').value = 'cash';
+            document.getElementById('discountCode').value = '';
+            document.getElementById('discountValue').value = '';
+            document.getElementById('discountStatus').innerHTML = '';
+            document.getElementById('amountPaid').value = '';
+            document.getElementById('billNotes').value = '';
+            document.getElementById('balanceDisplay').classList.add('hidden');
+            
+            // Reset payment details
+            updatePaymentDetails();
+            updateCreditInfo();
+            
+            // Clear saved bill data
+            if (window.savedBillData) {
+                delete window.savedBillData;
+            }
         }
 
         // Test bill header function
@@ -1613,10 +1524,10 @@
                 }
             });
 
-            // Quick Add modal close on outside click
-            document.getElementById('quickAddModal').addEventListener('click', function(e) {
+            // Print modal close on outside click
+            document.getElementById('printModal').addEventListener('click', function(e) {
                 if (e.target === this) {
-                    closeQuickAddModal();
+                    closePrintModal();
                 }
             });
         });

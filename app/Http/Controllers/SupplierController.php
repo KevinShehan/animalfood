@@ -10,7 +10,45 @@ class SupplierController extends Controller
 {
     public function index()
     {
-        $suppliers = Supplier::orderBy('created_at', 'desc')->get();
+        $suppliers = Supplier::orderBy('created_at', 'desc')->paginate(10);
+        return view('admin.suppliers.index', compact('suppliers'));
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->get('search', '');
+        
+        if (empty($search)) {
+            $suppliers = Supplier::orderBy('created_at', 'desc')->paginate(10);
+        } else {
+            $suppliers = Supplier::where(function($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                      ->orWhere('email', 'LIKE', "%{$search}%")
+                      ->orWhere('phone', 'LIKE', "%{$search}%")
+                      ->orWhere('contact_person', 'LIKE', "%{$search}%")
+                      ->orWhere('address', 'LIKE', "%{$search}%")
+                      ->orWhere('supplier_id', 'LIKE', "%{$search}%")
+                      ->orWhere('tax_number', 'LIKE', "%{$search}%");
+            })->orderBy('created_at', 'desc')->paginate(10);
+        }
+
+        if ($request->ajax()) {
+            $html = view('admin.suppliers.partials.suppliers-table', compact('suppliers'))->render();
+            $htmlMobile = view('admin.suppliers.partials.suppliers-mobile', compact('suppliers'))->render();
+            
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'html_mobile' => $htmlMobile,
+                'pagination' => $suppliers->links()->toHtml(),
+                'total' => $suppliers->total(),
+                'current_page' => $suppliers->currentPage(),
+                'per_page' => $suppliers->perPage(),
+                'showing_from' => $suppliers->firstItem(),
+                'showing_to' => $suppliers->lastItem()
+            ]);
+        }
+
         return view('admin.suppliers.index', compact('suppliers'));
     }
 

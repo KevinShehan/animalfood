@@ -102,15 +102,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customers.index');
         Route::get('/customers/create', [CustomerController::class, 'create'])->name('admin.customers.create');
         Route::post('/customers', [CustomerController::class, 'store']);
-        Route::get('/customers/{customer}', [CustomerController::class, 'show']);
-        Route::put('/customers/{customer}', [CustomerController::class, 'update']);
-        Route::delete('/customers/{customer}', [CustomerController::class, 'destroy']);
         Route::post('/customers/bulk-delete', [CustomerController::class, 'bulkDelete'])->name('admin.customers.bulk-delete');
         Route::get('/customers/export', [CustomerController::class, 'export'])->name('admin.customers.export');
         Route::get('/customers/validate-field', [CustomerController::class, 'validateField'])->name('admin.customers.validate-field');
+        Route::get('/customers/{customer}', [CustomerController::class, 'show']);
+        Route::put('/customers/{customer}', [CustomerController::class, 'update']);
+        Route::delete('/customers/{customer}', [CustomerController::class, 'destroy']);
         
         // Suppliers CRUD (Admin Only)
         Route::get('/suppliers', [SupplierController::class, 'index'])->name('admin.suppliers')->middleware('role:administrator,super_administrator');
+        Route::get('/suppliers/search', [SupplierController::class, 'search'])->name('admin.suppliers.search')->middleware('role:administrator,super_administrator');
         Route::post('/suppliers', [SupplierController::class, 'store'])->middleware('role:administrator,super_administrator');
         Route::get('/suppliers/{supplier}', [SupplierController::class, 'show'])->middleware('role:administrator,super_administrator');
         Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->middleware('role:administrator,super_administrator');
@@ -182,6 +183,12 @@ Route::middleware('auth')->group(function () {
             return response()->json($customer ? $customer->credit : null);
         })->name('admin.customers.credit');
         Route::patch('/payments/{payment}/reverse', [PaymentController::class, 'reverse'])->name('admin.payments.reverse');
+        
+        // Payment API Routes
+        Route::get('/payments/summary', [PaymentController::class, 'getSummary'])->name('admin.payments.summary');
+        Route::get('/payments/api', [PaymentController::class, 'getPaymentsApi'])->name('admin.payments.api');
+        Route::get('/payments/dues-report', [PaymentController::class, 'getDuesReport'])->name('admin.payments.dues-report');
+        Route::get('/customers/{customer}/bills', [PaymentController::class, 'getCustomerBills'])->name('admin.customers.bills');
 
         // Discounts
         Route::get('/discounts', [DiscountController::class, 'index'])->name('admin.discounts.index');
