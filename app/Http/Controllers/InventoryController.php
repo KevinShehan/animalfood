@@ -246,6 +246,67 @@ class InventoryController extends Controller
     }
 
     /**
+     * Get product information for stock adjustment
+     */
+    public function getProductInfo(Product $product)
+    {
+        return response()->json([
+            'success' => true,
+            'product' => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'sku' => $product->sku,
+                'stock_quantity' => $product->stock_quantity,
+                'unit' => $product->unit,
+                'reorder_level' => $product->reorder_level,
+                'max_stock_level' => $product->max_stock_level,
+                'minimum_stock_level' => $product->minimum_stock_level,
+                'average_cost' => $product->average_cost,
+                'last_stock_update' => $product->last_stock_update?->format('Y-m-d H:i:s')
+            ]
+        ]);
+    }
+
+    /**
+     * Search products for bulk adjustment
+     */
+    public function searchProducts(Request $request)
+    {
+        $query = $request->get('search', '');
+        
+        if (strlen($query) < 2) {
+            return response()->json([
+                'success' => true,
+                'products' => []
+            ]);
+        }
+
+        $products = Product::where(function($q) use ($query) {
+            $q->where('name', 'like', "%{$query}%")
+              ->orWhere('sku', 'like', "%{$query}%")
+              ->orWhere('barcode', 'like', "%{$query}%");
+        })
+        ->select('id', 'name', 'sku', 'stock_quantity', 'unit', 'barcode')
+        ->limit(20)
+        ->get()
+        ->map(function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'sku' => $product->sku,
+                'stock_quantity' => $product->stock_quantity,
+                'unit' => $product->unit,
+                'barcode' => $product->barcode
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'products' => $products
+        ]);
+    }
+
+    /**
      * Generate barcode for product
      */
     public function generateBarcode(Product $product)

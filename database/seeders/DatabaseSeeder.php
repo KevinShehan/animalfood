@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             SalesSeeder::class,
             BillHeaderSeeder::class,
             SriLankanCustomerSeeder::class,
+            InventoryAlertSeeder::class,
         ]);
     }
 }

@@ -208,6 +208,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/inventory/scanner', [InventoryController::class, 'scanner'])->name('admin.inventory.scanner');
         Route::post('/inventory/scan-barcode', [InventoryController::class, 'scanBarcode'])->name('admin.inventory.scan-barcode');
         Route::post('/inventory/adjust-stock', [InventoryController::class, 'adjustStock'])->name('admin.inventory.adjust-stock');
+        Route::get('/inventory/search-products', [InventoryController::class, 'searchProducts'])->name('admin.inventory.search-products');
+        Route::get('/products/{product}/info', [InventoryController::class, 'getProductInfo'])->name('admin.products.info');
         Route::post('/inventory/generate-barcode/{product}', [InventoryController::class, 'generateBarcode'])->name('admin.inventory.generate-barcode');
         
         // Billing
