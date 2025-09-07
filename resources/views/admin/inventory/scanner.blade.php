@@ -1,3 +1,5 @@
+@section('page-title', 'Barcode Scanner')
+
 <x-admin-layout>
     <!-- Page Header -->
     <div class="mb-8">

@@ -1,4 +1,7 @@
+@section('page-title', 'Inventory Dashboard')
+
 <x-admin-layout>
+    <div class="mobile-container">
     <!-- Page Header -->
     <div class="mb-6 lg:mb-8">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -28,56 +31,56 @@
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-3 sm:p-4 lg:p-6">
-            <div class="flex items-center">
+            <div class="flex items-center h-16 sm:h-20 lg:h-24">
                 <div class="flex-shrink-0">
                     <svg class="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                     </svg>
                 </div>
-                <div class="ml-2 sm:ml-3 lg:ml-4 min-w-0 flex-1">
-                    <div class="text-xs sm:text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Products</div>
+                <div class="ml-2 sm:ml-3 lg:ml-4 min-w-0 flex-1 flex flex-col justify-end h-full">
+                    <div class="text-xs sm:text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400 truncate mb-1">Total Products</div>
                     <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($stats['total_products']) }}</div>
                 </div>
             </div>
         </div>
 
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-3 sm:p-4 lg:p-6">
-            <div class="flex items-center">
+            <div class="flex items-center h-16 sm:h-20 lg:h-24">
                 <div class="flex-shrink-0">
                     <svg class="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                     </svg>
                 </div>
-                <div class="ml-2 sm:ml-3 lg:ml-4 min-w-0 flex-1">
-                    <div class="text-xs sm:text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Low Stock Products</div>
+                <div class="ml-2 sm:ml-3 lg:ml-4 min-w-0 flex-1 flex flex-col justify-end h-full">
+                    <div class="text-xs sm:text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400 truncate mb-1">Low Stock Products</div>
                     <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($stats['low_stock_products']) }}</div>
                 </div>
             </div>
         </div>
 
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-3 sm:p-4 lg:p-6">
-            <div class="flex items-center">
+            <div class="flex items-center h-16 sm:h-20 lg:h-24">
                 <div class="flex-shrink-0">
                     <svg class="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <div class="ml-2 sm:ml-3 lg:ml-4 min-w-0 flex-1">
-                    <div class="text-xs sm:text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Critical Alerts</div>
+                <div class="ml-2 sm:ml-3 lg:ml-4 min-w-0 flex-1 flex flex-col justify-end h-full">
+                    <div class="text-xs sm:text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400 truncate mb-1">Critical Alerts</div>
                     <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($stats['critical_alerts']) }}</div>
                 </div>
             </div>
         </div>
 
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-3 sm:p-4 lg:p-6">
-            <div class="flex items-center">
+            <div class="flex items-center h-16 sm:h-20 lg:h-24">
                 <div class="flex-shrink-0">
                     <svg class="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                     </svg>
                 </div>
-                <div class="ml-2 sm:ml-3 lg:ml-4 min-w-0 flex-1">
-                    <div class="text-xs sm:text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Inventory Value</div>
+                <div class="ml-2 sm:ml-3 lg:ml-4 min-w-0 flex-1 flex flex-col justify-end h-full">
+                    <div class="text-xs sm:text-xs lg:text-sm font-medium text-gray-500 dark:text-gray-400 truncate mb-1">Inventory Value</div>
                     <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{{ \App\Helpers\CurrencyHelper::format($stats['total_inventory_value']) }}</div>
                 </div>
             </div>
@@ -169,7 +172,7 @@
             <div class="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700">
                 <h3 class="text-sm sm:text-base lg:text-lg font-medium text-gray-900 dark:text-white">Expiring Batches (Next 30 Days)</h3>
             </div>
-            <div class="overflow-x-auto">
+            <div class="table-container overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
@@ -360,4 +363,5 @@
             }
         });
     </script>
+    </div>
 </x-admin-layout>

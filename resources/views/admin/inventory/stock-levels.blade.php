@@ -1,4 +1,7 @@
+@section('page-title', 'Stock Levels')
+
 <x-admin-layout>
+    <div class="mobile-container">
     <!-- Page Header -->
     <div class="mb-6 lg:mb-8">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -87,16 +90,16 @@
 
     <!-- Stock Levels Table -->
     <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
-        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <div class="table-container overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
-                        <th class="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Product</th>
-                        <th class="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Stock</th>
-                        <th class="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">Levels</th>
-                        <th class="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">Value</th>
-                        <th class="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                        <th class="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                        <th class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Product</th>
+                        <th class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Stock</th>
+                        <th class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">Levels</th>
+                        <th class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">Value</th>
+                        <th class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                        <th class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-20 sm:w-auto">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -126,7 +129,7 @@
                         })->count();
                     @endphp
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td class="px-2 sm:px-4 lg:px-6 py-3 sm:py-4">
+                        <td class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 md:py-4">
                             <div class="flex items-center">
                                 <div class="flex-1 min-w-0">
                                     <div class="text-xs sm:text-sm font-medium text-gray-900 dark:text-white truncate">{{ $product->name }}</div>
@@ -147,7 +150,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-2 sm:px-4 lg:px-6 py-3 sm:py-4">
+                        <td class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 md:py-4">
                             <div class="text-xs sm:text-sm text-gray-900 dark:text-white">
                                 <div class="font-medium">{{ $product->stock_quantity }} {{ $product->unit }}</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">Method: {{ $product->stock_method }}</div>
@@ -159,14 +162,14 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 hidden md:table-cell">
+                        <td class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 md:py-4 hidden md:table-cell">
                             <div class="text-xs sm:text-sm text-gray-900 dark:text-white">
                                 <div>Min: {{ $product->minimum_stock_level }}</div>
                                 <div>Reorder: {{ $product->reorder_level }}</div>
                                 <div>Max: {{ $product->max_stock_level }}</div>
                             </div>
                         </td>
-                        <td class="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 hidden lg:table-cell">
+                        <td class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 md:py-4 hidden lg:table-cell">
                             <div class="text-xs sm:text-sm text-gray-900 dark:text-white">
                                 <div>Cost: {{ \App\Helpers\CurrencyHelper::format($product->average_cost) }}</div>
                                 <div>Total: {{ \App\Helpers\CurrencyHelper::format($totalValue) }}</div>
@@ -175,9 +178,9 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="px-2 sm:px-4 lg:px-6 py-3 sm:py-4">
+                        <td class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 md:py-4">
                             <div class="flex flex-col gap-1">
-                                <span class="inline-flex items-center px-1.5 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-{{ $stockColor }}-100 text-{{ $stockColor }}-800 dark:bg-{{ $stockColor }}-900 dark:text-{{ $stockColor }}-200">
+                                <span class="inline-flex items-center px-1 sm:px-1.5 md:px-2.5 py-0.5 rounded-full text-xs font-medium bg-{{ $stockColor }}-100 text-{{ $stockColor }}-800 dark:bg-{{ $stockColor }}-900 dark:text-{{ $stockColor }}-200">
                                     <span class="hidden sm:inline">{{ $stockStatus }}</span>
                                     <span class="sm:hidden">
                                         @if($stockStatus === 'Out of Stock') OOS
@@ -189,29 +192,29 @@
                                     </span>
                                 </span>
                                 @if($product->inventoryAlerts->where('status', 'active')->count() > 0)
-                                    <span class="inline-flex items-center px-1.5 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                                    <span class="inline-flex items-center px-1 sm:px-1.5 md:px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
                                         <span class="hidden sm:inline">{{ $product->inventoryAlerts->where('status', 'active')->count() }} alerts</span>
                                         <span class="sm:hidden">{{ $product->inventoryAlerts->where('status', 'active')->count() }}!</span>
                                     </span>
                                 @endif
                             </div>
                         </td>
-                        <td class="px-2 sm:px-4 lg:px-6 py-3 sm:py-4 text-sm font-medium">
-                            <div class="flex flex-col sm:flex-row gap-1 sm:gap-2">
-                                <a href="{{ route('admin.products.show', $product) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20" title="View Details">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <td class="px-1 sm:px-2 md:px-4 lg:px-6 py-2 sm:py-3 md:py-4 text-sm font-medium w-16 sm:w-20 md:w-auto">
+                            <div class="flex flex-col sm:flex-row gap-0.5 sm:gap-1 md:gap-2 items-center sm:items-start">
+                                <a href="{{ route('admin.products.show', $product) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 p-0.5 sm:p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20" title="View Details">
+                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                     </svg>
                                 </a>
-                                <button onclick="adjustStock({{ $product->id }}, '{{ $product->name }}')" class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 p-1 rounded hover:bg-green-50 dark:hover:bg-green-900/20" title="Adjust Stock">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <button onclick="adjustStock({{ $product->id }}, '{{ $product->name }}')" class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 p-0.5 sm:p-1 rounded hover:bg-green-50 dark:hover:bg-green-900/20" title="Adjust Stock">
+                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                     </svg>
                                 </button>
                                 @if(!$product->barcode)
-                                    <button onclick="generateBarcode({{ $product->id }})" class="text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 p-1 rounded hover:bg-purple-50 dark:hover:bg-purple-900/20" title="Generate Barcode">
-                                        <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <button onclick="generateBarcode({{ $product->id }})" class="text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 p-0.5 sm:p-1 rounded hover:bg-purple-50 dark:hover:bg-purple-900/20" title="Generate Barcode">
+                                        <svg class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V6a1 1 0 00-1-1H5a1 1 0 00-1 1v1a1 1 0 001 1zm12 0h2a1 1 0 001-1V6a1 1 0 00-1-1h-2a1 1 0 00-1 1v1a1 1 0 001 1zM5 20h2a1 1 0 001-1v-1a1 1 0 00-1-1H5a1 1 0 00-1 1v1a1 1 0 001 1z"></path>
                                         </svg>
                                     </button>
@@ -221,8 +224,8 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-3 sm:px-6 py-8 sm:py-12 text-center text-gray-500 dark:text-gray-400">
-                            <svg class="mx-auto h-8 w-8 sm:h-12 sm:w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <td colspan="6" class="px-2 sm:px-4 md:px-6 py-6 sm:py-8 md:py-12 text-center text-gray-500 dark:text-gray-400">
+                            <svg class="mx-auto h-6 w-6 sm:h-8 sm:w-8 md:h-12 md:w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                             </svg>
                             <p class="mt-2 text-xs sm:text-sm">No products found matching the criteria.</p>
@@ -836,4 +839,5 @@
             });
         }
     </script>
+    </div>
 </x-admin-layout>
